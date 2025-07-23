@@ -28,6 +28,9 @@
                     Il tuo partner strategico per spazi di collaborazione perfetti
                 </p>
             </div>
+            <button id="homeBtn" class="text-sm font-medium text-blue-600 hover:text-blue-800 hidden">
+                Torna alla Homepage
+            </button>
         </div>
     </div>
 
@@ -49,11 +52,314 @@
                             <svg class="w-10 h-10 text-blue-600 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
                             </svg>
-                            <h3 class="text-xl font-semibold text-gray-800 mb-4">Wizard in Sviluppo</h3>
+                            <h3 class="text-xl font-semibold text-gray-800 mb-2">Analizza Meeting & Genera Brief DSA</h3>
+                            <p class="text-gray-600 mb-4">Analizza appunti del meeting, estrai requisiti e genera brief strutturato per il team DSA con upload di planimetrie e foto.</p>
+                            <button onclick="showPostMeeting()" class="w-full inline-flex items-center justify-center px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg">
+                                Inizia
+                                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <!-- Module 2 -->
+                        <div class="border border-gray-200 rounded-lg p-6 hover:shadow-md hover:border-blue-300 transition-all">
+                            <svg class="w-10 h-10 text-cyan-600 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                            </svg>
+                            <h3 class="text-xl font-semibold text-gray-800 mb-2">Wizard Spazi Collaborativi</h3>
+                            <p class="text-gray-600 mb-4">Definisci la soluzione tecnologica ottimale per spazi collaborativi basandoti su misure, tipologia e caratteristiche.</p>
+                            <button onclick="showSpaceWizard()" class="w-full inline-flex items-center justify-center px-6 py-2.5 bg-cyan-600 hover:bg-cyan-700 text-white font-medium rounded-lg">
+                                Inizia
+                                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Post Meeting Module -->
+        <div id="postMeetingSection" class="hidden">
+            <div class="bg-white rounded-xl shadow-lg p-8">
+                <button onclick="showIntro()" class="inline-flex items-center mb-6 px-4 py-2 bg-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-300">
+                    <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                    Torna alla Homepage
+                </button>
+                
+                <h2 class="text-3xl font-bold text-gray-900 mb-2">Analizza Meeting & Genera Brief DSA</h2>
+                <p class="text-gray-600 mb-8">Trasforma i tuoi appunti del meeting in un brief tecnico strutturato per il team DSA</p>
+                
+                <div id="postMeetingForm" class="space-y-8">
+                    <!-- Dati Base Cliente -->
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Nome Cliente *</label>
+                            <input type="text" id="clientName" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Es. JBT Corporation">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Contatto Principale</label>
+                            <input type="text" id="contactPerson" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Es. Mario Rossi - IT Manager">
+                        </div>
+                    </div>
+
+                    <!-- Dettagli Meeting -->
+                    <div class="grid md:grid-cols-3 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Data Meeting</label>
+                            <input type="date" id="meetingDate" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Numero Sale/Spazi *</label>
+                            <input type="text" id="numberOfRooms" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Es. 3 meeting room + 1 auditorium">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Budget Indicativo</label>
+                            <input type="text" id="budget" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Es. 50k-100k€">
+                        </div>
+                    </div>
+
+                    <!-- Tipologie Spazi -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-3">Tipologie di Spazi</label>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3" id="spaceTypes">
+                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                                <input type="checkbox" value="Meeting Room" class="mr-3 text-blue-600">
+                                <span class="text-sm">Meeting Room</span>
+                            </label>
+                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                                <input type="checkbox" value="Huddle Room" class="mr-3 text-blue-600">
+                                <span class="text-sm">Huddle Room</span>
+                            </label>
+                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                                <input type="checkbox" value="Board Room" class="mr-3 text-blue-600">
+                                <span class="text-sm">Board Room</span>
+                            </label>
+                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                                <input type="checkbox" value="Auditorium" class="mr-3 text-blue-600">
+                                <span class="text-sm">Auditorium</span>
+                            </label>
+                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                                <input type="checkbox" value="Training Room" class="mr-3 text-blue-600">
+                                <span class="text-sm">Training Room</span>
+                            </label>
+                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                                <input type="checkbox" value="Ufficio Ibrido" class="mr-3 text-blue-600">
+                                <span class="text-sm">Ufficio Ibrido</span>
+                            </label>
+                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                                <input type="checkbox" value="Media Room" class="mr-3 text-blue-600">
+                                <span class="text-sm">Media Room</span>
+                            </label>
+                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                                <input type="checkbox" value="Control Room" class="mr-3 text-blue-600">
+                                <span class="text-sm">Control Room</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Requisiti Tecnologici -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-3">Requisiti Tecnologici</label>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3" id="techRequirements">
+                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                                <input type="checkbox" value="BYOD" class="mr-3 text-blue-600">
+                                <span class="text-sm">BYOD</span>
+                            </label>
+                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                                <input type="checkbox" value="Microsoft Teams Rooms (MTR)" class="mr-3 text-blue-600">
+                                <span class="text-sm">Microsoft Teams Rooms (MTR)</span>
+                            </label>
+                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                                <input type="checkbox" value="Videoconferenza" class="mr-3 text-blue-600">
+                                <span class="text-sm">Videoconferenza</span>
+                            </label>
+                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                                <input type="checkbox" value="Audio Professionale" class="mr-3 text-blue-600">
+                                <span class="text-sm">Audio Professionale</span>
+                            </label>
+                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                                <input type="checkbox" value="Digital Signage" class="mr-3 text-blue-600">
+                                <span class="text-sm">Digital Signage</span>
+                            </label>
+                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                                <input type="checkbox" value="Controllo Centralizzato" class="mr-3 text-blue-600">
+                                <span class="text-sm">Controllo Centralizzato</span>
+                            </label>
+                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                                <input type="checkbox" value="Streaming/Recording" class="mr-3 text-blue-600">
+                                <span class="text-sm">Streaming/Recording</span>
+                            </label>
+                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                                <input type="checkbox" value="Telepresence" class="mr-3 text-blue-600">
+                                <span class="text-sm">Telepresence</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Note Meeting con Upload Trascrizione -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Note e Appunti del Meeting *</label>
+                        <div class="space-y-4">
+                            <textarea id="meetingNotes" rows="8" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Incolla qui tutti gli appunti del meeting, requisiti emersi, problematiche discusse, aspettative del cliente..."></textarea>
+                            
+                            <!-- Upload Trascrizione Teams -->
+                            <div class="border-t pt-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Oppure carica trascrizione Teams/call</label>
+                                <div onclick="document.getElementById('transcriptUpload').click()" class="flex items-center justify-center w-full h-20 border-2 border-blue-300 border-dashed rounded-lg bg-blue-50 hover:bg-blue-100 cursor-pointer transition-colors">
+                                    <svg class="w-6 h-6 text-blue-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
+                                    </svg>
+                                    <span class="text-sm text-blue-700">Carica trascrizione Teams (.txt, .docx, .pdf)</span>
+                                </div>
+                                <input type="file" id="transcriptUpload" class="hidden" accept=".txt,.docx,.pdf,.doc">
+                                <div id="transcriptFile" class="mt-2 hidden">
+                                    <div class="flex items-center justify-between bg-blue-100 p-3 rounded-lg">
+                                        <div class="flex items-center">
+                                            <svg class="w-5 h-5 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                            </svg>
+                                            <span id="transcriptFileName" class="font-medium text-blue-800"></span>
+                                        </div>
+                                        <button onclick="removeTranscript()" class="text-red-500 hover:text-red-700">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div id="transcriptPreview" class="mt-2 hidden">
+                                    <div class="bg-gray-50 p-3 rounded-lg max-h-40 overflow-y-auto">
+                                        <p class="text-xs text-gray-600 mb-2">Anteprima trascrizione estratta:</p>
+                                        <div id="transcriptPreviewContent" class="text-sm text-gray-800"></div>
+                                    </div>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-2">Il contenuto del file verrà automaticamente aggiunto alle note del meeting per l'analisi AI</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Timeline e Requisiti Speciali -->
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Timeline Progetto</label>
+                            <input type="text" id="timeline" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Es. Implementazione entro Q2 2024">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Requisiti Speciali</label>
+                            <input type="text" id="specialRequirements" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Es. Certificazioni, integrazione con sistemi esistenti...">
+                        </div>
+                    </div>
+
+                    <!-- Upload File -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Planimetrie, Foto e Documenti</label>
+                        <div onclick="document.getElementById('fileUpload').click()" class="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg bg-gray-50 hover:bg-gray-100 cursor-pointer transition-colors">
+                            <svg class="w-10 h-10 text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                            </svg>
+                            <span class="text-sm text-gray-600">Trascina qui o clicca per caricare</span>
+                            <span class="text-xs text-gray-500 mt-1">DWG, PDF, immagini, documenti</span>
+                        </div>
+                        <input type="file" multiple id="fileUpload" class="hidden" accept=".dwg,.pdf,.jpg,.jpeg,.png,.gif,.doc,.docx,.txt,.zip,.rar">
+                        <div id="uploadedFiles" class="mt-4 space-y-2 hidden">
+                            <p class="font-semibold text-sm">File caricati:</p>
+                            <div id="fileList"></div>
+                        </div>
+                    </div>
+
+                    <!-- Generate Button -->
+                    <div class="text-center">
+                        <button onclick="generateBrief()" id="generateBtn" class="inline-flex items-center px-8 py-3 bg-blue-600 text-white font-medium text-lg rounded-lg hover:bg-blue-700 shadow-lg">
+                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                            </svg>
+                            Genera Brief per DSA
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Generated Brief Display -->
+                <div id="generatedBrief" class="hidden space-y-6">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-2xl font-bold text-gray-800">Brief Generato per il Team DSA</h3>
+                        <div class="flex items-center gap-3">
+                            <button onclick="copyBrief()" class="inline-flex items-center px-3 py-1.5 bg-gray-200 text-gray-700 text-xs font-medium rounded-lg hover:bg-gray-300">
+                                <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                                </svg>
+                                Copia Brief
+                            </button>
+                            <button onclick="resetForm()" class="inline-flex items-center px-4 py-2 bg-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-300">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                                </svg>
+                                Nuova Analisi
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div id="briefContent" class="prose prose-lg max-w-none bg-gray-50 p-6 rounded-lg border">
+                        <!-- Generated content will be inserted here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Space Wizard Module -->
+        <div id="spaceWizardSection" class="hidden">
+            <div class="bg-white rounded-xl shadow-lg p-8">
+                <button onclick="showIntro()" class="inline-flex items-center mb-6 px-4 py-2 bg-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-300">
+                    <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                    Torna alla Homepage
+                </button>
+                
+                <h2 class="text-3xl font-bold text-gray-900 mb-2">Wizard Spazi Collaborativi</h2>
+                <p class="text-gray-600 mb-8">Definisci la soluzione tecnologica ottimale per il tuo spazio</p>
+                
+                <div class="text-center py-12">
+                    <svg class="w-16 h-16 text-cyan-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
+                    </svg>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Wizard in Sviluppo</h3>
                     <p class="text-gray-600 max-w-2xl mx-auto">
                         Il wizard per spazi collaborativi è in fase di sviluppo avanzato. 
-                        Sarà disponibile a breve con funzionalità complete.
+                        Sarà disponibile a breve con funzionalità complete per:
                     </p>
+                    <div class="mt-6 text-left max-w-md mx-auto">
+                        <ul class="space-y-2 text-gray-600">
+                            <li class="flex items-center">
+                                <svg class="w-5 h-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                </svg>
+                                Selezione tipologia spazio
+                            </li>
+                            <li class="flex items-center">
+                                <svg class="w-5 h-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                </svg>
+                                Calcolo dimensioni e capacità
+                            </li>
+                            <li class="flex items-center">
+                                <svg class="w-5 h-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                </svg>
+                                Raccomandazioni tecnologiche BYOD/MTR
+                            </li>
+                            <li class="flex items-center">
+                                <svg class="w-5 h-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                </svg>
+                                Stima costi e configurazioni
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
@@ -71,8 +377,97 @@
     </div>
 
     <script>
-        console.log("🎯 Multimedia & Workspaces AI - Versione Demo");
+        // API Configuration
+        const API_KEY = "AIzaSyDjlVWJIzGCa5CnXbj_nQEj1aG2aHlLwnQ";
         
+        // Multimedia & Workspaces Context
+        const MW_CONTEXT = `
+# Var Group - Multimedia & Workspaces Business Unit
+
+## Identità e Mission
+La BU Multimedia & Workspaces di Var Group si occupa di far comunicare e collaborare al meglio le persone in ogni luogo e contesto. Con oltre 60 anni di esperienza, progettiamo e integriamo spazi di lavoro ibridi e soluzioni di comunicazione, agendo come partner unico per l'intero ciclo di vita del progetto.
+
+## Pilastri degli Hybrid Workspaces
+1. **User Experience**: Massima semplicità d'uso, performance elevate ed ergonomia
+2. **Tecnologie**: Implementazione delle migliori soluzioni di collaborazione, audio-video e piattaforme per il lavoro ibrido
+3. **ESG**: Attenzione al benessere delle persone e alla sostenibilità ambientale ed economica
+
+## Aree di Competenza Principali
+
+### Microsoft Modern Work
+- Suite Microsoft 365 completa per ambiente di lavoro sicuro e intelligente
+- Gestione identità e accessi (Entra ID)
+- Management dispositivi (Intune)
+- Produttività (Teams, Exchange, SharePoint)
+- Sicurezza (Defender, Sentinel)
+- AI personale con Copilot
+
+### Collaboration Solutions
+- Telefonia enterprise e videoconferenza
+- Piattaforme di collaborazione ibrida
+- Partner: Microsoft, Cisco, Poly, Pexip, Logitech, Zoom, Google Cloud
+
+### Allestimenti Workplace
+- Progettazione spazi fisici che uniscono architettura e tecnologia
+- Focus su qualità audio-video e semplicità d'uso (BYOD)
+- Tipologie: Huddle Room, Meeting Room, Board Room, Training Room, Demo Room
+
+### Spazi Specializzati
+- **Media Room**: Ambienti per creazione contenuti professionali, webinar, podcast, live streaming
+- **Control Room**: Situation room e sale di controllo con design multimediale e ridondanza sistemi
+- **Digital Reception (Agrid Welcome)**: Soluzioni Microsoft Teams per remotizzazione accoglienza
+- **Remote Expert (Agrid Bank)**: Piattaforme banking per consulenza video specializzata
+
+### Digital Signage e Audio-Video
+- Soluzioni end-to-end per comunicazione visiva
+- Settori: Retail, Lusso, Automotive, GDO, Corporate, Musei, Entertainment
+- Servizi: Progettazione, installazione, creazione contenuti, gestione
+
+### Hybrid Events
+- Organizzazione eventi in presenza, virtuali o ibridi
+- Servizi completi: concept, noleggio tecnologie, regia live, streaming
+
+## Processo di Vendita Tipico
+1. **Call di Qualifica**: Analisi esigenze cliente con HR/IT Manager
+2. **Sopralluogo e Raccolta Dati**: Planimetrie, foto, misure, requisiti specifici
+3. **Brief al DSA**: Trasferimento informazioni al reparto Design & Solution Architecture
+4. **Progettazione**: DSA crea soluzione tecnica con Tech Annex ed Economics
+5. **Presentazione Offerta**: Presentazione soluzione completa al cliente
+
+## Target Clienti Principali
+- **HR Manager**: Responsabili gestione spazi e benessere dipendenti
+- **IT Manager**: Responsabili infrastruttura tecnologica e sicurezza
+- **Facility Manager**: Gestione immobili e spazi aziendali
+- **C-Level**: Decision maker per investimenti strategici
+
+## Tipologie di Spazi Gestiti
+- **Meeting Rooms**: Sale riunioni tradizionali e ibride
+- **Huddle Rooms**: Spazi collaborativi informali
+- **Board Rooms**: Sale direttive e C-level
+- **Auditorium**: Spazi per grandi eventi e comunicazioni
+- **Training Rooms**: Aule formative e didattiche
+- **Uffici Ibridi**: Postazioni flessibili e adattabili
+- **Media Rooms**: Studi per produzione contenuti
+
+## Soluzioni Tecnologiche Standard
+- **BYOD (Bring Your Own Device)**: Connessione dispositivi personali
+- **MTR (Microsoft Teams Rooms)**: Sale certificate Microsoft Teams
+- **Soluzioni Ibride**: Combinazione BYOD + MTR per massima flessibilità
+- **Audio**: Sistemi di amplificazione, diffusione e acquisizione
+- **Video**: Telecamere, proiettori, monitor, sistemi di switching
+- **Controllo**: Pannelli touch, automazione, gestione centralizzata
+
+## Partner Tecnologici Strategici
+Microsoft, Cisco, Poly, Logitech, Zoom, Google Cloud, Epson, AVer, Dante, WyreStorm
+
+## DOC (Durante Operation Center)
+Supporto tecnico qualificato con:
+- Help Desk multi-livello (HD1-HD3)
+- VNOC (Video Network Operation Center)
+- Monitoraggio proattivo 24/7
+- Presidi on-site dedicati
+        `;
+
         // State management
         let uploadedFiles = [];
         let transcriptContent = '';
@@ -83,18 +478,21 @@
             document.getElementById('introSection').classList.remove('hidden');
             document.getElementById('postMeetingSection').classList.add('hidden');
             document.getElementById('spaceWizardSection').classList.add('hidden');
+            document.getElementById('homeBtn').classList.add('hidden');
         }
 
         function showPostMeeting() {
             document.getElementById('introSection').classList.add('hidden');
             document.getElementById('postMeetingSection').classList.remove('hidden');
             document.getElementById('spaceWizardSection').classList.add('hidden');
+            document.getElementById('homeBtn').classList.remove('hidden');
         }
 
         function showSpaceWizard() {
             document.getElementById('introSection').classList.add('hidden');
             document.getElementById('postMeetingSection').classList.add('hidden');
             document.getElementById('spaceWizardSection').classList.remove('hidden');
+            document.getElementById('homeBtn').classList.remove('hidden');
         }
 
         // File upload handling for planimetrie/documenti
@@ -270,10 +668,8 @@
             return Array.from(checkboxes).map(cb => cb.value);
         }
 
-        // Generate demo brief - NO API CALLS
+        // Generate brief using Gemini AI
         async function generateBrief() {
-            console.log("🎯 Generazione brief demo...");
-            
             if (!canGenerateBrief()) {
                 alert('Per favore compila almeno: Nome Cliente, Numero Sale/Spazi e Note del Meeting');
                 return;
@@ -291,9 +687,6 @@
             `;
             generateBtn.disabled = true;
 
-            // Simulate API delay
-            await new Promise(resolve => setTimeout(resolve, 2000));
-
             try {
                 // Collect form data
                 const formData = {
@@ -309,22 +702,77 @@
                     specialRequirements: document.getElementById('specialRequirements').value
                 };
 
-                console.log("📋 Dati raccolti:", formData);
+                const prompt = `Agisci come un Senior Technical Consultant di Var Group - Multimedia & Workspaces. 
 
-                // Generate demo brief with real data
-                const briefHTML = generateDemoBrief(formData);
+CONTESTO AZIENDALE:
+${MW_CONTEXT}
+
+DATI DEL MEETING E REQUISITI CLIENTE:
+- Cliente: ${formData.clientName}
+- Contatto: ${formData.contactPerson}
+- Data Meeting: ${formData.meetingDate}
+- Numero Sale/Spazi: ${formData.numberOfRooms}
+- Tipologie Spazi: ${formData.spaceTypes.join(', ')}
+- Requisiti Tecnologici: ${formData.techRequirements.join(', ')}
+- Budget Indicativo: ${formData.budget}
+- Timeline: ${formData.timeline}
+- Note del Meeting: ${formData.meetingNotes}
+- Requisiti Speciali: ${formData.specialRequirements}
+- File Allegati: ${uploadedFiles.map(f => f.name).join(', ')}
+
+TASK: Genera un brief strutturato e professionale per il team DSA (Design & Solution Architecture) che contenga:
+
+1. **EXECUTIVE SUMMARY**
+   - Sintesi del progetto e obiettivi del cliente
+
+2. **ANALISI REQUISITI**
+   - Requisiti funzionali estratti dal meeting
+   - Requisiti tecnici identificati
+   - Vincoli e criticità emerse
+
+3. **SPECIFICHE SPAZI**
+   - Dettaglio per ogni tipologia di spazio richiesta
+   - Numero partecipanti previsti per spazio
+   - Funzionalità specifiche richieste
+
+4. **INDICAZIONI TECNOLOGICHE**
+   - Soluzioni tecnologiche da valutare
+   - Integrazioni richieste
+   - Standard di qualità da rispettare
+
+5. **DELIVERABLE RICHIESTI AL DSA**
+   - Tech Annex dettagliato
+   - Economics e pricing
+   - Timeline di implementazione
+   - Documentazione tecnica
+
+6. **DOCUMENTAZIONE ALLEGATA**
+   - Riferimenti ai file caricati: ${uploadedFiles.map(f => f.name).join(', ')}
+   - Indicazioni su come utilizzare planimetrie/documenti allegati
+   - Note per l'analisi dei file forniti
+
+7. **NEXT STEPS**
+   - Azioni immediate per il DSA
+   - Informazioni aggiuntive da raccogliere
+   - Milestone del progetto
+
+IMPORTANTE: 
+- Se sono stati caricati file (planimetrie, foto, documenti), fai sempre riferimento ad essi nella sezione "DOCUMENTAZIONE ALLEGATA" 
+- Indica chiaramente al DSA come utilizzare i file allegati per la progettazione
+- Se presente trascrizione meeting, utilizzala come fonte primaria per i requisiti
+
+Fornisci il brief in formato HTML professionale, strutturato e pronto per essere condiviso con il team DSA.`;
+
+                const response = await callGeminiAPI(prompt);
                 
                 // Show generated brief
-                generatedBriefContent = briefHTML;
-                document.getElementById('briefContent').innerHTML = briefHTML;
+                generatedBriefContent = response;
+                document.getElementById('briefContent').innerHTML = response;
                 document.getElementById('postMeetingForm').classList.add('hidden');
                 document.getElementById('generatedBrief').classList.remove('hidden');
                 document.getElementById('generatedBrief').classList.add('fade-in');
 
-                console.log("✅ Brief demo generato con successo!");
-
             } catch (error) {
-                console.error('❌ Errore:', error);
                 alert('Errore nella generazione del brief: ' + error.message);
             } finally {
                 // Restore button
@@ -333,258 +781,33 @@
             }
         }
 
-        // Generate demo brief with real form data
-        function generateDemoBrief(formData) {
-            const currentDate = new Date().toLocaleDateString('it-IT');
-            const hasTranscript = transcriptContent ? true : false;
-            const fileList = uploadedFiles.map(f => f.name).join(', ');
-            
-            return `
-<div class="space-y-6">
-    <div class="border-b pb-4">
-        <h1 class="text-2xl font-bold text-blue-800 mb-2">BRIEF TECNICO PER DSA</h1>
-        <p class="text-gray-600">Cliente: <strong>${formData.clientName}</strong> | Data: ${currentDate}</p>
-        ${formData.contactPerson ? `<p class="text-gray-600">Contatto: <strong>${formData.contactPerson}</strong></p>` : ''}
-    </div>
+        // Call Gemini API
+        async function callGeminiAPI(prompt) {
+            const modelName = "gemini-2.5-pro";
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${API_KEY}`;
 
-    <div class="bg-blue-50 p-4 rounded-lg">
-        <h2 class="text-xl font-semibold text-blue-800 mb-3">📋 EXECUTIVE SUMMARY</h2>
-        <p><strong>${formData.clientName}</strong> richiede la progettazione e implementazione di <strong>${formData.numberOfRooms}</strong> per modernizzare i propri spazi collaborativi.</p>
-        ${formData.budget ? `<p class="mt-2"><strong>Budget indicativo:</strong> ${formData.budget}</p>` : ''}
-        ${formData.timeline ? `<p><strong>Timeline:</strong> ${formData.timeline}</p>` : ''}
-        <p class="mt-2">L'obiettivo è creare un ambiente di lavoro ibrido che favorisca la collaborazione e la produttività del team.</p>
-    </div>
-
-    <div>
-        <h2 class="text-xl font-semibold text-gray-800 mb-3">🔍 ANALISI REQUISITI</h2>
-        
-        <div class="grid md:grid-cols-2 gap-4">
-            <div class="bg-gray-50 p-4 rounded-lg">
-                <h3 class="font-semibold text-gray-800 mb-2">Requisiti Funzionali</h3>
-                <ul class="space-y-1 text-sm">
-                    <li>• Configurazione spazi: ${formData.numberOfRooms}</li>
-                    ${formData.spaceTypes.length > 0 ? `<li>• Tipologie: ${formData.spaceTypes.join(', ')}</li>` : ''}
-                    <li>• Integrazione piattaforme collaboration</li>
-                    <li>• Facilità d'uso per utenti non tecnici</li>
-                </ul>
-            </div>
-            
-            <div class="bg-gray-50 p-4 rounded-lg">
-                <h3 class="font-semibold text-gray-800 mb-2">Requisiti Tecnici</h3>
-                <ul class="space-y-1 text-sm">
-                    ${formData.techRequirements.length > 0 ? 
-                        formData.techRequirements.map(req => `<li>• ${req}</li>`).join('') : 
-                        '<li>• Soluzioni AV integrate</li><li>• Connettività wireless stabile</li>'
-                    }
-                    <li>• Qualità audio/video professionale</li>
-                    <li>• Gestione centralizzata</li>
-                </ul>
-            </div>
-        </div>
-
-        ${formData.specialRequirements ? `
-        <div class="mt-4 bg-yellow-50 p-4 rounded-lg">
-            <h3 class="font-semibold text-yellow-800 mb-2">Requisiti Speciali</h3>
-            <p class="text-yellow-700">${formData.specialRequirements}</p>
-        </div>
-        ` : ''}
-    </div>
-
-    <div>
-        <h2 class="text-xl font-semibold text-gray-800 mb-3">🏢 SPECIFICHE SPAZI</h2>
-        
-        ${formData.spaceTypes.length > 0 ? 
-            formData.spaceTypes.map(spaceType => `
-            <div class="bg-gray-50 p-4 rounded-lg mb-3">
-                <h3 class="font-semibold text-gray-800">${spaceType}</h3>
-                <div class="mt-2 grid grid-cols-2 gap-4 text-sm">
-                    <div>
-                        <strong>Partecipanti:</strong> ${getParticipantCount(spaceType)}
-                    </div>
-                    <div>
-                        <strong>Tecnologie:</strong> ${getTechForSpace(spaceType, formData.techRequirements)}
-                    </div>
-                </div>
-            </div>
-            `).join('') :
-            `
-            <div class="bg-gray-50 p-4 rounded-lg">
-                <p>Dettagli specifici da definire in base al sopralluogo e alle planimetrie fornite.</p>
-                <p class="mt-2"><strong>Sale da configurare:</strong> ${formData.numberOfRooms}</p>
-            </div>
-            `
-        }
-    </div>
-
-    <div>
-        <h2 class="text-xl font-semibold text-gray-800 mb-3">⚙️ INDICAZIONI TECNOLOGICHE</h2>
-        
-        <div class="grid md:grid-cols-2 gap-4">
-            <div class="bg-green-50 p-4 rounded-lg">
-                <h3 class="font-semibold text-green-800 mb-2">Soluzioni Raccomandate</h3>
-                <ul class="space-y-1 text-sm text-green-700">
-                    <li>• Microsoft Teams Rooms native</li>
-                    <li>• Soluzioni BYOD integrate</li>
-                    <li>• Audio Dante per qualità professionale</li>
-                    <li>• Display 4K per videoconferenza</li>
-                    <li>• Controlli touch intuitivi</li>
-                </ul>
-            </div>
-            
-            <div class="bg-blue-50 p-4 rounded-lg">
-                <h3 class="font-semibold text-blue-800 mb-2">Partner Tecnologici</h3>
-                <ul class="space-y-1 text-sm text-blue-700">
-                    <li>• Microsoft (Teams, Surface Hub)</li>
-                    <li>• Logitech (Webcam, Audio)</li>
-                    <li>• Poly (Soluzioni conferencing)</li>
-                    <li>• Epson (Proiezione)</li>
-                    <li>• Crestron (Controllo)</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-
-    <div>
-        <h2 class="text-xl font-semibold text-gray-800 mb-3">📦 DELIVERABLE RICHIESTI AL DSA</h2>
-        
-        <div class="bg-orange-50 p-4 rounded-lg">
-            <div class="grid md:grid-cols-2 gap-4">
-                <div>
-                    <h3 class="font-semibold text-orange-800 mb-2">Documentazione Tecnica</h3>
-                    <ul class="space-y-1 text-sm text-orange-700">
-                        <li>• Tech Annex dettagliato per ogni spazio</li>
-                        <li>• Schemi di collegamento AV</li>
-                        <li>• Layout planimetrico con posizionamento</li>
-                        <li>• Specifiche tecniche complete</li>
-                    </ul>
-                </div>
-                
-                <div>
-                    <h3 class="font-semibold text-orange-800 mb-2">Economics & Timeline</h3>
-                    <ul class="space-y-1 text-sm text-orange-700">
-                        <li>• Preventivo dettagliato per voce</li>
-                        <li>• Cronoprogramma implementazione</li>
-                        <li>• Piano di project management</li>
-                        <li>• Costi di manutenzione e supporto</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    ${fileList ? `
-    <div>
-        <h2 class="text-xl font-semibold text-gray-800 mb-3">📁 DOCUMENTAZIONE ALLEGATA</h2>
-        <div class="bg-gray-50 p-4 rounded-lg">
-            <p class="mb-2"><strong>File ricevuti:</strong></p>
-            <ul class="text-sm text-gray-700">
-                ${uploadedFiles.map(file => `<li>• ${file.name} (${file.size})</li>`).join('')}
-            </ul>
-            <p class="mt-3 text-sm text-gray-600">
-                <strong>Note per il DSA:</strong> Utilizzare la documentazione allegata per:
-            </p>
-            <ul class="mt-1 text-sm text-gray-600">
-                <li>• Analisi delle planimetrie per il posizionamento ottimale</li>
-                <li>• Verifica vincoli architettonici e impiantistici</li>
-                <li>• Calcolo preciso delle distanze e dimensionamenti</li>
-            </ul>
-        </div>
-    </div>
-    ` : ''}
-
-    ${hasTranscript ? `
-    <div>
-        <h2 class="text-xl font-semibold text-gray-800 mb-3">🎙️ PUNTI SALIENTI MEETING</h2>
-        <div class="bg-blue-50 p-4 rounded-lg">
-            <p class="text-sm text-blue-700 mb-2">
-                <strong>Nota:</strong> Trascrizione meeting processata e integrata nell'analisi dei requisiti.
-            </p>
-            <p class="text-sm text-blue-600">
-                Riferimenti specifici del cliente e discussioni tecniche sono stati estratti 
-                e incorporati nelle sezioni precedenti del brief.
-            </p>
-        </div>
-    </div>
-    ` : ''}
-
-    <div>
-        <h2 class="text-xl font-semibold text-gray-800 mb-3">🎯 NEXT STEPS</h2>
-        
-        <div class="space-y-3">
-            <div class="bg-red-50 p-4 rounded-lg">
-                <h3 class="font-semibold text-red-800 mb-2">🚨 Azioni Immediate</h3>
-                <ul class="space-y-1 text-sm text-red-700">
-                    <li>• Sopralluogo tecnico per verifica vincoli</li>
-                    <li>• Acquisizione planimetrie aggiornate (se non fornite)</li>
-                    <li>• Verifica infrastruttura di rete esistente</li>
-                    <li>• Definizione cronoprogramma dettagliato</li>
-                </ul>
-            </div>
-            
-            <div class="bg-yellow-50 p-4 rounded-lg">
-                <h3 class="font-semibold text-yellow-800 mb-2">📋 Informazioni da Raccogliere</h3>
-                <ul class="space-y-1 text-sm text-yellow-700">
-                    <li>• Specifiche tecniche infrastruttura IT</li>
-                    <li>• Policy aziendali su sicurezza e privacy</li>
-                    <li>• Preferenze su brand e fornitori</li>
-                    <li>• Requisiti di integrazione con sistemi esistenti</li>
-                </ul>
-            </div>
-            
-            <div class="bg-green-50 p-4 rounded-lg">
-                <h3 class="font-semibold text-green-800 mb-2">📅 Milestone Progetto</h3>
-                <ul class="space-y-1 text-sm text-green-700">
-                    <li>• Presentazione Tech Annex: +1 settimana</li>
-                    <li>• Approvazione budget: +2 settimane</li>
-                    <li>• Inizio implementazione: ${formData.timeline || '+1 mese'}</li>
-                    <li>• Go-live e training: +6 settimane</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-
-    ${formData.meetingNotes ? `
-    <div>
-        <h2 class="text-xl font-semibold text-gray-800 mb-3">📝 NOTE ORIGINALI MEETING</h2>
-        <div class="bg-gray-100 p-4 rounded-lg">
-            <pre class="text-sm text-gray-700 whitespace-pre-wrap">${formData.meetingNotes.substring(0, 1000)}${formData.meetingNotes.length > 1000 ? '...' : ''}</pre>
-        </div>
-    </div>
-    ` : ''}
-</div>
-            `;
-        }
-
-        // Helper functions for demo brief
-        function getParticipantCount(spaceType) {
-            const counts = {
-                'Huddle Room': '2-4 persone',
-                'Meeting Room': '6-12 persone', 
-                'Board Room': '8-16 persone',
-                'Auditorium': '50+ persone',
-                'Training Room': '15-30 persone',
-                'Media Room': '2-6 persone',
-                'Control Room': '2-8 persone',
-                'Ufficio Ibrido': '1-4 persone'
+            const requestBody = {
+                contents: [{ role: "user", parts: [{ text: prompt }] }],
             };
-            return counts[spaceType] || '4-8 persone';
-        }
 
-        function getTechForSpace(spaceType, techRequirements) {
-            const baseTech = ['Display', 'Audio', 'Controllo'];
-            const spaceTech = {
-                'Huddle Room': ['Webcam', 'Speakerphone'],
-                'Meeting Room': ['PTZ Camera', 'Microfoni ceiling'],
-                'Board Room': ['Video wall', 'Wireless presentation'],
-                'Auditorium': ['Impianto audio PA', 'Recording'],
-                'Training Room': ['Proiettore', 'Lavagna interattiva'],
-                'Media Room': ['Broadcasting', 'Streaming'],
-                'Control Room': ['Multi-monitor', 'KVM'],
-                'Ufficio Ibrido': ['BYOD hub', 'Personal devices']
-            };
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(requestBody),
+            });
             
-            const selected = techRequirements.length > 0 ? techRequirements.slice(0, 2) : spaceTech[spaceType] || baseTech;
-            return selected.join(', ');
+            if (!response.ok) {
+                throw new Error(`API Error (${response.status}): ${response.statusText}`);
+            }
+
+            const result = await response.json();
+            
+            if (result.candidates && result.candidates[0]?.content?.parts[0]?.text) {
+                let rawText = result.candidates[0].content.parts[0].text;
+                return rawText.replace(/^\s*```(html)?\n?/, '').replace(/\n?```\s*$/, '');
+            } else {
+                throw new Error("Risposta AI non nel formato atteso.");
+            }
         }
 
         // Copy brief to clipboard
@@ -654,297 +877,12 @@
 
         // Initialize the app
         document.addEventListener('DOMContentLoaded', function() {
-            console.log("🎉 App Demo inizializzata!");
             // Set default view
             showIntro();
+            
+            // Add click handler for home button
+            document.getElementById('homeBtn').addEventListener('click', showIntro);
         });
     </script>
 </body>
-</html> mb-2">Analizza Meeting & Genera Brief DSA</h3>
-                            <p class="text-gray-600 mb-4">Analizza appunti del meeting, estrai requisiti e genera brief strutturato per il team DSA con upload di planimetrie e foto.</p>
-                            <button onclick="showPostMeeting()" class="w-full inline-flex items-center justify-center px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg">
-                                Inizia
-                                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                                </svg>
-                            </button>
-                        </div>
-
-                        <!-- Module 2 -->
-                        <div class="border border-gray-200 rounded-lg p-6 hover:shadow-md hover:border-blue-300 transition-all">
-                            <svg class="w-10 h-10 text-cyan-600 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                            </svg>
-                            <h3 class="text-xl font-semibold text-gray-800 mb-2">Wizard Spazi Collaborativi</h3>
-                            <p class="text-gray-600 mb-4">Definisci la soluzione tecnologica ottimale per spazi collaborativi basandoti su misure, tipologia e caratteristiche.</p>
-                            <button onclick="showSpaceWizard()" class="w-full inline-flex items-center justify-center px-6 py-2.5 bg-cyan-600 hover:bg-cyan-700 text-white font-medium rounded-lg">
-                                Inizia
-                                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Post Meeting Module -->
-        <div id="postMeetingSection" class="hidden">
-            <div class="bg-white rounded-xl shadow-lg p-8">
-                <button onclick="showIntro()" class="inline-flex items-center mb-6 px-4 py-2 bg-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-300">
-                    <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-                    </svg>
-                    Torna alla Homepage
-                </button>
-                
-                <h2 class="text-3xl font-bold text-gray-900 mb-2">Analizza Meeting & Genera Brief DSA</h2>
-                <p class="text-gray-600 mb-8">Trasforma i tuoi appunti del meeting in un brief tecnico strutturato per il team DSA</p>
-                
-                <!-- Demo/Offline Notice -->
-                <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-8">
-                    <h3 class="text-lg font-semibold text-yellow-800 mb-3">🎯 Modalità Demo</h3>
-                    <p class="text-yellow-700 mb-3">
-                        Per evitare problemi di API e costi, questa versione genera un <strong>brief di esempio pre-strutturato</strong> 
-                        basato sui dati che inserisci.
-                    </p>
-                    <p class="text-sm text-yellow-600">
-                        💡 Il brief includerà automaticamente tutti i dati del form e le trascrizioni caricate!
-                    </p>
-                </div>
-                
-                <div id="postMeetingForm" class="space-y-8">
-                    <!-- Dati Base Cliente -->
-                    <div class="grid md:grid-cols-2 gap-6">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Nome Cliente *</label>
-                            <input type="text" id="clientName" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Es. JBT Corporation">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Contatto Principale</label>
-                            <input type="text" id="contactPerson" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Es. Mario Rossi - IT Manager">
-                        </div>
-                    </div>
-
-                    <!-- Dettagli Meeting -->
-                    <div class="grid md:grid-cols-3 gap-6">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Data Meeting</label>
-                            <input type="date" id="meetingDate" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Numero Sale/Spazi *</label>
-                            <input type="text" id="numberOfRooms" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Es. 3 meeting room + 1 auditorium">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Budget Indicativo</label>
-                            <input type="text" id="budget" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Es. 50k-100k€">
-                        </div>
-                    </div>
-
-                    <!-- Tipologie Spazi -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-3">Tipologie di Spazi</label>
-                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3" id="spaceTypes">
-                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
-                                <input type="checkbox" value="Meeting Room" class="mr-3 text-blue-600">
-                                <span class="text-sm">Meeting Room</span>
-                            </label>
-                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
-                                <input type="checkbox" value="Huddle Room" class="mr-3 text-blue-600">
-                                <span class="text-sm">Huddle Room</span>
-                            </label>
-                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
-                                <input type="checkbox" value="Board Room" class="mr-3 text-blue-600">
-                                <span class="text-sm">Board Room</span>
-                            </label>
-                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
-                                <input type="checkbox" value="Auditorium" class="mr-3 text-blue-600">
-                                <span class="text-sm">Auditorium</span>
-                            </label>
-                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
-                                <input type="checkbox" value="Training Room" class="mr-3 text-blue-600">
-                                <span class="text-sm">Training Room</span>
-                            </label>
-                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
-                                <input type="checkbox" value="Ufficio Ibrido" class="mr-3 text-blue-600">
-                                <span class="text-sm">Ufficio Ibrido</span>
-                            </label>
-                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
-                                <input type="checkbox" value="Media Room" class="mr-3 text-blue-600">
-                                <span class="text-sm">Media Room</span>
-                            </label>
-                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
-                                <input type="checkbox" value="Control Room" class="mr-3 text-blue-600">
-                                <span class="text-sm">Control Room</span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <!-- Requisiti Tecnologici -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-3">Requisiti Tecnologici</label>
-                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3" id="techRequirements">
-                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
-                                <input type="checkbox" value="BYOD" class="mr-3 text-blue-600">
-                                <span class="text-sm">BYOD</span>
-                            </label>
-                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
-                                <input type="checkbox" value="Microsoft Teams Rooms (MTR)" class="mr-3 text-blue-600">
-                                <span class="text-sm">Microsoft Teams Rooms (MTR)</span>
-                            </label>
-                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
-                                <input type="checkbox" value="Videoconferenza" class="mr-3 text-blue-600">
-                                <span class="text-sm">Videoconferenza</span>
-                            </label>
-                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
-                                <input type="checkbox" value="Audio Professionale" class="mr-3 text-blue-600">
-                                <span class="text-sm">Audio Professionale</span>
-                            </label>
-                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
-                                <input type="checkbox" value="Digital Signage" class="mr-3 text-blue-600">
-                                <span class="text-sm">Digital Signage</span>
-                            </label>
-                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
-                                <input type="checkbox" value="Controllo Centralizzato" class="mr-3 text-blue-600">
-                                <span class="text-sm">Controllo Centralizzato</span>
-                            </label>
-                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
-                                <input type="checkbox" value="Streaming/Recording" class="mr-3 text-blue-600">
-                                <span class="text-sm">Streaming/Recording</span>
-                            </label>
-                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
-                                <input type="checkbox" value="Telepresence" class="mr-3 text-blue-600">
-                                <span class="text-sm">Telepresence</span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <!-- Note Meeting con Upload Trascrizione -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Note e Appunti del Meeting *</label>
-                        <div class="space-y-4">
-                            <textarea id="meetingNotes" rows="8" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Incolla qui tutti gli appunti del meeting, requisiti emersi, problematiche discusse, aspettative del cliente..."></textarea>
-                            
-                            <!-- Upload Trascrizione Teams -->
-                            <div class="border-t pt-4">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Oppure carica trascrizione Teams/call</label>
-                                <div onclick="document.getElementById('transcriptUpload').click()" class="flex items-center justify-center w-full h-20 border-2 border-blue-300 border-dashed rounded-lg bg-blue-50 hover:bg-blue-100 cursor-pointer transition-colors">
-                                    <svg class="w-6 h-6 text-blue-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
-                                    </svg>
-                                    <span class="text-sm text-blue-700">Carica trascrizione Teams (.txt, .docx, .pdf)</span>
-                                </div>
-                                <input type="file" id="transcriptUpload" class="hidden" accept=".txt,.docx,.pdf,.doc">
-                                <div id="transcriptFile" class="mt-2 hidden">
-                                    <div class="flex items-center justify-between bg-blue-100 p-3 rounded-lg">
-                                        <div class="flex items-center">
-                                            <svg class="w-5 h-5 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                                            </svg>
-                                            <span id="transcriptFileName" class="font-medium text-blue-800"></span>
-                                        </div>
-                                        <button onclick="removeTranscript()" class="text-red-500 hover:text-red-700">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                                            </svg>
-                                        </button>
-                                    </div>
-                                </div>
-                                <div id="transcriptPreview" class="mt-2 hidden">
-                                    <div class="bg-gray-50 p-3 rounded-lg max-h-40 overflow-y-auto">
-                                        <p class="text-xs text-gray-600 mb-2">Anteprima trascrizione estratta:</p>
-                                        <div id="transcriptPreviewContent" class="text-sm text-gray-800"></div>
-                                    </div>
-                                </div>
-                                <p class="text-xs text-gray-500 mt-2">Il contenuto del file verrà automaticamente aggiunto alle note del meeting per l'analisi</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Timeline e Requisiti Speciali -->
-                    <div class="grid md:grid-cols-2 gap-6">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Timeline Progetto</label>
-                            <input type="text" id="timeline" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Es. Implementazione entro Q2 2024">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Requisiti Speciali</label>
-                            <input type="text" id="specialRequirements" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Es. Certificazioni, integrazione con sistemi esistenti...">
-                        </div>
-                    </div>
-
-                    <!-- Upload File -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Planimetrie, Foto e Documenti</label>
-                        <div onclick="document.getElementById('fileUpload').click()" class="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg bg-gray-50 hover:bg-gray-100 cursor-pointer transition-colors">
-                            <svg class="w-10 h-10 text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
-                            </svg>
-                            <span class="text-sm text-gray-600">Trascina qui o clicca per caricare</span>
-                            <span class="text-xs text-gray-500 mt-1">DWG, PDF, immagini, documenti</span>
-                        </div>
-                        <input type="file" multiple id="fileUpload" class="hidden" accept=".dwg,.pdf,.jpg,.jpeg,.png,.gif,.doc,.docx,.txt,.zip,.rar">
-                        <div id="uploadedFiles" class="mt-4 space-y-2 hidden">
-                            <p class="font-semibold text-sm">File caricati:</p>
-                            <div id="fileList"></div>
-                        </div>
-                    </div>
-
-                    <!-- Generate Button -->
-                    <div class="text-center">
-                        <button onclick="generateBrief()" id="generateBtn" class="inline-flex items-center px-8 py-3 bg-blue-600 text-white font-medium text-lg rounded-lg hover:bg-blue-700 shadow-lg">
-                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
-                            </svg>
-                            Genera Brief per DSA
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Generated Brief Display -->
-                <div id="generatedBrief" class="hidden space-y-6">
-                    <div class="flex justify-between items-center">
-                        <h3 class="text-2xl font-bold text-gray-800">Brief Generato per il Team DSA</h3>
-                        <div class="flex items-center gap-3">
-                            <button onclick="copyBrief()" class="inline-flex items-center px-3 py-1.5 bg-gray-200 text-gray-700 text-xs font-medium rounded-lg hover:bg-gray-300">
-                                <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                                </svg>
-                                Copia Brief
-                            </button>
-                            <button onclick="resetForm()" class="inline-flex items-center px-4 py-2 bg-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-300">
-                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
-                                </svg>
-                                Nuova Analisi
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div id="briefContent" class="prose prose-lg max-w-none bg-gray-50 p-6 rounded-lg border">
-                        <!-- Generated content will be inserted here -->
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Space Wizard Module -->
-        <div id="spaceWizardSection" class="hidden">
-            <div class="bg-white rounded-xl shadow-lg p-8">
-                <button onclick="showIntro()" class="inline-flex items-center mb-6 px-4 py-2 bg-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-300">
-                    <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-                    </svg>
-                    Torna alla Homepage
-                </button>
-                
-                <h2 class="text-3xl font-bold text-gray-900 mb-2">Wizard Spazi Collaborativi</h2>
-                <p class="text-gray-600 mb-8">Definisci la soluzione tecnologica ottimale per il tuo spazio</p>
-                
-                <div class="text-center py-12">
-                    <svg class="w-16 h-16 text-cyan-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
-                    </svg>
-                    <h3 class="text-xl font-semibold text-gray-800
+</html>
