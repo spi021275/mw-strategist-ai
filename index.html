@@ -338,12 +338,6 @@
                                 <svg class="w-5 h-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
                                 </svg>
-                                Selezione tipologia spazio
-                            </li>
-                            <li class="flex items-center">
-                                <svg class="w-5 h-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                                </svg>
                                 Calcolo dimensioni e capacità
                             </li>
                             <li class="flex items-center">
@@ -470,7 +464,7 @@ Supporto tecnico qualificato con:
 
         // State management
         let uploadedFiles = [];
-        let uploadedFileData = []; // Store actual file data for images
+        let uploadedFileData = [];
         let transcriptContent = '';
         let generatedBriefContent = '';
 
@@ -577,41 +571,6 @@ Supporto tecnico qualificato con:
                 console.error('Errore nel caricamento del file:', error);
                 alert('Errore nel caricamento del file: ' + error.message);
             }
-        }
-
-        // Generate image section for uploaded files
-        function generateImageSection() {
-            const images = uploadedFileData.filter(f => f.type && f.type.startsWith('image/') && f.data);
-            if (images.length === 0) return '';
-
-            let imageHtml = `
-                <div class="mt-8 p-6 bg-blue-50 rounded-lg border border-blue-200">
-                    <h4 class="text-lg font-semibold text-blue-900 mb-4">📸 Planimetrie e Immagini Allegate</h4>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            `;
-
-            images.forEach(img => {
-                imageHtml += `
-                    <div class="bg-white p-4 rounded-lg shadow-sm border">
-                        <h5 class="font-medium text-gray-800 mb-2">${img.name}</h5>
-                        <img src="${img.data}" alt="${img.name}" class="w-full h-auto max-h-64 object-contain rounded border" />
-                        <p class="text-xs text-gray-500 mt-2">Riferimento per progettazione DSA</p>
-                    </div>
-                `;
-            });
-
-            imageHtml += `
-                    </div>
-                    <div class="mt-4 p-3 bg-blue-100 rounded">
-                        <p class="text-sm text-blue-800">
-                            <strong>Nota per DSA:</strong> Utilizzare le immagini sopra come riferimento per:
-                            • Analisi layout esistente • Identificazione vincoli strutturali • Posizionamento ottimale equipment • Valutazione cablaggio e alimentazioni
-                        </p>
-                    </div>
-                </div>
-            `;
-
-            return imageHtml;
         });
 
         // Clean Teams transcript function with enhanced extraction
@@ -854,11 +813,8 @@ Fornisci il brief in formato HTML professionale con sezioni ben strutturate, evi
                 let finalResponse = response;
                 if (uploadedFileData.some(f => f.type && f.type.startsWith('image/'))) {
                     const imageSection = generateImageSection();
-                    // Insert image section after the DOCUMENTAZIONE ALLEGATA section
-                    finalResponse = response.replace(
-                        /(<\/div>\s*<\/div>\s*$|$)/,
-                        imageSection + '$1'
-                    );
+                    // Insert image section after the main content
+                    finalResponse = response + imageSection;
                 }
                 
                 // Show generated brief
@@ -875,6 +831,41 @@ Fornisci il brief in formato HTML professionale con sezioni ben strutturate, evi
                 generateBtn.innerHTML = originalText;
                 generateBtn.disabled = false;
             }
+        }
+
+        // Generate image section for uploaded files
+        function generateImageSection() {
+            const images = uploadedFileData.filter(f => f.type && f.type.startsWith('image/') && f.data);
+            if (images.length === 0) return '';
+
+            let imageHtml = `
+                <div class="mt-8 p-6 bg-blue-50 rounded-lg border border-blue-200">
+                    <h4 class="text-lg font-semibold text-blue-900 mb-4">📸 Planimetrie e Immagini Allegate</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            `;
+
+            images.forEach(img => {
+                imageHtml += `
+                    <div class="bg-white p-4 rounded-lg shadow-sm border">
+                        <h5 class="font-medium text-gray-800 mb-2">${img.name}</h5>
+                        <img src="${img.data}" alt="${img.name}" class="w-full h-auto max-h-64 object-contain rounded border" />
+                        <p class="text-xs text-gray-500 mt-2">Riferimento per progettazione DSA</p>
+                    </div>
+                `;
+            });
+
+            imageHtml += `
+                    </div>
+                    <div class="mt-4 p-3 bg-blue-100 rounded">
+                        <p class="text-sm text-blue-800">
+                            <strong>Nota per DSA:</strong> Utilizzare le immagini sopra come riferimento per:
+                            • Analisi layout esistente • Identificazione vincoli strutturali • Posizionamento ottimale equipment • Valutazione cablaggio e alimentazioni
+                        </p>
+                    </div>
+                </div>
+            `;
+
+            return imageHtml;
         }
 
         // Call Gemini API
@@ -982,10 +973,10 @@ Fornisci il brief in formato HTML professionale con sezioni ben strutturate, evi
         });
     </script>
 </body>
-</html>.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+</html>.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
                                 </svg>
                                 Selezione tipologia spazio
                             </li>
                             <li class="flex items-center">
                                 <svg class="w-5 h-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7
