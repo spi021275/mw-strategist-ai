@@ -4,33 +4,345 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Multimedia & Workspaces Strategist AI</title>
-    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://unpkg.com/framer-motion@10.16.4/dist/framer-motion.js"></script>
-    <script src="https://unpkg.com/lucide-react@0.263.1/dist/umd/lucide-react.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { font-family: 'Inter', sans-serif; margin: 0; padding: 0; }
+        body { 
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; 
+        }
+        .loading { animation: spin 2s linear infinite; }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .fade-in { animation: fadeIn 0.5s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
-<body>
-    <div id="root"></div>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <div class="bg-white shadow-sm border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <div>
+                <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">
+                    Multimedia & Workspaces Strategist AI
+                </h1>
+                <p class="text-gray-600 mt-1 text-sm sm:text-base">
+                    Il tuo partner strategico per spazi di collaborazione perfetti
+                </p>
+            </div>
+            <button id="homeBtn" class="text-sm font-medium text-blue-600 hover:text-blue-800 hidden">
+                Torna alla Homepage
+            </button>
+        </div>
+    </div>
 
-    <script type="text/babel">
-        const { useState, useCallback, useEffect, useRef } = React;
-        const { motion, AnimatePresence } = window.FramerMotion;
-        const { 
-            ChevronRight, ChevronLeft, Upload, Loader2, FileText, Users, Briefcase, 
-            Monitor, Camera, Volume2, Wifi, Building, Settings, CheckCircle, Target,
-            Copy, Check, Download, Search, Calendar, Info, Trash2, PlusCircle,
-            BarChart3, Zap, Eye, RefreshCw, Send, Paperclip, FilePenLine,
-            UsersRound, BrainCircuit, Sparkles, HelpCircle, ClipboardList
-        } = window.LucideReact;
+    <!-- Main Content -->
+    <div id="app" class="max-w-7xl mx-auto px-4 py-12">
+        <!-- Intro Section -->
+        <div id="introSection" class="bg-white rounded-xl shadow-lg p-8">
+            <div class="flex items-start mb-6">
+                <svg class="w-12 h-12 text-blue-600 mt-1 mr-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                </svg>
+                <div class="w-full">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-4">Scegli il tuo modulo</h2>
+                    <p class="text-lg text-gray-700 mb-8">Seleziona lo strumento che ti serve per il tuo progetto</p>
+                    
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <!-- Module 1 -->
+                        <div class="border border-gray-200 rounded-lg p-6 hover:shadow-md hover:border-blue-300 transition-all">
+                            <svg class="w-10 h-10 text-blue-600 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+                            </svg>
+                            <h3 class="text-xl font-semibold text-gray-800 mb-2">Analizza Meeting & Genera Brief DSA</h3>
+                            <p class="text-gray-600 mb-4">Analizza appunti del meeting, estrai requisiti e genera brief strutturato per il team DSA con upload di planimetrie e foto.</p>
+                            <button onclick="showPostMeeting()" class="w-full inline-flex items-center justify-center px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg">
+                                Inizia
+                                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                </svg>
+                            </button>
+                        </div>
 
+                        <!-- Module 2 -->
+                        <div class="border border-gray-200 rounded-lg p-6 hover:shadow-md hover:border-blue-300 transition-all">
+                            <svg class="w-10 h-10 text-cyan-600 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                            </svg>
+                            <h3 class="text-xl font-semibold text-gray-800 mb-2">Wizard Spazi Collaborativi</h3>
+                            <p class="text-gray-600 mb-4">Definisci la soluzione tecnologica ottimale per spazi collaborativi basandoti su misure, tipologia e caratteristiche.</p>
+                            <button onclick="showSpaceWizard()" class="w-full inline-flex items-center justify-center px-6 py-2.5 bg-cyan-600 hover:bg-cyan-700 text-white font-medium rounded-lg">
+                                Inizia
+                                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Post Meeting Module -->
+        <div id="postMeetingSection" class="hidden">
+            <div class="bg-white rounded-xl shadow-lg p-8">
+                <button onclick="showIntro()" class="inline-flex items-center mb-6 px-4 py-2 bg-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-300">
+                    <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                    Torna alla Homepage
+                </button>
+                
+                <h2 class="text-3xl font-bold text-gray-900 mb-2">Analizza Meeting & Genera Brief DSA</h2>
+                <p class="text-gray-600 mb-8">Trasforma i tuoi appunti del meeting in un brief tecnico strutturato per il team DSA</p>
+                
+                <div id="postMeetingForm" class="space-y-8">
+                    <!-- Dati Base Cliente -->
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Nome Cliente *</label>
+                            <input type="text" id="clientName" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Es. JBT Corporation">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Contatto Principale</label>
+                            <input type="text" id="contactPerson" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Es. Mario Rossi - IT Manager">
+                        </div>
+                    </div>
+
+                    <!-- Dettagli Meeting -->
+                    <div class="grid md:grid-cols-3 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Data Meeting</label>
+                            <input type="date" id="meetingDate" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Numero Sale/Spazi *</label>
+                            <input type="text" id="numberOfRooms" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Es. 3 meeting room + 1 auditorium">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Budget Indicativo</label>
+                            <input type="text" id="budget" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Es. 50k-100k€">
+                        </div>
+                    </div>
+
+                    <!-- Tipologie Spazi -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-3">Tipologie di Spazi</label>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3" id="spaceTypes">
+                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                                <input type="checkbox" value="Meeting Room" class="mr-3 text-blue-600">
+                                <span class="text-sm">Meeting Room</span>
+                            </label>
+                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                                <input type="checkbox" value="Huddle Room" class="mr-3 text-blue-600">
+                                <span class="text-sm">Huddle Room</span>
+                            </label>
+                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                                <input type="checkbox" value="Board Room" class="mr-3 text-blue-600">
+                                <span class="text-sm">Board Room</span>
+                            </label>
+                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                                <input type="checkbox" value="Auditorium" class="mr-3 text-blue-600">
+                                <span class="text-sm">Auditorium</span>
+                            </label>
+                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                                <input type="checkbox" value="Training Room" class="mr-3 text-blue-600">
+                                <span class="text-sm">Training Room</span>
+                            </label>
+                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                                <input type="checkbox" value="Ufficio Ibrido" class="mr-3 text-blue-600">
+                                <span class="text-sm">Ufficio Ibrido</span>
+                            </label>
+                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                                <input type="checkbox" value="Media Room" class="mr-3 text-blue-600">
+                                <span class="text-sm">Media Room</span>
+                            </label>
+                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                                <input type="checkbox" value="Control Room" class="mr-3 text-blue-600">
+                                <span class="text-sm">Control Room</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Requisiti Tecnologici -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-3">Requisiti Tecnologici</label>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3" id="techRequirements">
+                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                                <input type="checkbox" value="BYOD" class="mr-3 text-blue-600">
+                                <span class="text-sm">BYOD</span>
+                            </label>
+                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                                <input type="checkbox" value="Microsoft Teams Rooms (MTR)" class="mr-3 text-blue-600">
+                                <span class="text-sm">Microsoft Teams Rooms (MTR)</span>
+                            </label>
+                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                                <input type="checkbox" value="Videoconferenza" class="mr-3 text-blue-600">
+                                <span class="text-sm">Videoconferenza</span>
+                            </label>
+                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                                <input type="checkbox" value="Audio Professionale" class="mr-3 text-blue-600">
+                                <span class="text-sm">Audio Professionale</span>
+                            </label>
+                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                                <input type="checkbox" value="Digital Signage" class="mr-3 text-blue-600">
+                                <span class="text-sm">Digital Signage</span>
+                            </label>
+                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                                <input type="checkbox" value="Controllo Centralizzato" class="mr-3 text-blue-600">
+                                <span class="text-sm">Controllo Centralizzato</span>
+                            </label>
+                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                                <input type="checkbox" value="Streaming/Recording" class="mr-3 text-blue-600">
+                                <span class="text-sm">Streaming/Recording</span>
+                            </label>
+                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                                <input type="checkbox" value="Telepresence" class="mr-3 text-blue-600">
+                                <span class="text-sm">Telepresence</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Note Meeting -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Note e Appunti del Meeting *</label>
+                        <textarea id="meetingNotes" rows="8" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Incolla qui tutti gli appunti del meeting, requisiti emersi, problematiche discusse, aspettative del cliente..."></textarea>
+                    </div>
+
+                    <!-- Timeline e Requisiti Speciali -->
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Timeline Progetto</label>
+                            <input type="text" id="timeline" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Es. Implementazione entro Q2 2024">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Requisiti Speciali</label>
+                            <input type="text" id="specialRequirements" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Es. Certificazioni, integrazione con sistemi esistenti...">
+                        </div>
+                    </div>
+
+                    <!-- Upload File -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Planimetrie, Foto e Documenti</label>
+                        <div class="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg bg-gray-50 hover:bg-gray-100">
+                            <svg class="w-10 h-10 text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                            </svg>
+                            <span class="text-sm text-gray-600">Trascina qui o clicca per caricare</span>
+                            <span class="text-xs text-gray-500 mt-1">DWG, PDF, immagini, documenti</span>
+                            <input type="file" multiple id="fileUpload" class="hidden">
+                        </div>
+                        <div id="uploadedFiles" class="mt-4 space-y-2 hidden">
+                            <p class="font-semibold text-sm">File caricati:</p>
+                            <div id="fileList"></div>
+                        </div>
+                    </div>
+
+                    <!-- Generate Button -->
+                    <div class="text-center">
+                        <button onclick="generateBrief()" id="generateBtn" class="inline-flex items-center px-8 py-3 bg-blue-600 text-white font-medium text-lg rounded-lg hover:bg-blue-700 shadow-lg">
+                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                            </svg>
+                            Genera Brief per DSA
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Generated Brief Display -->
+                <div id="generatedBrief" class="hidden space-y-6">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-2xl font-bold text-gray-800">Brief Generato per il Team DSA</h3>
+                        <div class="flex items-center gap-3">
+                            <button onclick="copyBrief()" class="inline-flex items-center px-3 py-1.5 bg-gray-200 text-gray-700 text-xs font-medium rounded-lg hover:bg-gray-300">
+                                <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                                </svg>
+                                Copia Brief
+                            </button>
+                            <button onclick="resetForm()" class="inline-flex items-center px-4 py-2 bg-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-300">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                                </svg>
+                                Nuova Analisi
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div id="briefContent" class="prose prose-lg max-w-none bg-gray-50 p-6 rounded-lg border">
+                        <!-- Generated content will be inserted here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Space Wizard Module -->
+        <div id="spaceWizardSection" class="hidden">
+            <div class="bg-white rounded-xl shadow-lg p-8">
+                <button onclick="showIntro()" class="inline-flex items-center mb-6 px-4 py-2 bg-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-300">
+                    <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                    Torna alla Homepage
+                </button>
+                
+                <h2 class="text-3xl font-bold text-gray-900 mb-2">Wizard Spazi Collaborativi</h2>
+                <p class="text-gray-600 mb-8">Definisci la soluzione tecnologica ottimale per il tuo spazio</p>
+                
+                <div class="text-center py-12">
+                    <svg class="w-16 h-16 text-cyan-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
+                    </svg>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Wizard in Sviluppo</h3>
+                    <p class="text-gray-600 max-w-2xl mx-auto">
+                        Il wizard per spazi collaborativi è in fase di sviluppo avanzato. 
+                        Sarà disponibile a breve con funzionalità complete per:
+                    </p>
+                    <div class="mt-6 text-left max-w-md mx-auto">
+                        <ul class="space-y-2 text-gray-600">
+                            <li class="flex items-center">
+                                <svg class="w-5 h-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                </svg>
+                                Selezione tipologia spazio
+                            </li>
+                            <li class="flex items-center">
+                                <svg class="w-5 h-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                </svg>
+                                Calcolo dimensioni e capacità
+                            </li>
+                            <li class="flex items-center">
+                                <svg class="w-5 h-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                </svg>
+                                Raccomandazioni tecnologiche BYOD/MTR
+                            </li>
+                            <li class="flex items-center">
+                                <svg class="w-5 h-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                </svg>
+                                Stima costi e configurazioni
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="mt-16 pb-8 text-center text-sm text-gray-500">
+        <p>
+            Strumento personalizzato per la BU Multimedia & Workspaces di
+            <span class="font-semibold text-blue-600">Var Group</span>
+        </p>
+        <p class="mt-2 text-xs text-gray-400 max-w-2xl mx-auto px-4">
+            Sviluppato utilizzando l'expertise della BU e il framework AI del B2B Sales Strategist AI
+        </p>
+    </div>
+
+    <script>
         // API Configuration
         const API_KEY = "AIzaSyDjlVWJIzGCa5CnXbj_nQEj1aG2aHlLwnQ";
-
+        
         // Multimedia & Workspaces Context
         const MW_CONTEXT = `
 # Var Group - Multimedia & Workspaces Business Unit
@@ -119,229 +431,127 @@ Supporto tecnico qualificato con:
 - Presidi on-site dedicati
         `;
 
-        // Hooks
-        function useGeminiGenerator() {
-            const [isGenerating, setIsGenerating] = useState(false);
-            const [error, setError] = useState(null);
+        // State management
+        let uploadedFiles = [];
+        let generatedBriefContent = '';
 
-            const generateContent = useCallback(async (prompt, isJson = false) => {
-                setIsGenerating(true);
-                setError(null);
-                
-                try {
-                    const modelName = "gemini-2.5-pro";
-                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${API_KEY}`;
-
-                    const requestBody = {
-                        contents: [{ role: "user", parts: [{ text: prompt }] }],
-                        generationConfig: isJson ? { responseMimeType: "application/json" } : {},
-                    };
-
-                    const response = await fetch(apiUrl, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(requestBody),
-                    });
-                    
-                    if (!response.ok) {
-                        throw new Error(`API Error (${response.status}): ${response.statusText}`);
-                    }
-
-                    const result = await response.json();
-                    
-                    if (result.candidates && result.candidates[0]?.content?.parts[0]?.text) {
-                        let rawText = result.candidates[0].content.parts[0].text;
-                        rawText = rawText.replace(/^\s*```(json|html|markdown)?\n?/, '').replace(/\n?```\s*$/, '');
-                        setIsGenerating(false);
-                        return rawText;
-                    } else {
-                        throw new Error("Risposta AI non nel formato atteso.");
-                    }
-                } catch (err) {
-                    console.error("Errore durante la generazione:", err);
-                    setError(err.message);
-                    setIsGenerating(false);
-                    throw err;
-                }
-            }, []);
-
-            return { isGenerating, error, generateContent };
+        // Navigation functions
+        function showIntro() {
+            document.getElementById('introSection').classList.remove('hidden');
+            document.getElementById('postMeetingSection').classList.add('hidden');
+            document.getElementById('spaceWizardSection').classList.add('hidden');
+            document.getElementById('homeBtn').classList.add('hidden');
         }
 
-        function usePersistentState(key, defaultValue) {
-            const [state, setState] = useState(() => {
-                try {
-                    const persistentState = localStorage.getItem(key);
-                    return persistentState ? JSON.parse(persistentState) : defaultValue;
-                } catch (error) {
-                    return defaultValue;
-                }
-            });
-
-            useEffect(() => {
-                try {
-                    localStorage.setItem(key, JSON.stringify(state));
-                } catch (error) {
-                    console.warn(`Errore nel salvare lo stato: ${error}`);
-                }
-            }, [key, state]);
-
-            return [state, setState];
+        function showPostMeeting() {
+            document.getElementById('introSection').classList.add('hidden');
+            document.getElementById('postMeetingSection').classList.remove('hidden');
+            document.getElementById('spaceWizardSection').classList.add('hidden');
+            document.getElementById('homeBtn').classList.remove('hidden');
         }
 
-        // Utility Components
-        const CopyButton = ({ text, label = "Copia" }) => {
-            const [copied, setCopied] = useState(false);
+        function showSpaceWizard() {
+            document.getElementById('introSection').classList.add('hidden');
+            document.getElementById('postMeetingSection').classList.add('hidden');
+            document.getElementById('spaceWizardSection').classList.remove('hidden');
+            document.getElementById('homeBtn').classList.remove('hidden');
+        }
 
-            const handleCopy = useCallback(() => {
-                if (!text) return;
-                const textArea = document.createElement("textarea");
-                textArea.value = text.trim();
-                textArea.style.position = "fixed";
-                textArea.style.top = "-9999px";
-                document.body.appendChild(textArea);
-                textArea.select();
-                
-                try {
-                    document.execCommand('copy');
-                    setCopied(true);
-                    setTimeout(() => setCopied(false), 2000);
-                } catch (err) {
-                    alert('Impossibile copiare il testo.');
-                }
-                
-                document.body.removeChild(textArea);
-            }, [text]);
-
-            return (
-                <button onClick={handleCopy} className="inline-flex items-center px-3 py-1.5 bg-gray-200 text-gray-700 text-xs font-medium rounded-lg hover:bg-gray-300 transition-colors">
-                    {copied ? <Check className="w-4 h-4 mr-1.5 text-green-600" /> : <Copy className="w-4 h-4 mr-1.5" />}
-                    {copied ? 'Copiato!' : label}
-                </button>
-            );
-        };
-
-        const GeneratingPlaceholder = ({ text = "L'AI sta lavorando per te..." }) => (
-            <div className="w-full min-h-[15rem] flex flex-col items-center justify-center bg-blue-50 rounded-lg p-8 text-center border border-blue-200">
-                <Loader2 className="w-10 h-10 text-blue-500 animate-spin mb-4" />
-                <p className="text-lg font-medium text-blue-700">{text}</p>
-                <p className="text-sm text-blue-500 mt-1">Questa operazione potrebbe richiedere qualche istante.</p>
-            </div>
-        );
-
-        // Main Components
-        const IntroSection = ({ onStartPostMeeting, onStartSpaceWizard }) => {
-            const modules = [
-                {
-                    icon: FilePenLine,
-                    title: "Analizza Meeting & Genera Brief DSA",
-                    text: "Analizza appunti del meeting, estrai requisiti e genera brief strutturato per il team DSA con upload di planimetrie e foto.",
-                    action: onStartPostMeeting,
-                    buttonText: "Inizia",
-                    color: "bg-blue-600 hover:bg-blue-700 border-blue-300 text-blue-600"
-                },
-                {
-                    icon: Monitor,
-                    title: "Wizard Spazi Collaborativi",
-                    text: "Definisci la soluzione tecnologica ottimale per spazi collaborativi basandoti su misure, tipologia e caratteristiche.",
-                    action: onStartSpaceWizard,
-                    buttonText: "Inizia",
-                    color: "bg-cyan-600 hover:bg-cyan-700 border-cyan-300 text-cyan-600"
-                }
-            ];
-
-            return (
-                <div className="max-w-7xl mx-auto px-4 py-12">
-                    <div className="bg-white rounded-xl shadow-lg p-8">
-                        <div className="flex items-start mb-6">
-                            <Monitor className="w-12 h-12 text-blue-600 mt-1 mr-6 flex-shrink-0" />
-                            <div>
-                                <h2 className="text-3xl font-bold text-gray-900 mb-4">Multimedia & Workspaces Strategist AI</h2>
-                                <p className="text-lg text-gray-700 mb-8">Il tuo partner strategico per progettare spazi di collaborazione perfetti</p>
-                                <div className="grid md:grid-cols-2 gap-6">
-                                    {modules.map((module, i) => (
-                                        <motion.div 
-                                            key={i} 
-                                            initial={{ opacity: 0, y: 20 }} 
-                                            animate={{ opacity: 1, y: 0 }} 
-                                            transition={{ delay: i * 0.1 }}
-                                            className={`border border-gray-200 rounded-lg p-6 flex flex-col hover:shadow-md hover:border-blue-300 transition-all`}
-                                        >
-                                            <module.icon className={`w-10 h-10 ${module.color.split(' ')[3]} mb-3`} />
-                                            <h3 className="text-xl font-semibold text-gray-800 mb-2">{module.title}</h3>
-                                            <p className="text-gray-600 mb-4 flex-grow">{module.text}</p>
-                                            <button 
-                                                onClick={module.action} 
-                                                className={`mt-auto w-full inline-flex items-center justify-center px-6 py-2.5 ${module.color.split(' ')[0]} ${module.color.split(' ')[1]} text-white font-medium rounded-lg`}
-                                            >
-                                                {module.buttonText} <ChevronRight className="w-5 h-5 ml-2" />
-                                            </button>
-                                        </motion.div>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            );
-        };
-
-        const PostMeetingModule = ({ onBack }) => {
-            const { isGenerating, generateContent } = useGeminiGenerator();
-            const [formData, setFormData] = useState({
-                clientName: '',
-                contactPerson: '',
-                meetingDate: '',
-                meetingNotes: '',
-                numberOfRooms: '',
-                spaceTypes: [],
-                techRequirements: [],
-                budget: '',
-                timeline: '',
-                specialRequirements: ''
-            });
-            const [uploadedFiles, setUploadedFiles] = useState([]);
-            const [generatedBrief, setGeneratedBrief] = useState('');
-
-            const spaceTypeOptions = [
-                'Meeting Room', 'Huddle Room', 'Board Room', 'Auditorium', 
-                'Training Room', 'Ufficio Ibrido', 'Media Room', 'Control Room'
-            ];
-
-            const techOptions = [
-                'BYOD', 'Microsoft Teams Rooms (MTR)', 'Videoconferenza', 
-                'Audio Professionale', 'Digital Signage', 'Controllo Centralizzato',
-                'Streaming/Recording', 'Telepresence'
-            ];
-
-            const handleInputChange = (field, value) => {
-                setFormData(prev => ({ ...prev, [field]: value }));
-            };
-
-            const handleArrayToggle = (field, value) => {
-                setFormData(prev => ({
-                    ...prev,
-                    [field]: prev[field].includes(value) 
-                        ? prev[field].filter(item => item !== value)
-                        : [...prev[field], value]
-                }));
-            };
-
-            const handleFileUpload = (event) => {
-                const files = Array.from(event.target.files);
-                const fileData = files.map(file => ({
+        // File upload handling
+        document.getElementById('fileUpload').addEventListener('change', function(event) {
+            const files = Array.from(event.target.files);
+            
+            files.forEach(file => {
+                const fileObj = {
                     name: file.name,
                     size: (file.size / 1024 / 1024).toFixed(2) + ' MB',
                     type: file.type || 'application/octet-stream'
-                }));
-                setUploadedFiles(prev => [...prev, ...fileData]);
-            };
+                };
+                uploadedFiles.push(fileObj);
+            });
 
-            const removeFile = (fileName) => {
-                setUploadedFiles(prev => prev.filter(file => file.name !== fileName));
-            };
+            updateFileDisplay();
+        });
 
-            const generateBrief = async () => {
+        function updateFileDisplay() {
+            const uploadedFilesDiv = document.getElementById('uploadedFiles');
+            const fileList = document.getElementById('fileList');
+            
+            if (uploadedFiles.length > 0) {
+                uploadedFilesDiv.classList.remove('hidden');
+                fileList.innerHTML = uploadedFiles.map((file, index) => `
+                    <div class="flex items-center justify-between bg-gray-100 p-3 rounded-lg">
+                        <div>
+                            <span class="font-medium">${file.name}</span>
+                            <span class="text-sm text-gray-500 ml-2">(${file.size})</span>
+                        </div>
+                        <button onclick="removeFile(${index})" class="text-red-500 hover:text-red-700">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                            </svg>
+                        </button>
+                    </div>
+                `).join('');
+            } else {
+                uploadedFilesDiv.classList.add('hidden');
+            }
+        }
+
+        function removeFile(index) {
+            uploadedFiles.splice(index, 1);
+            updateFileDisplay();
+        }
+
+        // Form validation
+        function canGenerateBrief() {
+            const clientName = document.getElementById('clientName').value.trim();
+            const meetingNotes = document.getElementById('meetingNotes').value.trim();
+            const numberOfRooms = document.getElementById('numberOfRooms').value.trim();
+            
+            return clientName && meetingNotes && numberOfRooms;
+        }
+
+        // Get selected values from checkboxes
+        function getSelectedValues(containerId) {
+            const container = document.getElementById(containerId);
+            const checkboxes = container.querySelectorAll('input[type="checkbox"]:checked');
+            return Array.from(checkboxes).map(cb => cb.value);
+        }
+
+        // Generate brief using Gemini AI
+        async function generateBrief() {
+            if (!canGenerateBrief()) {
+                alert('Per favore compila almeno: Nome Cliente, Numero Sale/Spazi e Note del Meeting');
+                return;
+            }
+
+            const generateBtn = document.getElementById('generateBtn');
+            const originalText = generateBtn.innerHTML;
+            
+            // Show loading state
+            generateBtn.innerHTML = `
+                <svg class="w-5 h-5 mr-3 loading" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                </svg>
+                Generazione in corso...
+            `;
+            generateBtn.disabled = true;
+
+            try {
+                // Collect form data
+                const formData = {
+                    clientName: document.getElementById('clientName').value,
+                    contactPerson: document.getElementById('contactPerson').value,
+                    meetingDate: document.getElementById('meetingDate').value,
+                    numberOfRooms: document.getElementById('numberOfRooms').value,
+                    budget: document.getElementById('budget').value,
+                    spaceTypes: getSelectedValues('spaceTypes'),
+                    techRequirements: getSelectedValues('techRequirements'),
+                    meetingNotes: document.getElementById('meetingNotes').value,
+                    timeline: document.getElementById('timeline').value,
+                    specialRequirements: document.getElementById('specialRequirements').value
+                };
+
                 const prompt = `Agisci come un Senior Technical Consultant di Var Group - Multimedia & Workspaces. 
 
 CONTESTO AZIENDALE:
@@ -393,742 +603,120 @@ TASK: Genera un brief strutturato e professionale per il team DSA (Design & Solu
 
 Fornisci il brief in formato HTML professionale, strutturato e pronto per essere condiviso con il team DSA.`;
 
-                try {
-                    const response = await generateContent(prompt);
-                    setGeneratedBrief(response);
-                } catch (error) {
-                    alert('Errore nella generazione del brief: ' + error.message);
-                }
-            };
-
-            const canGenerate = formData.clientName && formData.meetingNotes && formData.numberOfRooms;
-
-            return (
-                <div className="max-w-6xl mx-auto px-4 py-8">
-                    <button onClick={onBack} className="inline-flex items-center mb-6 px-4 py-2 bg-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-300">
-                        <ChevronLeft className="w-5 h-5 mr-1" />Torna alla Homepage
-                    </button>
-                    
-                    <div className="bg-white rounded-xl shadow-lg p-8">
-                        <h2 className="text-3xl font-bold text-gray-900 mb-2">Analizza Meeting & Genera Brief DSA</h2>
-                        <p className="text-gray-600 mb-8">Trasforma i tuoi appunti del meeting in un brief tecnico strutturato per il team DSA</p>
-                        
-                        {!generatedBrief ? (
-                            <div className="space-y-8">
-                                {/* Dati Base Cliente */}
-                                <div className="grid md:grid-cols-2 gap-6">
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">Nome Cliente *</label>
-                                        <input 
-                                            type="text" 
-                                            value={formData.clientName}
-                                            onChange={(e) => handleInputChange('clientName', e.target.value)}
-                                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                                            placeholder="Es. JBT Corporation"
-                                        />
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">Contatto Principale</label>
-                                        <input 
-                                            type="text" 
-                                            value={formData.contactPerson}
-                                            onChange={(e) => handleInputChange('contactPerson', e.target.value)}
-                                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                                            placeholder="Es. Mario Rossi - IT Manager"
-                                        />
-                                    </div>
-                                </div>
-
-                                {/* Dettagli Meeting */}
-                                <div className="grid md:grid-cols-3 gap-6">
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">Data Meeting</label>
-                                        <input 
-                                            type="date" 
-                                            value={formData.meetingDate}
-                                            onChange={(e) => handleInputChange('meetingDate', e.target.value)}
-                                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                                        />
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">Numero Sale/Spazi *</label>
-                                        <input 
-                                            type="text" 
-                                            value={formData.numberOfRooms}
-                                            onChange={(e) => handleInputChange('numberOfRooms', e.target.value)}
-                                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                                            placeholder="Es. 3 meeting room + 1 auditorium"
-                                        />
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">Budget Indicativo</label>
-                                        <input 
-                                            type="text" 
-                                            value={formData.budget}
-                                            onChange={(e) => handleInputChange('budget', e.target.value)}
-                                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                                            placeholder="Es. 50k-100k€"
-                                        />
-                                    </div>
-                                </div>
-
-                                {/* Tipologie Spazi */}
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-3">Tipologie di Spazi</label>
-                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                                        {spaceTypeOptions.map(option => (
-                                            <label key={option} className="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
-                                                <input 
-                                                    type="checkbox"
-                                                    checked={formData.spaceTypes.includes(option)}
-                                                    onChange={() => handleArrayToggle('spaceTypes', option)}
-                                                    className="mr-3 text-blue-600"
-                                                />
-                                                <span className="text-sm">{option}</span>
-                                            </label>
-                                        ))}
-                                    </div>
-                                </div>
-
-                                {/* Requisiti Tecnologici */}
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-3">Requisiti Tecnologici</label>
-                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                                        {techOptions.map(option => (
-                                            <label key={option} className="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
-                                                <input 
-                                                    type="checkbox"
-                                                    checked={formData.techRequirements.includes(option)}
-                                                    onChange={() => handleArrayToggle('techRequirements', option)}
-                                                    className="mr-3 text-blue-600"
-                                                />
-                                                <span className="text-sm">{option}</span>
-                                            </label>
-                                        ))}
-                                    </div>
-                                </div>
-
-                                {/* Note Meeting */}
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">Note e Appunti del Meeting *</label>
-                                    <textarea 
-                                        value={formData.meetingNotes}
-                                        onChange={(e) => handleInputChange('meetingNotes', e.target.value)}
-                                        rows="8"
-                                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                                        placeholder="Incolla qui tutti gli appunti del meeting, requisiti emersi, problematiche discusse, aspettative del cliente..."
-                                    />
-                                </div>
-
-                                {/* Timeline e Requisiti Speciali */}
-                                <div className="grid md:grid-cols-2 gap-6">
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">Timeline Progetto</label>
-                                        <input 
-                                            type="text" 
-                                            value={formData.timeline}
-                                            onChange={(e) => handleInputChange('timeline', e.target.value)}
-                                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                                            placeholder="Es. Implementazione entro Q2 2024"
-                                        />
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">Requisiti Speciali</label>
-                                        <input 
-                                            type="text" 
-                                            value={formData.specialRequirements}
-                                            onChange={(e) => handleInputChange('specialRequirements', e.target.value)}
-                                            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                                            placeholder="Es. Certificazioni, integrazione con sistemi esistenti..."
-                                        />
-                                    </div>
-                                </div>
-
-                                {/* Upload File */}
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">Planimetrie, Foto e Documenti</label>
-                                    <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
-                                        <Upload className="w-10 h-10 text-gray-400 mb-2" />
-                                        <span className="text-sm text-gray-600">Trascina qui o clicca per caricare</span>
-                                        <span className="text-xs text-gray-500 mt-1">DWG, PDF, immagini, documenti</span>
-                                        <input type="file" multiple className="hidden" onChange={handleFileUpload} />
-                                    </label>
-                                    
-                                    {uploadedFiles.length > 0 && (
-                                        <div className="mt-4 space-y-2">
-                                            <p className="font-semibold text-sm">File caricati:</p>
-                                            {uploadedFiles.map((file, index) => (
-                                                <div key={index} className="flex items-center justify-between bg-gray-100 p-3 rounded-lg">
-                                                    <div>
-                                                        <span className="font-medium">{file.name}</span>
-                                                        <span className="text-sm text-gray-500 ml-2">({file.size})</span>
-                                                    </div>
-                                                    <button 
-                                                        onClick={() => removeFile(file.name)}
-                                                        className="text-red-500 hover:text-red-700"
-                                                    >
-                                                        <Trash2 className="w-4 h-4" />
-                                                    </button>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    )}
-                                </div>
-
-                                {/* Generate Button */}
-                                <div className="text-center">
-                                    <button 
-                                        onClick={generateBrief}
-                                        disabled={!canGenerate || isGenerating}
-                                        className="inline-flex items-center px-8 py-3 bg-blue-600 text-white font-medium text-lg rounded-lg hover:bg-blue-700 disabled:opacity-50 shadow-lg"
-                                    >
-                                        {isGenerating ? (
-                                            <>
-                                                <Loader2 className="w-5 h-5 mr-3 animate-spin" />
-                                                Generazione Brief...
-                                            </>
-                                        ) : (
-                                            <>
-                                                <Send className="w-5 h-5 mr-3" />
-                                                Genera Brief per DSA
-                                            </>
-                                        )}
-                                    </button>
-                                </div>
-                            </div>
-                        ) : (
-                            /* Generated Brief Display */
-                            <div className="space-y-6">
-                                <div className="flex justify-between items-center">
-                                    <h3 className="text-2xl font-bold text-gray-800">Brief Generato per il Team DSA</h3>
-                                    <div className="flex items-center gap-3">
-                                        <CopyButton text={generatedBrief} label="Copia Brief" />
-                                        <button 
-                                            onClick={() => setGeneratedBrief('')}
-                                            className="inline-flex items-center px-4 py-2 bg-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-300"
-                                        >
-                                            <RefreshCw className="w-4 h-4 mr-2" />
-                                            Nuova Analisi
-                                        </button>
-                                    </div>
-                                </div>
-                                
-                                <div 
-                                    className="prose prose-lg max-w-none bg-gray-50 p-6 rounded-lg border"
-                                    dangerouslySetInnerHTML={{ __html: generatedBrief }}
-                                />
-                            </div>
-                        )}
-                    </div>
-                </div>
-            );
-        };
-
-        const SpaceWizardModule = ({ onBack }) => {
-            const { isGenerating, generateContent } = useGeminiGenerator();
-            const [currentStep, setCurrentStep] = useState(0);
-            const [wizardData, setWizardData] = useState({
-                spaceType: '',
-                dimensions: { length: '', width: '', height: '' },
-                participants: '',
-                usageFrequency: '',
-                primaryUse: '',
-                techPreferences: [],
-                budget: '',
-                specialNeeds: '',
-                existingInfrastructure: '',
-                integrationRequirements: ''
-            });
-            const [recommendation, setRecommendation] = useState('');
-
-            const spaceTypes = [
-                { id: 'meeting', name: 'Meeting Room', desc: 'Sala riunioni standard per 4-12 persone', icon: Users },
-                { id: 'huddle', name: 'Huddle Room', desc: 'Spazio collaborativo informale per 2-6 persone', icon: Users },
-                { id: 'board', name: 'Board Room', desc: 'Sala direttiva per presentazioni C-level', icon: Briefcase },
-                { id: 'auditorium', name: 'Auditorium', desc: 'Spazio per grandi eventi e comunicazioni', icon: Users },
-                { id: 'training', name: 'Training Room', desc: 'Aula formativa e didattica', icon: Users },
-                { id: 'media', name: 'Media Room', desc: 'Studio per produzione contenuti', icon: Camera }
-            ];
-
-            const techOptions = [
-                'BYOD (Bring Your Own Device)',
-                'Microsoft Teams Rooms (MTR)',
-                'Videoconferenza HD/4K',
-                'Audio Professionale',
-                'Digital Signage',
-                'Controllo Touch Centralizzato',
-                'Streaming/Recording',
-                'Lavagna Interattiva',
-                'Telepresence',
-                'Automazione Luci/Clima'
-            ];
-
-            const updateWizardData = (field, value) => {
-                setWizardData(prev => ({ ...prev, [field]: value }));
-            };
-
-            const toggleTechOption = (option) => {
-                setWizardData(prev => ({
-                    ...prev,
-                    techPreferences: prev.techPreferences.includes(option)
-                        ? prev.techPreferences.filter(item => item !== option)
-                        : [...prev.techPreferences, option]
-                }));
-            };
-
-            const generateRecommendation = async () => {
-                const selectedSpaceType = spaceTypes.find(s => s.id === wizardData.spaceType);
+                const response = await callGeminiAPI(prompt);
                 
-                const prompt = `Agisci come un Senior Solution Architect di Var Group - Multimedia & Workspaces.
+                // Show generated brief
+                generatedBriefContent = response;
+                document.getElementById('briefContent').innerHTML = response;
+                document.getElementById('postMeetingForm').classList.add('hidden');
+                document.getElementById('generatedBrief').classList.remove('hidden');
+                document.getElementById('generatedBrief').classList.add('fade-in');
 
-CONTESTO AZIENDALE:
-${MW_CONTEXT}
+            } catch (error) {
+                alert('Errore nella generazione del brief: ' + error.message);
+            } finally {
+                // Restore button
+                generateBtn.innerHTML = originalText;
+                generateBtn.disabled = false;
+            }
+        }
 
-DATI DELLO SPAZIO DA PROGETTARE:
-- Tipologia: ${selectedSpaceType?.name} - ${selectedSpaceType?.desc}
-- Dimensioni: ${wizardData.dimensions.length}m x ${wizardData.dimensions.width}m x ${wizardData.dimensions.height}m
-- Numero Partecipanti: ${wizardData.participants}
-- Frequenza Utilizzo: ${wizardData.usageFrequency}
-- Uso Principale: ${wizardData.primaryUse}
-- Preferenze Tecnologiche: ${wizardData.techPreferences.join(', ')}
-- Budget: ${wizardData.budget}
-- Esigenze Speciali: ${wizardData.specialNeeds}
-- Infrastruttura Esistente: ${wizardData.existingInfrastructure}
-- Requisiti Integrazione: ${wizardData.integrationRequirements}
+        // Call Gemini API
+        async function callGeminiAPI(prompt) {
+            const modelName = "gemini-2.5-pro";
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${API_KEY}`;
 
-TASK: Genera una raccomandazione tecnica completa e dettagliata che includa:
-
-1. **SOLUZIONE RACCOMANDATA**
-   - Configurazione tecnologica ottimale
-   - Motivazioni delle scelte tecniche
-
-2. **COMPONENTI AUDIO-VIDEO**
-   - Sistemi di visualizzazione (monitor/proiettori)
-   - Soluzioni audio (microfoni, diffusori)
-   - Telecamere e sistemi di ripresa
-   - Specifiche tecniche e modelli consigliati
-
-3. **PIATTAFORMA DI CONTROLLO**
-   - Sistema di gestione centralizzato
-   - Interfacce utente consigliate
-   - Automazioni possibili
-
-4. **INFRASTRUTTURA NECESSARIA**
-   - Requisiti di rete e connettività
-   - Alimentazione e cablaggio
-   - Supporti e installazioni
-
-5. **INTEGRAZIONE E COMPATIBILITÀ**
-   - Compatibilità con sistemi esistenti
-   - Integrazioni software necessarie
-   - Standard e protocolli utilizzati
-
-6. **STIMA ECONOMICA INDICATIVA**
-   - Breakdown dei costi principali
-   - Opzioni alternative per diversi budget
-   - ROI e benefici attesi
-
-7. **IMPLEMENTAZIONE**
-   - Timeline di installazione
-   - Fasi del progetto
-   - Formazione utenti necessaria
-
-8. **MANUTENZIONE E SUPPORTO**
-   - Piano di manutenzione consigliato
-   - Supporto DOC disponibile
-   - Garanzie e SLA
-
-Struttura la risposta in formato HTML professionale, con sezioni ben definite e specifiche tecniche dettagliate.`;
-
-                try {
-                    const response = await generateContent(prompt);
-                    setRecommendation(response);
-                } catch (error) {
-                    alert('Errore nella generazione della raccomandazione: ' + error.message);
-                }
+            const requestBody = {
+                contents: [{ role: "user", parts: [{ text: prompt }] }],
             };
 
-            const steps = [
-                {
-                    title: "Tipologia Spazio",
-                    component: (
-                        <div className="space-y-6">
-                            <p className="text-gray-600">Seleziona il tipo di spazio che vuoi configurare:</p>
-                            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                                {spaceTypes.map(type => (
-                                    <button
-                                        key={type.id}
-                                        onClick={() => updateWizardData('spaceType', type.id)}
-                                        className={`p-4 border-2 rounded-lg text-left transition-all ${
-                                            wizardData.spaceType === type.id 
-                                                ? 'border-blue-500 bg-blue-50' 
-                                                : 'border-gray-200 hover:border-gray-400'
-                                        }`}
-                                    >
-                                        <type.icon className="w-8 h-8 text-blue-600 mb-2" />
-                                        <h3 className="font-bold text-gray-900">{type.name}</h3>
-                                        <p className="text-sm text-gray-600 mt-1">{type.desc}</p>
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-                    )
-                },
-                {
-                    title: "Dimensioni e Capacità",
-                    component: (
-                        <div className="space-y-6">
-                            <div className="grid md:grid-cols-3 gap-4">
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">Lunghezza (m)</label>
-                                    <input 
-                                        type="number" 
-                                        value={wizardData.dimensions.length}
-                                        onChange={(e) => updateWizardData('dimensions', {...wizardData.dimensions, length: e.target.value})}
-                                        className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
-                                        placeholder="Es. 6"
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">Larghezza (m)</label>
-                                    <input 
-                                        type="number" 
-                                        value={wizardData.dimensions.width}
-                                        onChange={(e) => updateWizardData('dimensions', {...wizardData.dimensions, width: e.target.value})}
-                                        className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
-                                        placeholder="Es. 4"
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">Altezza (m)</label>
-                                    <input 
-                                        type="number" 
-                                        value={wizardData.dimensions.height}
-                                        onChange={(e) => updateWizardData('dimensions', {...wizardData.dimensions, height: e.target.value})}
-                                        className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
-                                        placeholder="Es. 2.8"
-                                    />
-                                </div>
-                            </div>
-                            
-                            <div className="grid md:grid-cols-2 gap-6">
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">Numero Partecipanti</label>
-                                    <input 
-                                        type="text" 
-                                        value={wizardData.participants}
-                                        onChange={(e) => updateWizardData('participants', e.target.value)}
-                                        className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
-                                        placeholder="Es. 8-10 persone"
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">Frequenza di Utilizzo</label>
-                                    <select 
-                                        value={wizardData.usageFrequency}
-                                        onChange={(e) => updateWizardData('usageFrequency', e.target.value)}
-                                        className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
-                                    >
-                                        <option value="">Seleziona...</option>
-                                        <option value="Quotidiana">Quotidiana</option>
-                                        <option value="Settimanale">Settimanale</option>
-                                        <option value="Occasionale">Occasionale</option>
-                                        <option value="Eventi speciali">Eventi speciali</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    )
-                },
-                {
-                    title: "Uso e Preferenze Tecnologiche",
-                    component: (
-                        <div className="space-y-6">
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">Uso Principale dello Spazio</label>
-                                <textarea 
-                                    value={wizardData.primaryUse}
-                                    onChange={(e) => updateWizardData('primaryUse', e.target.value)}
-                                    rows="3"
-                                    className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
-                                    placeholder="Descrivi come verrà principalmente utilizzato lo spazio..."
-                                />
-                            </div>
-                            
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-3">Preferenze Tecnologiche</label>
-                                <div className="grid md:grid-cols-2 gap-3">
-                                    {techOptions.map(option => (
-                                        <label key={option} className="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
-                                            <input 
-                                                type="checkbox"
-                                                checked={wizardData.techPreferences.includes(option)}
-                                                onChange={() => toggleTechOption(option)}
-                                                className="mr-3 text-blue-600"
-                                            />
-                                            <span className="text-sm">{option}</span>
-                                        </label>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-                    )
-                },
-                {
-                    title: "Budget e Requisiti Speciali",
-                    component: (
-                        <div className="space-y-6">
-                            <div className="grid md:grid-cols-2 gap-6">
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">Budget Disponibile</label>
-                                    <select 
-                                        value={wizardData.budget}
-                                        onChange={(e) => updateWizardData('budget', e.target.value)}
-                                        className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
-                                    >
-                                        <option value="">Seleziona range...</option>
-                                        <option value="< 15k€">Meno di 15k€</option>
-                                        <option value="15k-30k€">15k - 30k€</option>
-                                        <option value="30k-50k€">30k - 50k€</option>
-                                        <option value="50k-100k€">50k - 100k€</option>
-                                        <option value="> 100k€">Oltre 100k€</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">Esigenze Speciali</label>
-                                    <input 
-                                        type="text" 
-                                        value={wizardData.specialNeeds}
-                                        onChange={(e) => updateWizardData('specialNeeds', e.target.value)}
-                                        className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
-                                        placeholder="Es. Riduzione eco, accessibilità..."
-                                    />
-                                </div>
-                            </div>
-                            
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">Infrastruttura Esistente</label>
-                                <textarea 
-                                    value={wizardData.existingInfrastructure}
-                                    onChange={(e) => updateWizardData('existingInfrastructure', e.target.value)}
-                                    rows="3"
-                                    className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
-                                    placeholder="Descrivi i sistemi già presenti (rete, audio, video, controlli...)."
-                                />
-                            </div>
-                            
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">Requisiti di Integrazione</label>
-                                <textarea 
-                                    value={wizardData.integrationRequirements}
-                                    onChange={(e) => updateWizardData('integrationRequirements', e.target.value)}
-                                    rows="3"
-                                    className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
-                                    placeholder="Sistemi con cui deve integrarsi la nuova soluzione..."
-                                />
-                            </div>
-                        </div>
-                    )
-                }
-            ];
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(requestBody),
+            });
+            
+            if (!response.ok) {
+                throw new Error(`API Error (${response.status}): ${response.statusText}`);
+            }
 
-            const canProceed = () => {
-                switch(currentStep) {
-                    case 0: return wizardData.spaceType;
-                    case 1: return wizardData.dimensions.length && wizardData.dimensions.width && wizardData.participants;
-                    case 2: return wizardData.primaryUse && wizardData.techPreferences.length > 0;
-                    case 3: return true;
-                    default: return false;
-                }
-            };
+            const result = await response.json();
+            
+            if (result.candidates && result.candidates[0]?.content?.parts[0]?.text) {
+                let rawText = result.candidates[0].content.parts[0].text;
+                return rawText.replace(/^\s*```(html)?\n?/, '').replace(/\n?```\s*$/, '');
+            } else {
+                throw new Error("Risposta AI non nel formato atteso.");
+            }
+        }
 
-            const isLastStep = currentStep === steps.length - 1;
+        // Copy brief to clipboard
+        function copyBrief() {
+            if (!generatedBriefContent) return;
+            
+            const textArea = document.createElement("textarea");
+            textArea.value = generatedBriefContent.trim();
+            textArea.style.position = "fixed";
+            textArea.style.top = "-9999px";
+            document.body.appendChild(textArea);
+            textArea.select();
+            
+            try {
+                document.execCommand('copy');
+                // Change button text temporarily
+                const copyBtn = event.target.closest('button');
+                const originalText = copyBtn.innerHTML;
+                copyBtn.innerHTML = `
+                    <svg class="w-4 h-4 mr-1.5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    Copiato!
+                `;
+                setTimeout(() => {
+                    copyBtn.innerHTML = originalText;
+                }, 2000);
+            } catch (err) {
+                alert('Impossibile copiare il testo.');
+            }
+            
+            document.body.removeChild(textArea);
+        }
 
-            return (
-                <div className="max-w-6xl mx-auto px-4 py-8">
-                    <button onClick={onBack} className="inline-flex items-center mb-6 px-4 py-2 bg-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-300">
-                        <ChevronLeft className="w-5 h-5 mr-1" />Torna alla Homepage
-                    </button>
-                    
-                    <div className="bg-white rounded-xl shadow-lg p-8">
-                        {!recommendation ? (
-                            <>
-                                <div className="mb-8">
-                                    <h2 className="text-3xl font-bold text-gray-900 mb-2">Wizard Spazi Collaborativi</h2>
-                                    <p className="text-gray-600">Guidati passo-passo per definire la soluzione tecnologica perfetta</p>
-                                </div>
+        // Reset form
+        function resetForm() {
+            // Reset all form fields
+            document.getElementById('clientName').value = '';
+            document.getElementById('contactPerson').value = '';
+            document.getElementById('meetingDate').value = '';
+            document.getElementById('numberOfRooms').value = '';
+            document.getElementById('budget').value = '';
+            document.getElementById('meetingNotes').value = '';
+            document.getElementById('timeline').value = '';
+            document.getElementById('specialRequirements').value = '';
+            
+            // Reset checkboxes
+            document.querySelectorAll('#spaceTypes input[type="checkbox"]').forEach(cb => cb.checked = false);
+            document.querySelectorAll('#techRequirements input[type="checkbox"]').forEach(cb => cb.checked = false);
+            
+            // Reset file uploads
+            uploadedFiles = [];
+            updateFileDisplay();
+            
+            // Show form, hide brief
+            document.getElementById('postMeetingForm').classList.remove('hidden');
+            document.getElementById('generatedBrief').classList.add('hidden');
+            
+            generatedBriefContent = '';
+        }
 
-                                {/* Step Indicator */}
-                                <div className="mb-8">
-                                    <div className="flex items-center justify-between">
-                                        {steps.map((step, index) => (
-                                            <React.Fragment key={index}>
-                                                <div className="flex flex-col items-center">
-                                                    <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold ${
-                                                        index <= currentStep ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-600'
-                                                    }`}>
-                                                        {index + 1}
-                                                    </div>
-                                                    <span className="text-xs mt-2 text-center max-w-[80px]">{step.title}</span>
-                                                </div>
-                                                {index < steps.length - 1 && (
-                                                    <div className={`flex-1 h-0.5 mx-2 ${
-                                                        index < currentStep ? 'bg-blue-600' : 'bg-gray-200'
-                                                    }`} />
-                                                )}
-                                            </React.Fragment>
-                                        ))}
-                                    </div>
-                                </div>
-
-                                {/* Current Step Content */}
-                                <div className="mb-8">
-                                    <h3 className="text-2xl font-bold text-gray-800 mb-4">{steps[currentStep].title}</h3>
-                                    {steps[currentStep].component}
-                                </div>
-
-                                {/* Navigation Buttons */}
-                                <div className="flex justify-between">
-                                    <button 
-                                        onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}
-                                        disabled={currentStep === 0}
-                                        className="inline-flex items-center px-6 py-2.5 bg-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-300 disabled:opacity-50"
-                                    >
-                                        <ChevronLeft className="w-5 h-5 mr-1" />Indietro
-                                    </button>
-                                    
-                                    {isLastStep ? (
-                                        <button 
-                                            onClick={generateRecommendation}
-                                            disabled={!canProceed() || isGenerating}
-                                            className="inline-flex items-center px-6 py-2.5 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50"
-                                        >
-                                            {isGenerating ? (
-                                                <>
-                                                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                                                    Generazione...
-                                                </>
-                                            ) : (
-                                                <>
-                                                    <Sparkles className="w-5 h-5 mr-2" />
-                                                    Genera Raccomandazione
-                                                </>
-                                            )}
-                                        </button>
-                                    ) : (
-                                        <button 
-                                            onClick={() => setCurrentStep(Math.min(steps.length - 1, currentStep + 1))}
-                                            disabled={!canProceed()}
-                                            className="inline-flex items-center px-6 py-2.5 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50"
-                                        >
-                                            Avanti<ChevronRight className="w-5 h-5 ml-1" />
-                                        </button>
-                                    )}
-                                </div>
-                            </>
-                        ) : (
-                            /* Generated Recommendation Display */
-                            <div className="space-y-6">
-                                <div className="flex justify-between items-center">
-                                    <h3 className="text-2xl font-bold text-gray-800">Raccomandazione Tecnica Generata</h3>
-                                    <div className="flex items-center gap-3">
-                                        <CopyButton text={recommendation} label="Copia Raccomandazione" />
-                                        <button 
-                                            onClick={() => setRecommendation('')}
-                                            className="inline-flex items-center px-4 py-2 bg-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-300"
-                                        >
-                                            <RefreshCw className="w-4 h-4 mr-2" />
-                                            Nuova Configurazione
-                                        </button>
-                                    </div>
-                                </div>
-                                
-                                <div 
-                                    className="prose prose-lg max-w-none bg-gray-50 p-6 rounded-lg border"
-                                    dangerouslySetInnerHTML={{ __html: recommendation }}
-                                />
-                            </div>
-                        )}
-                    </div>
-                </div>
-            );
-        };
-
-        // Main App Component
-        const App = () => {
-            const [currentView, setCurrentView] = usePersistentState('mw-ai-currentView', 'intro');
-
-            const goToHome = () => setCurrentView('intro');
-
-            const renderCurrentView = () => {
-                switch (currentView) {
-                    case 'intro':
-                        return <IntroSection 
-                            onStartPostMeeting={() => setCurrentView('postMeeting')}
-                            onStartSpaceWizard={() => setCurrentView('spaceWizard')}
-                        />;
-                    case 'postMeeting':
-                        return <PostMeetingModule onBack={goToHome} />;
-                    case 'spaceWizard':
-                        return <SpaceWizardModule onBack={goToHome} />;
-                    default:
-                        return <IntroSection 
-                            onStartPostMeeting={() => setCurrentView('postMeeting')}
-                            onStartSpaceWizard={() => setCurrentView('spaceWizard')}
-                        />;
-                }
-            };
-
-            return (
-                <div className="min-h-screen bg-gray-50 font-sans">
-                    <div className="bg-white shadow-sm border-b">
-                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-                            <div>
-                                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
-                                    Multimedia & Workspaces Strategist AI
-                                </h1>
-                                <p className="text-gray-600 mt-1 text-sm sm:text-base">
-                                    Il tuo partner strategico per spazi di collaborazione perfetti
-                                </p>
-                            </div>
-                            {currentView !== 'intro' && (
-                                <button 
-                                    onClick={goToHome} 
-                                    className="text-sm font-medium text-blue-600 hover:text-blue-800"
-                                >
-                                    Torna alla Homepage
-                                </button>
-                            )}
-                        </div>
-                    </div>
-                    
-                    <AnimatePresence mode="wait">
-                        <motion.div 
-                            key={currentView} 
-                            initial={{ opacity: 0, y: 20 }} 
-                            animate={{ opacity: 1, y: 0 }} 
-                            exit={{ opacity: 0, y: -20 }} 
-                            transition={{ duration: 0.3 }}
-                        >
-                            {renderCurrentView()}
-                        </motion.div>
-                    </AnimatePresence>
-                    
-                    <div className="mt-16 pb-8 text-center text-sm text-gray-500">
-                        <p>
-                            Strumento personalizzato per la BU Multimedia & Workspaces di{' '}
-                            <span className="font-semibold text-blue-600">Var Group</span>
-                        </p>
-                        <p className="mt-2 text-xs text-gray-400 max-w-2xl mx-auto px-4">
-                            Sviluppato utilizzando l'expertise della BU e il framework AI del B2B Sales Strategist AI
-                        </p>
-                    </div>
-                </div>
-            );
-        };
-
-        // Render the App
-        ReactDOM.render(<App />, document.getElementById('root'));
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set default view
+            showIntro();
+            
+            // Add click handler for home button
+            document.getElementById('homeBtn').addEventListener('click', showIntro);
+        });
     </script>
 </body>
 </html>
