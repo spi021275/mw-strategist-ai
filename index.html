@@ -1,340 +1,4 @@
-<!DOCTYPE html>
-<html lang="it">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Multimedia & Workspaces Strategist AI</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.2/mammoth.browser.min.js"></script>
-    <style>
-        body { 
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; 
-        }
-        .loading { animation: spin 2s linear infinite; }
-        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        .fade-in { animation: fadeIn 0.5s ease-in; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    </style>
-</head>
-<body class="bg-gray-50">
-    <!-- Header -->
-    <div class="bg-white shadow-sm border-b">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-            <div>
-                <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">
-                    Multimedia & Workspaces Strategist AI
-                </h1>
-                <p class="text-gray-600 mt-1 text-sm sm:text-base">
-                    Il tuo partner strategico per spazi di collaborazione perfetti
-                </p>
-            </div>
-            <button id="homeBtn" class="text-sm font-medium text-blue-600 hover:text-blue-800 hidden">
-                Torna alla Homepage
-            </button>
-        </div>
-    </div>
-
-    <!-- Main Content -->
-    <div id="app" class="max-w-7xl mx-auto px-4 py-12">
-        <!-- Intro Section -->
-        <div id="introSection" class="bg-white rounded-xl shadow-lg p-8">
-            <div class="flex items-start mb-6">
-                <svg class="w-12 h-12 text-blue-600 mt-1 mr-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                </svg>
-                <div class="w-full">
-                    <h2 class="text-3xl font-bold text-gray-900 mb-4">Scegli il tuo modulo</h2>
-                    <p class="text-lg text-gray-700 mb-8">Seleziona lo strumento che ti serve per il tuo progetto</p>
-                    
-                    <div class="grid md:grid-cols-2 gap-6">
-                        <!-- Module 1 -->
-                        <div class="border border-gray-200 rounded-lg p-6 hover:shadow-md hover:border-blue-300 transition-all">
-                            <svg class="w-10 h-10 text-blue-600 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
-                            </svg>
-                            <h3 class="text-xl font-semibold text-gray-800 mb-2">Analizza Meeting & Genera Brief DSA</h3>
-                            <p class="text-gray-600 mb-4">Analizza appunti del meeting, estrai requisiti e genera brief strutturato per il team DSA con upload di planimetrie e foto.</p>
-                            <button onclick="showPostMeeting()" class="w-full inline-flex items-center justify-center px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg">
-                                Inizia
-                                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                                </svg>
-                            </button>
-                        </div>
-
-                        <!-- Module 2 -->
-                        <div class="border border-gray-200 rounded-lg p-6 hover:shadow-md hover:border-blue-300 transition-all">
-                            <svg class="w-10 h-10 text-cyan-600 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                            </svg>
-                            <h3 class="text-xl font-semibold text-gray-800 mb-2">Wizard Spazi Collaborativi</h3>
-                            <p class="text-gray-600 mb-4">Definisci la soluzione tecnologica ottimale per spazi collaborativi basandoti su misure, tipologia e caratteristiche.</p>
-                            <button onclick="showSpaceWizard()" class="w-full inline-flex items-center justify-center px-6 py-2.5 bg-cyan-600 hover:bg-cyan-700 text-white font-medium rounded-lg">
-                                Inizia
-                                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Post Meeting Module -->
-        <div id="postMeetingSection" class="hidden">
-            <div class="bg-white rounded-xl shadow-lg p-8">
-                <button onclick="showIntro()" class="inline-flex items-center mb-6 px-4 py-2 bg-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-300">
-                    <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-                    </svg>
-                    Torna alla Homepage
-                </button>
-                
-                <h2 class="text-3xl font-bold text-gray-900 mb-2">Analizza Meeting & Genera Brief DSA</h2>
-                <p class="text-gray-600 mb-8">Trasforma i tuoi appunti del meeting in un brief tecnico strutturato per il team DSA</p>
-                
-                <div id="postMeetingForm" class="space-y-8">
-                    <!-- Dati Base Cliente -->
-                    <div class="grid md:grid-cols-2 gap-6">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Nome Cliente *</label>
-                            <input type="text" id="clientName" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Es. JBT Corporation">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Contatto Principale</label>
-                            <input type="text" id="contactPerson" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Es. Mario Rossi - IT Manager">
-                        </div>
-                    </div>
-
-                    <!-- Dettagli Meeting -->
-                    <div class="grid md:grid-cols-3 gap-6">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Data Meeting</label>
-                            <input type="date" id="meetingDate" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Numero Sale/Spazi *</label>
-                            <input type="text" id="numberOfRooms" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Es. 3 meeting room + 1 auditorium">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Budget Indicativo</label>
-                            <input type="text" id="budget" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Es. 50k-100k€">
-                        </div>
-                    </div>
-
-                    <!-- Tipologie Spazi -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-3">Tipologie di Spazi</label>
-                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3" id="spaceTypes">
-                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
-                                <input type="checkbox" value="Meeting Room" class="mr-3 text-blue-600">
-                                <span class="text-sm">Meeting Room</span>
-                            </label>
-                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
-                                <input type="checkbox" value="Huddle Room" class="mr-3 text-blue-600">
-                                <span class="text-sm">Huddle Room</span>
-                            </label>
-                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
-                                <input type="checkbox" value="Board Room" class="mr-3 text-blue-600">
-                                <span class="text-sm">Board Room</span>
-                            </label>
-                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
-                                <input type="checkbox" value="Auditorium" class="mr-3 text-blue-600">
-                                <span class="text-sm">Auditorium</span>
-                            </label>
-                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
-                                <input type="checkbox" value="Training Room" class="mr-3 text-blue-600">
-                                <span class="text-sm">Training Room</span>
-                            </label>
-                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
-                                <input type="checkbox" value="Ufficio Ibrido" class="mr-3 text-blue-600">
-                                <span class="text-sm">Ufficio Ibrido</span>
-                            </label>
-                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
-                                <input type="checkbox" value="Media Room" class="mr-3 text-blue-600">
-                                <span class="text-sm">Media Room</span>
-                            </label>
-                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
-                                <input type="checkbox" value="Control Room" class="mr-3 text-blue-600">
-                                <span class="text-sm">Control Room</span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <!-- Requisiti Tecnologici -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-3">Requisiti Tecnologici</label>
-                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3" id="techRequirements">
-                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
-                                <input type="checkbox" value="BYOD" class="mr-3 text-blue-600">
-                                <span class="text-sm">BYOD</span>
-                            </label>
-                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
-                                <input type="checkbox" value="Microsoft Teams Rooms (MTR)" class="mr-3 text-blue-600">
-                                <span class="text-sm">Microsoft Teams Rooms (MTR)</span>
-                            </label>
-                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
-                                <input type="checkbox" value="Videoconferenza" class="mr-3 text-blue-600">
-                                <span class="text-sm">Videoconferenza</span>
-                            </label>
-                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
-                                <input type="checkbox" value="Audio Professionale" class="mr-3 text-blue-600">
-                                <span class="text-sm">Audio Professionale</span>
-                            </label>
-                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
-                                <input type="checkbox" value="Digital Signage" class="mr-3 text-blue-600">
-                                <span class="text-sm">Digital Signage</span>
-                            </label>
-                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
-                                <input type="checkbox" value="Controllo Centralizzato" class="mr-3 text-blue-600">
-                                <span class="text-sm">Controllo Centralizzato</span>
-                            </label>
-                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
-                                <input type="checkbox" value="Streaming/Recording" class="mr-3 text-blue-600">
-                                <span class="text-sm">Streaming/Recording</span>
-                            </label>
-                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
-                                <input type="checkbox" value="Telepresence" class="mr-3 text-blue-600">
-                                <span class="text-sm">Telepresence</span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <!-- Note Meeting con Upload Trascrizione -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Note e Appunti del Meeting *</label>
-                        <div class="space-y-4">
-                            <textarea id="meetingNotes" rows="8" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Incolla qui tutti gli appunti del meeting, requisiti emersi, problematiche discusse, aspettative del cliente..."></textarea>
-                            
-                            <!-- Upload Trascrizione Teams -->
-                            <div class="border-t pt-4">
-                                <label class="block text-sm font-medium text-gray-700 mb-2">Oppure carica trascrizione Teams/call</label>
-                                <div onclick="document.getElementById('transcriptUpload').click()" class="flex items-center justify-center w-full h-20 border-2 border-blue-300 border-dashed rounded-lg bg-blue-50 hover:bg-blue-100 cursor-pointer transition-colors">
-                                    <svg class="w-6 h-6 text-blue-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
-                                    </svg>
-                                    <span class="text-sm text-blue-700">Carica trascrizione Teams (.txt, .docx, .pdf)</span>
-                                </div>
-                                <input type="file" id="transcriptUpload" class="hidden" accept=".txt,.docx,.pdf,.doc">
-                                <div id="transcriptFile" class="mt-2 hidden">
-                                    <div class="flex items-center justify-between bg-blue-100 p-3 rounded-lg">
-                                        <div class="flex items-center">
-                                            <svg class="w-5 h-5 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                                            </svg>
-                                            <span id="transcriptFileName" class="font-medium text-blue-800"></span>
-                                        </div>
-                                        <button onclick="removeTranscript()" class="text-red-500 hover:text-red-700">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                                            </svg>
-                                        </button>
-                                    </div>
-                                </div>
-                                <div id="transcriptPreview" class="mt-2 hidden">
-                                    <div class="bg-gray-50 p-3 rounded-lg max-h-40 overflow-y-auto">
-                                        <p class="text-xs text-gray-600 mb-2">Anteprima trascrizione estratta:</p>
-                                        <div id="transcriptPreviewContent" class="text-sm text-gray-800"></div>
-                                    </div>
-                                </div>
-                                <p class="text-xs text-gray-500 mt-2">Il contenuto del file verrà automaticamente aggiunto alle note del meeting per l'analisi AI</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Timeline e Requisiti Speciali -->
-                    <div class="grid md:grid-cols-2 gap-6">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Timeline Progetto</label>
-                            <input type="text" id="timeline" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Es. Implementazione entro Q2 2024">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Requisiti Speciali</label>
-                            <input type="text" id="specialRequirements" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Es. Certificazioni, integrazione con sistemi esistenti...">
-                        </div>
-                    </div>
-
-                    <!-- Upload File -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Planimetrie, Foto e Documenti</label>
-                        <div onclick="document.getElementById('fileUpload').click()" class="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg bg-gray-50 hover:bg-gray-100 cursor-pointer transition-colors">
-                            <svg class="w-10 h-10 text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
-                            </svg>
-                            <span class="text-sm text-gray-600">Trascina qui o clicca per caricare</span>
-                            <span class="text-xs text-gray-500 mt-1">DWG, PDF, immagini, documenti</span>
-                        </div>
-                        <input type="file" multiple id="fileUpload" class="hidden" accept=".dwg,.pdf,.jpg,.jpeg,.png,.gif,.doc,.docx,.txt,.zip,.rar">
-                        <div id="uploadedFiles" class="mt-4 space-y-2 hidden">
-                            <p class="font-semibold text-sm">File caricati:</p>
-                            <div id="fileList"></div>
-                        </div>
-                    </div>
-
-                    <!-- Generate Button -->
-                    <div class="text-center">
-                        <button onclick="generateBrief()" id="generateBtn" class="inline-flex items-center px-8 py-3 bg-blue-600 text-white font-medium text-lg rounded-lg hover:bg-blue-700 shadow-lg">
-                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
-                            </svg>
-                            Genera Brief per DSA
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Generated Brief Display -->
-                <div id="generatedBrief" class="hidden space-y-6">
-                    <div class="flex justify-between items-center">
-                        <h3 class="text-2xl font-bold text-gray-800">Brief Generato per il Team DSA</h3>
-                        <div class="flex items-center gap-3">
-                            <button onclick="copyBrief()" class="inline-flex items-center px-3 py-1.5 bg-gray-200 text-gray-700 text-xs font-medium rounded-lg hover:bg-gray-300">
-                                <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                                </svg>
-                                Copia Brief
-                            </button>
-                            <button onclick="resetForm()" class="inline-flex items-center px-4 py-2 bg-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-300">
-                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
-                                </svg>
-                                Nuova Analisi
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div id="briefContent" class="prose prose-lg max-w-none bg-gray-50 p-6 rounded-lg border">
-                        <!-- Generated content will be inserted here -->
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Space Wizard Module -->
-        <div id="spaceWizardSection" class="hidden">
-            <div class="bg-white rounded-xl shadow-lg p-8">
-                <button onclick="showIntro()" class="inline-flex items-center mb-6 px-4 py-2 bg-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-300">
-                    <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-                    </svg>
-                    Torna alla Homepage
-                </button>
-                
-                <h2 class="text-3xl font-bold text-gray-900 mb-2">Wizard Spazi Collaborativi</h2>
-                <p class="text-gray-600 mb-8">Definisci la soluzione tecnologica ottimale per il tuo spazio</p>
-                
-                <div class="text-center py-12">
-                    <svg class="w-16 h-16 text-cyan-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
-                    </svg>
-                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Wizard in Sviluppo</h3>
-                    <p class="text-gray-600 max-w-2xl mx-auto">
-                        Il wizard per spazi collaborativi è in fase di sviluppo avanzato. 
-                        Sarà disponibile a breve con funzionalità complete per:
-                    </p>
-                    <div class="mt-6 text-left max-w-md mx-auto">
-                        <ul class="space-y-2 text-gray-600">
-                            <li class="flex items-center">
+<li class="flex items-center">
                                 <svg class="w-5 h-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
                                 </svg>
@@ -941,10 +605,6 @@ Fornisci il brief in formato HTML professionale con sezioni ben strutturate, evi
             document.getElementById('timeline').value = '';
             document.getElementById('specialRequirements').value = '';
             
-            // Reset checkboxes
-            document.querySelectorAll('#spaceTypes input[type="checkbox"]').forEach(cb => cb.checked = false);
-            document.querySelectorAll('#techRequirements input[type="checkbox"]').forEach(cb => cb.checked = false);
-            
             // Reset file uploads
             uploadedFiles = [];
             uploadedFileData = [];
@@ -973,10 +633,349 @@ Fornisci il brief in formato HTML professionale con sezioni ben strutturate, evi
         });
     </script>
 </body>
-</html>.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+</html>
+            <!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multimedia & Workspaces Strategist AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.2/mammoth.browser.min.js"></script>
+    <style>
+        body { 
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; 
+        }
+        .loading { animation: spin 2s linear infinite; }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .fade-in { animation: fadeIn 0.5s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <div class="bg-white shadow-sm border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <div>
+                <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">
+                    Multimedia & Workspaces Strategist AI
+                </h1>
+                <p class="text-gray-600 mt-1 text-sm sm:text-base">
+                    Il tuo partner strategico per spazi di collaborazione perfetti
+                </p>
+            </div>
+            <button id="homeBtn" class="text-sm font-medium text-blue-600 hover:text-blue-800 hidden">
+                Torna alla Homepage
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div id="app" class="max-w-7xl mx-auto px-4 py-12">
+        <!-- Intro Section -->
+        <div id="introSection" class="bg-white rounded-xl shadow-lg p-8">
+            <div class="flex items-start mb-6">
+                <svg class="w-12 h-12 text-blue-600 mt-1 mr-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                </svg>
+                <div class="w-full">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-4">Scegli il tuo modulo</h2>
+                    <p class="text-lg text-gray-700 mb-8">Seleziona lo strumento che ti serve per il tuo progetto</p>
+                    
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <!-- Module 1 -->
+                        <div class="border border-gray-200 rounded-lg p-6 hover:shadow-md hover:border-blue-300 transition-all">
+                            <svg class="w-10 h-10 text-blue-600 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+                            </svg>
+                            <h3 class="text-xl font-semibold text-gray-800 mb-2">Analizza Meeting & Genera Brief DSA</h3>
+                            <p class="text-gray-600 mb-4">Analizza appunti del meeting, estrai requisiti e genera brief strutturato per il team DSA con upload di planimetrie e foto.</p>
+                            <button onclick="showPostMeeting()" class="w-full inline-flex items-center justify-center px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg">
+                                Inizia
+                                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <!-- Module 2 -->
+                        <div class="border border-gray-200 rounded-lg p-6 hover:shadow-md hover:border-blue-300 transition-all">
+                            <svg class="w-10 h-10 text-cyan-600 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                            </svg>
+                            <h3 class="text-xl font-semibold text-gray-800 mb-2">Wizard Spazi Collaborativi</h3>
+                            <p class="text-gray-600 mb-4">Definisci la soluzione tecnologica ottimale per spazi collaborativi basandoti su misure, tipologia e caratteristiche.</p>
+                            <button onclick="showSpaceWizard()" class="w-full inline-flex items-center justify-center px-6 py-2.5 bg-cyan-600 hover:bg-cyan-700 text-white font-medium rounded-lg">
+                                Inizia
+                                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Post Meeting Module -->
+        <div id="postMeetingSection" class="hidden">
+            <div class="bg-white rounded-xl shadow-lg p-8">
+                <button onclick="showIntro()" class="inline-flex items-center mb-6 px-4 py-2 bg-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-300">
+                    <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                    Torna alla Homepage
+                </button>
+                
+                <h2 class="text-3xl font-bold text-gray-900 mb-2">Analizza Meeting & Genera Brief DSA</h2>
+                <p class="text-gray-600 mb-8">Trasforma i tuoi appunti del meeting in un brief tecnico strutturato per il team DSA</p>
+                
+                <div id="postMeetingForm" class="space-y-8">
+                    <!-- Dati Base Cliente -->
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Nome Cliente *</label>
+                            <input type="text" id="clientName" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Es. JBT Corporation">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Contatto Principale</label>
+                            <input type="text" id="contactPerson" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Es. Mario Rossi - IT Manager">
+                        </div>
+                    </div>
+
+                    <!-- Dettagli Meeting -->
+                    <div class="grid md:grid-cols-3 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Data Meeting</label>
+                            <input type="date" id="meetingDate" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Numero Sale/Spazi *</label>
+                            <input type="text" id="numberOfRooms" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Es. 3 meeting room + 1 auditorium">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Budget Indicativo</label>
+                            <input type="text" id="budget" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Es. 50k-100k€">
+                        </div>
+                    </div>
+
+                    <!-- Tipologie Spazi -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-3">Tipologie di Spazi</label>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3" id="spaceTypes">
+                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                                <input type="checkbox" value="Meeting Room" class="mr-3 text-blue-600">
+                                <span class="text-sm">Meeting Room</span>
+                            </label>
+                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                                <input type="checkbox" value="Huddle Room" class="mr-3 text-blue-600">
+                                <span class="text-sm">Huddle Room</span>
+                            </label>
+                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                                <input type="checkbox" value="Board Room" class="mr-3 text-blue-600">
+                                <span class="text-sm">Board Room</span>
+                            </label>
+                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                                <input type="checkbox" value="Auditorium" class="mr-3 text-blue-600">
+                                <span class="text-sm">Auditorium</span>
+                            </label>
+                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                                <input type="checkbox" value="Training Room" class="mr-3 text-blue-600">
+                                <span class="text-sm">Training Room</span>
+                            </label>
+                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                                <input type="checkbox" value="Ufficio Ibrido" class="mr-3 text-blue-600">
+                                <span class="text-sm">Ufficio Ibrido</span>
+                            </label>
+                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                                <input type="checkbox" value="Media Room" class="mr-3 text-blue-600">
+                                <span class="text-sm">Media Room</span>
+                            </label>
+                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                                <input type="checkbox" value="Control Room" class="mr-3 text-blue-600">
+                                <span class="text-sm">Control Room</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Requisiti Tecnologici -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-3">Requisiti Tecnologici</label>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3" id="techRequirements">
+                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                                <input type="checkbox" value="BYOD" class="mr-3 text-blue-600">
+                                <span class="text-sm">BYOD</span>
+                            </label>
+                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                                <input type="checkbox" value="Microsoft Teams Rooms (MTR)" class="mr-3 text-blue-600">
+                                <span class="text-sm">Microsoft Teams Rooms (MTR)</span>
+                            </label>
+                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                                <input type="checkbox" value="Videoconferenza" class="mr-3 text-blue-600">
+                                <span class="text-sm">Videoconferenza</span>
+                            </label>
+                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                                <input type="checkbox" value="Audio Professionale" class="mr-3 text-blue-600">
+                                <span class="text-sm">Audio Professionale</span>
+                            </label>
+                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                                <input type="checkbox" value="Digital Signage" class="mr-3 text-blue-600">
+                                <span class="text-sm">Digital Signage</span>
+                            </label>
+                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                                <input type="checkbox" value="Controllo Centralizzato" class="mr-3 text-blue-600">
+                                <span class="text-sm">Controllo Centralizzato</span>
+                            </label>
+                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                                <input type="checkbox" value="Streaming/Recording" class="mr-3 text-blue-600">
+                                <span class="text-sm">Streaming/Recording</span>
+                            </label>
+                            <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                                <input type="checkbox" value="Telepresence" class="mr-3 text-blue-600">
+                                <span class="text-sm">Telepresence</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Note Meeting con Upload Trascrizione -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Note e Appunti del Meeting *</label>
+                        <div class="space-y-4">
+                            <textarea id="meetingNotes" rows="8" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Incolla qui tutti gli appunti del meeting, requisiti emersi, problematiche discusse, aspettative del cliente..."></textarea>
+                            
+                            <!-- Upload Trascrizione Teams -->
+                            <div class="border-t pt-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Oppure carica trascrizione Teams/call</label>
+                                <div onclick="document.getElementById('transcriptUpload').click()" class="flex items-center justify-center w-full h-20 border-2 border-blue-300 border-dashed rounded-lg bg-blue-50 hover:bg-blue-100 cursor-pointer transition-colors">
+                                    <svg class="w-6 h-6 text-blue-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
+                                    </svg>
+                                    <span class="text-sm text-blue-700">Carica trascrizione Teams (.txt, .docx, .pdf)</span>
+                                </div>
+                                <input type="file" id="transcriptUpload" class="hidden" accept=".txt,.docx,.pdf,.doc">
+                                <div id="transcriptFile" class="mt-2 hidden">
+                                    <div class="flex items-center justify-between bg-blue-100 p-3 rounded-lg">
+                                        <div class="flex items-center">
+                                            <svg class="w-5 h-5 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                            </svg>
+                                            <span id="transcriptFileName" class="font-medium text-blue-800"></span>
+                                        </div>
+                                        <button onclick="removeTranscript()" class="text-red-500 hover:text-red-700">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div id="transcriptPreview" class="mt-2 hidden">
+                                    <div class="bg-gray-50 p-3 rounded-lg max-h-40 overflow-y-auto">
+                                        <p class="text-xs text-gray-600 mb-2">Anteprima trascrizione estratta:</p>
+                                        <div id="transcriptPreviewContent" class="text-sm text-gray-800"></div>
+                                    </div>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-2">Il contenuto del file verrà automaticamente aggiunto alle note del meeting per l'analisi AI</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Timeline e Requisiti Speciali -->
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Timeline Progetto</label>
+                            <input type="text" id="timeline" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Es. Implementazione entro Q2 2024">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Requisiti Speciali</label>
+                            <input type="text" id="specialRequirements" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Es. Certificazioni, integrazione con sistemi esistenti...">
+                        </div>
+                    </div>
+
+                    <!-- Upload File -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Planimetrie, Foto e Documenti</label>
+                        <div onclick="document.getElementById('fileUpload').click()" class="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg bg-gray-50 hover:bg-gray-100 cursor-pointer transition-colors">
+                            <svg class="w-10 h-10 text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                            </svg>
+                            <span class="text-sm text-gray-600">Trascina qui o clicca per caricare</span>
+                            <span class="text-xs text-gray-500 mt-1">DWG, PDF, immagini, documenti</span>
+                        </div>
+                        <input type="file" multiple id="fileUpload" class="hidden" accept=".dwg,.pdf,.jpg,.jpeg,.png,.gif,.doc,.docx,.txt,.zip,.rar">
+                        <div id="uploadedFiles" class="mt-4 space-y-2 hidden">
+                            <p class="font-semibold text-sm">File caricati:</p>
+                            <div id="fileList"></div>
+                        </div>
+                    </div>
+
+                    <!-- Generate Button -->
+                    <div class="text-center">
+                        <button onclick="generateBrief()" id="generateBtn" class="inline-flex items-center px-8 py-3 bg-blue-600 text-white font-medium text-lg rounded-lg hover:bg-blue-700 shadow-lg">
+                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                            </svg>
+                            Genera Brief per DSA
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Generated Brief Display -->
+                <div id="generatedBrief" class="hidden space-y-6">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-2xl font-bold text-gray-800">Brief Generato per il Team DSA</h3>
+                        <div class="flex items-center gap-3">
+                            <button onclick="copyBrief()" class="inline-flex items-center px-3 py-1.5 bg-gray-200 text-gray-700 text-xs font-medium rounded-lg hover:bg-gray-300">
+                                <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                                </svg>
+                                Copia Brief
+                            </button>
+                            <button onclick="resetForm()" class="inline-flex items-center px-4 py-2 bg-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-300">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                                </svg>
+                                Nuova Analisi
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div id="briefContent" class="prose prose-lg max-w-none bg-gray-50 p-6 rounded-lg border">
+                        <!-- Generated content will be inserted here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Space Wizard Module -->
+        <div id="spaceWizardSection" class="hidden">
+            <div class="bg-white rounded-xl shadow-lg p-8">
+                <button onclick="showIntro()" class="inline-flex items-center mb-6 px-4 py-2 bg-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-300">
+                    <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                    Torna alla Homepage
+                </button>
+                
+                <h2 class="text-3xl font-bold text-gray-900 mb-2">Wizard Spazi Collaborativi</h2>
+                <p class="text-gray-600 mb-8">Definisci la soluzione tecnologica ottimale per il tuo spazio</p>
+                
+                <div class="text-center py-12">
+                    <svg class="w-16 h-16 text-cyan-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
+                    </svg>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Wizard in Sviluppo</h3>
+                    <p class="text-gray-600 max-w-2xl mx-auto">
+                        Il wizard per spazi collaborativi è in fase di sviluppo avanzato. 
+                        Sarà disponibile a breve con funzionalità complete per:
+                    </p>
+                    <div class="mt-6 text-left max-w-md mx-auto">
+                        <ul class="space-y-2 text-gray-600">
+                            <li class="flex items-center">
+                                <svg class="w-5 h-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
                                 </svg>
                                 Selezione tipologia spazio
                             </li>
                             <li class="flex items-center">
                                 <svg class="w-5 h-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7
