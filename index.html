@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Multimedia & Workspaces Strategist AI</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.2/mammoth.browser.min.js"></script>
     <style>
         body { 
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; 
@@ -229,6 +230,12 @@
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                                             </svg>
                                         </button>
+                                    </div>
+                                </div>
+                                <div id="transcriptPreview" class="mt-2 hidden">
+                                    <div class="bg-gray-50 p-3 rounded-lg max-h-40 overflow-y-auto">
+                                        <p class="text-xs text-gray-600 mb-2">Anteprima trascrizione estratta:</p>
+                                        <div id="transcriptPreviewContent" class="text-sm text-gray-800"></div>
                                     </div>
                                 </div>
                                 <p class="text-xs text-gray-500 mt-2">Il contenuto del file verrà automaticamente aggiunto alle note del meeting per l'analisi AI</p>
@@ -504,19 +511,41 @@ Supporto tecnico qualificato con:
             updateFileDisplay();
         });
 
-        // Transcript upload handling
+        // Enhanced transcript upload handling with better DOCX support
         document.getElementById('transcriptUpload').addEventListener('change', async function(event) {
             const file = event.target.files[0];
             if (!file) return;
 
             try {
-                // Read file content
-                const content = await readFileContent(file);
+                let content = '';
+                
+                // Handle different file types
+                if (file.name.toLowerCase().endsWith('.docx')) {
+                    // Use mammoth.js for DOCX files
+                    const arrayBuffer = await file.arrayBuffer();
+                    const result = await mammoth.extractRawText({ arrayBuffer: arrayBuffer });
+                    content = result.value;
+                } else if (file.name.toLowerCase().endsWith('.pdf')) {
+                    // For PDF files, read as text (basic extraction)
+                    content = await readFileAsText(file);
+                    content = "File PDF caricato: " + file.name + "\n\nNOTA: Per i file PDF è consigliabile copiare manualmente il testo nelle note del meeting per una migliore analisi.";
+                } else {
+                    // For TXT and other text files
+                    content = await readFileAsText(file);
+                }
+
+                // Clean up transcript content for Teams format
+                content = cleanTeamsTranscript(content);
                 transcriptContent = content;
                 
                 // Show file info
                 document.getElementById('transcriptFileName').textContent = file.name;
                 document.getElementById('transcriptFile').classList.remove('hidden');
+                
+                // Show preview
+                const preview = content.substring(0, 500) + (content.length > 500 ? '...' : '');
+                document.getElementById('transcriptPreviewContent').textContent = preview;
+                document.getElementById('transcriptPreview').classList.remove('hidden');
                 
                 // Add content to meeting notes
                 const meetingNotesTextarea = document.getElementById('meetingNotes');
@@ -525,104 +554,71 @@ Supporto tecnico qualificato con:
                 meetingNotesTextarea.value = currentNotes + separator + content;
                 
             } catch (error) {
+                console.error('Errore nel caricamento del file:', error);
                 alert('Errore nel caricamento del file: ' + error.message);
             }
         });
 
-        // Read file content (enhanced for different file types)
-        function readFileContent(file) {
+        // Clean Teams transcript function
+        function cleanTeamsTranscript(rawContent) {
+            if (!rawContent) return '';
+            
+            let cleaned = rawContent;
+            
+            // Remove image references and metadata
+            cleaned = cleaned.replace(/!\[.*?\]\(.*?\)/g, '');
+            cleaned = cleaned.replace(/\{width=".*?"\s*height=".*?"\}/g, '');
+            cleaned = cleaned.replace(/media\/[a-zA-Z0-9_-]+\.png/g, '');
+            
+            // Remove timestamp headers
+            cleaned = cleaned.replace(/\*\*Trascrizione\*\*\s*\d+.*?\d+:\d+[AP]M/g, '');
+            
+            // Clean up speaker names and format
+            cleaned = cleaned.replace(/\*\*\\\s*/g, '');
+            cleaned = cleaned.replace(/\*\*\s*([^*]+)\*\*\s*(\d+:\d+)\\\s*/g, '\n$1 ($2): ');
+            cleaned = cleaned.replace(/\*\*\s*([^*]+)\*\*\s*/g, '\n$1: ');
+            
+            // Remove extra asterisks and formatting
+            cleaned = cleaned.replace(/\*+/g, '');
+            cleaned = cleaned.replace(/\\\s*/g, ' ');
+            
+            // Clean up multiple newlines and spaces
+            cleaned = cleaned.replace(/\n\s*\n\s*\n/g, '\n\n');
+            cleaned = cleaned.replace(/[ \t]+/g, ' ');
+            
+            // Remove "trascrizione avviata/arrestata" lines
+            cleaned = cleaned.replace(/.*trascrizione (avviata|arrestata).*/gi, '');
+            
+            return cleaned.trim();
+        }
+
+        // Read file as text
+        function readFileAsText(file) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
                 
                 reader.onload = function(e) {
-                    let content = e.target.result;
-                    
-                    // Clean up the content for better processing
-                    if (file.name.toLowerCase().includes('trascrizione') || content.includes('**Trascrizione**')) {
-                        // This looks like a Teams transcript, let's clean it up
-                        content = cleanTeamsTranscript(content);
-                    }
-                    
-                    resolve(content);
+                    resolve(e.target.result);
                 };
                 
                 reader.onerror = function() {
                     reject(new Error('Errore nella lettura del file'));
                 };
                 
-                // Always read as text - this works for most file types including basic .docx
-                reader.readAsText(file, 'utf-8');
+                reader.readAsText(file, 'UTF-8');
             });
-        }
-
-        // Clean Teams transcript content
-        function cleanTeamsTranscript(content) {
-            // Remove image references and media paths
-            content = content.replace(/!\[.*?\]\(.*?\)\{.*?\}/g, '');
-            content = content.replace(/\{width=".*?" height=".*?"\}/g, '');
-            
-            // Extract speaker names and dialogue
-            const lines = content.split('\n');
-            let cleanedContent = '--- TRASCRIZIONE TEAMS ---\n\n';
-            let currentSpeaker = '';
-            let currentTime = '';
-            
-            for (let line of lines) {
-                line = line.trim();
-                
-                // Skip empty lines and image references
-                if (!line || line.includes('media/') || line.includes('![')) continue;
-                
-                // Detect speaker names (bold text with **)
-                if (line.includes('**') && (line.includes('Alberto') || line.includes('Giulia') || line.includes('trascrizione'))) {
-                    const speakerMatch = line.match(/\*\*(.*?)\*\*/);
-                    if (speakerMatch) {
-                        currentSpeaker = speakerMatch[1];
-                        // Check if there's a timestamp
-                        const timeMatch = line.match(/(\d{1,2}:\d{2})/);
-                        if (timeMatch) {
-                            currentTime = timeMatch[1];
-                        }
-                        continue;
-                    }
-                }
-                
-                // Detect standalone timestamps
-                if (line.match(/^\d{1,2}:\d{2}$/)) {
-                    currentTime = line;
-                    continue;
-                }
-                
-                // If we have meaningful content and a speaker
-                if (line.length > 2 && currentSpeaker && !line.includes('**')) {
-                    cleanedContent += `${currentSpeaker} (${currentTime}): ${line}\n`;
-                }
-            }
-            
-            // If cleaning didn't work well, return original with basic cleanup
-            if (cleanedContent.length < 200) {
-                return content
-                    .replace(/!\[.*?\]\(.*?\)\{.*?\}/g, '')
-                    .replace(/\{width=".*?" height=".*?"\}/g, '')
-                    .replace(/\*\*(.*?)\*\*/g, '$1')
-                    .replace(/media\/[^\s]+/g, '')
-                    .replace(/\n\s*\n/g, '\n')
-                    .trim();
-            }
-            
-            return cleanedContent;
         }
 
         // Remove transcript
         function removeTranscript() {
             transcriptContent = '';
             document.getElementById('transcriptFile').classList.add('hidden');
+            document.getElementById('transcriptPreview').classList.add('hidden');
             document.getElementById('transcriptUpload').value = '';
             
-            // Optionally remove from meeting notes
+            // Remove from meeting notes
             const meetingNotesTextarea = document.getElementById('meetingNotes');
             const content = meetingNotesTextarea.value;
-            // Remove the transcript section if it exists
             const cleanedContent = content.replace(/\n*--- TRASCRIZIONE MEETING ---\n[\s\S]*$/, '');
             meetingNotesTextarea.value = cleanedContent;
         }
@@ -869,6 +865,7 @@ Fornisci il brief in formato HTML professionale, strutturato e pronto per essere
             // Reset transcript
             transcriptContent = '';
             document.getElementById('transcriptFile').classList.add('hidden');
+            document.getElementById('transcriptPreview').classList.add('hidden');
             document.getElementById('transcriptUpload').value = '';
             
             // Show form, hide brief
