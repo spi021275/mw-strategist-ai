@@ -94,6 +94,18 @@
                 <h2 class="text-3xl font-bold text-gray-900 mb-2">Analizza Meeting & Genera Brief DSA</h2>
                 <p class="text-gray-600 mb-8">Trasforma i tuoi appunti del meeting in un brief tecnico strutturato per il team DSA</p>
                 
+                <!-- API Key Input -->
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-8">
+                    <h3 class="text-lg font-semibold text-blue-900 mb-3">🔑 Configurazione API</h3>
+                    <div class="flex gap-4">
+                        <input type="password" id="apiKeyInput" class="flex-1 p-2 border border-blue-300 rounded" placeholder="Inserisci la tua OpenAI API key (sk-...)">
+                        <button onclick="saveApiKey()" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Salva</button>
+                    </div>
+                    <p class="text-sm text-blue-700 mt-2">
+                        📌 Ottieni la tua API key gratuita su <a href="https://platform.openai.com/api-keys" target="_blank" class="underline">platform.openai.com</a>
+                    </p>
+                </div>
+                
                 <div id="postMeetingForm" class="space-y-8">
                     <!-- Dati Base Cliente -->
                     <div class="grid md:grid-cols-2 gap-6">
@@ -349,16 +361,10 @@
     </div>
 
     <script>
-        console.log("🚀 Multimedia & Workspaces AI - Versione Groq Pulita");
+        console.log("🤖 Multimedia & Workspaces AI - Versione OpenAI");
         
-        // API Configuration - SCEGLI TRA GROQ O OPENAI
-        const USE_OPENAI = false; // Cambiato a false per usare Groq
-        
-        // GROQ (GRATIS ma serve key valida)
-        const GROQ_API_KEY = "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";
-        
-        // OPENAI (Stabile, costa poco)
-        const OPENAI_API_KEY = "INSERISCI_QUI_LA_TUA_OPENAI_KEY"; // Da: platform.openai.com
+        // OpenAI API Configuration
+        let OPENAI_API_KEY = "";
         
         // Multimedia & Workspaces Context
         const MW_CONTEXT = `
@@ -399,6 +405,18 @@ La BU Multimedia & Workspaces di Var Group si occupa di far comunicare e collabo
         let uploadedFiles = [];
         let transcriptContent = '';
         let generatedBriefContent = '';
+
+        // API Key management
+        function saveApiKey() {
+            const apiKey = document.getElementById('apiKeyInput').value.trim();
+            if (apiKey && apiKey.startsWith('sk-')) {
+                OPENAI_API_KEY = apiKey;
+                alert('✅ API Key salvata con successo!');
+                document.getElementById('apiKeyInput').value = '';
+            } else {
+                alert('❌ Inserisci una API key valida che inizia con sk-');
+            }
+        }
 
         // Navigation functions
         function showIntro() {
@@ -585,7 +603,7 @@ La BU Multimedia & Workspaces di Var Group si occupa di far comunicare e collabo
             const meetingNotes = document.getElementById('meetingNotes').value.trim();
             const numberOfRooms = document.getElementById('numberOfRooms').value.trim();
             
-            return clientName && meetingNotes && numberOfRooms;
+            return clientName && meetingNotes && numberOfRooms && OPENAI_API_KEY;
         }
 
         // Get selected values from checkboxes
@@ -595,23 +613,14 @@ La BU Multimedia & Workspaces di Var Group si occupa di far comunicare e collabo
             return Array.from(checkboxes).map(cb => cb.value);
         }
 
-        // API CALL - SUPPORTA SIA GROQ CHE OPENAI
-        async function callAI(prompt, retryCount = 0) {
-            if (USE_OPENAI) {
-                return callOpenAI(prompt, retryCount);
-            } else {
-                return callGroqAPI(prompt, retryCount);
-            }
-        }
-
-        // OPENAI API CALL
+        // OpenAI API CALL
         async function callOpenAI(prompt, retryCount = 0) {
             console.log(`🤖 [OPENAI] Tentativo ${retryCount + 1} - Chiamata API...`);
             
             const apiUrl = "https://api.openai.com/v1/chat/completions";
 
             const requestBody = {
-                model: "gpt-4o-mini", // Modello economico e veloce
+                model: "gpt-4o-mini", // Modello economico e potente
                 messages: [
                     {
                         role: "system",
@@ -676,85 +685,15 @@ La BU Multimedia & Workspaces di Var Group si occupa di far comunicare e collabo
                 throw error;
             }
         }
-        async function callGroqAPI(prompt, retryCount = 0) {
-            console.log(`🚀 [GROQ] Tentativo ${retryCount + 1} - Chiamata API...`);
-            
-            const apiUrl = "https://api.groq.com/openai/v1/chat/completions";
 
-            const requestBody = {
-                model: "llama-3.1-8b-instant",
-                messages: [
-                    {
-                        role: "system",
-                        content: "Sei un Senior Technical Consultant di Var Group - Multimedia & Workspaces. Genera sempre risposte in HTML ben formattato e professionale."
-                    },
-                    {
-                        role: "user",
-                        content: prompt.substring(0, 5000) // Limitiamo per sicurezza
-                    }
-                ],
-                max_tokens: 2500,
-                temperature: 0.7,
-                stream: false
-            };
-
-            try {
-                console.log('📡 [GROQ] Invio richiesta...');
-                
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${GROQ_API_KEY}`
-                    },
-                    body: JSON.stringify(requestBody),
-                });
-                
-                console.log(`📊 [GROQ] Status: ${response.status}`);
-                
-                if (response.status === 429) {
-                    console.log('⏳ [GROQ] Rate limit, aspetto...');
-                    if (retryCount < 3) {
-                        const waitTime = (retryCount + 1) * 3000;
-                        console.log(`⏰ [GROQ] Aspetto ${waitTime}ms...`);
-                        await new Promise(resolve => setTimeout(resolve, waitTime));
-                        return callGroqAPI(prompt, retryCount + 1);
-                    } else {
-                        throw new Error('Rate limit GROQ superato. Riprova tra qualche minuto.');
-                    }
-                }
-                
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    console.error('❌ [GROQ] Errore:', errorText);
-                    throw new Error(`GROQ API Error (${response.status}): ${errorText}`);
-                }
-
-                const result = await response.json();
-                console.log('✅ [GROQ] Risposta ricevuta!');
-                
-                if (result.choices && result.choices[0]?.message?.content) {
-                    let rawText = result.choices[0].message.content;
-                    return rawText.replace(/^\s*```(html)?\n?/, '').replace(/\n?```\s*$/, '');
-                } else {
-                    console.error('❌ [GROQ] Formato non valido:', result);
-                    throw new Error("Risposta GROQ non nel formato atteso.");
-                }
-            } catch (error) {
-                console.error('❌ [GROQ] Errore chiamata:', error);
-                if (retryCount < 2) {
-                    const waitTime = (retryCount + 1) * 2000;
-                    console.log(`🔄 [GROQ] Retry in ${waitTime}ms...`);
-                    await new Promise(resolve => setTimeout(resolve, waitTime));
-                    return callGroqAPI(prompt, retryCount + 1);
-                }
-                throw error;
-            }
-        }
-
-        // Generate brief using GROQ API
+        // Generate brief using OpenAI
         async function generateBrief() {
-            console.log("🎯 Inizio generazione brief...");
+            console.log("🎯 Inizio generazione brief con OpenAI...");
+            
+            if (!OPENAI_API_KEY) {
+                alert('⚠️ Inserisci prima la tua OpenAI API key nel campo in alto!');
+                return;
+            }
             
             if (!canGenerateBrief()) {
                 alert('Per favore compila almeno: Nome Cliente, Numero Sale/Spazi e Note del Meeting');
@@ -819,8 +758,8 @@ TASK: Genera un brief strutturato e professionale per il team DSA (Design & Solu
 
 Fornisci il brief in formato HTML professionale, strutturato e pronto per essere condiviso con il team DSA.`;
 
-                console.log("📤 Invio prompt all'AI...");
-                const response = await callAI(prompt);
+                console.log("📤 Invio prompt a OpenAI...");
+                const response = await callOpenAI(prompt);
                 
                 // Show generated brief
                 generatedBriefContent = response;
@@ -908,7 +847,7 @@ Fornisci il brief in formato HTML professionale, strutturato e pronto per essere
 
         // Initialize the app
         document.addEventListener('DOMContentLoaded', function() {
-            console.log("🎉 App inizializzata - Solo GROQ attivo!");
+            console.log("🎉 App inizializzata con OpenAI!");
             // Set default view
             showIntro();
             
