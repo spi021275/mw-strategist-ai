@@ -330,36 +330,8 @@
                     <h3 class="text-xl font-semibold text-gray-800 mb-4">Wizard in Sviluppo</h3>
                     <p class="text-gray-600 max-w-2xl mx-auto">
                         Il wizard per spazi collaborativi è in fase di sviluppo avanzato. 
-                        Sarà disponibile a breve con funzionalità complete per:
+                        Sarà disponibile a breve con funzionalità complete.
                     </p>
-                    <div class="mt-6 text-left max-w-md mx-auto">
-                        <ul class="space-y-2 text-gray-600">
-                            <li class="flex items-center">
-                                <svg class="w-5 h-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                                </svg>
-                                Selezione tipologia spazio
-                            </li>
-                            <li class="flex items-center">
-                                <svg class="w-5 h-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                                </svg>
-                                Calcolo dimensioni e capacità
-                            </li>
-                            <li class="flex items-center">
-                                <svg class="w-5 h-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                                </svg>
-                                Raccomandazioni tecnologiche BYOD/MTR
-                            </li>
-                            <li class="flex items-center">
-                                <svg class="w-5 h-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                                </svg>
-                                Stima costi e configurazioni
-                            </li>
-                        </ul>
-                    </div>
                 </div>
             </div>
         </div>
@@ -377,8 +349,10 @@
     </div>
 
     <script>
-        // API Configuration
-        const API_KEY = "AIzaSyDjlVWJIzGCa5CnXbj_nQEj1aG2aHlLwnQ";
+        console.log("🚀 Multimedia & Workspaces AI - Versione Groq Pulita");
+        
+        // GROQ API Configuration - UNICA API USATA
+        const GROQ_API_KEY = "gsk_EDgI1s88fXYaA5rMWiARWGdyb3FYTMOZIhwouDxoVNmdqVczRIx";
         
         // Multimedia & Workspaces Context
         const MW_CONTEXT = `
@@ -387,13 +361,7 @@
 ## Identità e Mission
 La BU Multimedia & Workspaces di Var Group si occupa di far comunicare e collaborare al meglio le persone in ogni luogo e contesto. Con oltre 60 anni di esperienza, progettiamo e integriamo spazi di lavoro ibridi e soluzioni di comunicazione, agendo come partner unico per l'intero ciclo di vita del progetto.
 
-## Pilastri degli Hybrid Workspaces
-1. **User Experience**: Massima semplicità d'uso, performance elevate ed ergonomia
-2. **Tecnologie**: Implementazione delle migliori soluzioni di collaborazione, audio-video e piattaforme per il lavoro ibrido
-3. **ESG**: Attenzione al benessere delle persone e alla sostenibilità ambientale ed economica
-
 ## Aree di Competenza Principali
-
 ### Microsoft Modern Work
 - Suite Microsoft 365 completa per ambiente di lavoro sicuro e intelligente
 - Gestione identità e accessi (Entra ID)
@@ -412,60 +380,13 @@ La BU Multimedia & Workspaces di Var Group si occupa di far comunicare e collabo
 - Focus su qualità audio-video e semplicità d'uso (BYOD)
 - Tipologie: Huddle Room, Meeting Room, Board Room, Training Room, Demo Room
 
-### Spazi Specializzati
-- **Media Room**: Ambienti per creazione contenuti professionali, webinar, podcast, live streaming
-- **Control Room**: Situation room e sale di controllo con design multimediale e ridondanza sistemi
-- **Digital Reception (Agrid Welcome)**: Soluzioni Microsoft Teams per remotizzazione accoglienza
-- **Remote Expert (Agrid Bank)**: Piattaforme banking per consulenza video specializzata
-
-### Digital Signage e Audio-Video
-- Soluzioni end-to-end per comunicazione visiva
-- Settori: Retail, Lusso, Automotive, GDO, Corporate, Musei, Entertainment
-- Servizi: Progettazione, installazione, creazione contenuti, gestione
-
-### Hybrid Events
-- Organizzazione eventi in presenza, virtuali o ibridi
-- Servizi completi: concept, noleggio tecnologie, regia live, streaming
-
-## Processo di Vendita Tipico
-1. **Call di Qualifica**: Analisi esigenze cliente con HR/IT Manager
-2. **Sopralluogo e Raccolta Dati**: Planimetrie, foto, misure, requisiti specifici
-3. **Brief al DSA**: Trasferimento informazioni al reparto Design & Solution Architecture
-4. **Progettazione**: DSA crea soluzione tecnica con Tech Annex ed Economics
-5. **Presentazione Offerta**: Presentazione soluzione completa al cliente
-
-## Target Clienti Principali
-- **HR Manager**: Responsabili gestione spazi e benessere dipendenti
-- **IT Manager**: Responsabili infrastruttura tecnologica e sicurezza
-- **Facility Manager**: Gestione immobili e spazi aziendali
-- **C-Level**: Decision maker per investimenti strategici
-
-## Tipologie di Spazi Gestiti
-- **Meeting Rooms**: Sale riunioni tradizionali e ibride
-- **Huddle Rooms**: Spazi collaborativi informali
-- **Board Rooms**: Sale direttive e C-level
-- **Auditorium**: Spazi per grandi eventi e comunicazioni
-- **Training Rooms**: Aule formative e didattiche
-- **Uffici Ibridi**: Postazioni flessibili e adattabili
-- **Media Rooms**: Studi per produzione contenuti
-
-## Soluzioni Tecnologiche Standard
-- **BYOD (Bring Your Own Device)**: Connessione dispositivi personali
-- **MTR (Microsoft Teams Rooms)**: Sale certificate Microsoft Teams
-- **Soluzioni Ibride**: Combinazione BYOD + MTR per massima flessibilità
-- **Audio**: Sistemi di amplificazione, diffusione e acquisizione
-- **Video**: Telecamere, proiettori, monitor, sistemi di switching
-- **Controllo**: Pannelli touch, automazione, gestione centralizzata
-
-## Partner Tecnologici Strategici
-Microsoft, Cisco, Poly, Logitech, Zoom, Google Cloud, Epson, AVer, Dante, WyreStorm
-
-## DOC (Durante Operation Center)
-Supporto tecnico qualificato con:
-- Help Desk multi-livello (HD1-HD3)
-- VNOC (Video Network Operation Center)
-- Monitoraggio proattivo 24/7
-- Presidi on-site dedicati
+### Soluzioni Tecnologiche Standard
+- BYOD (Bring Your Own Device): Connessione dispositivi personali
+- MTR (Microsoft Teams Rooms): Sale certificate Microsoft Teams
+- Soluzioni Ibride: Combinazione BYOD + MTR per massima flessibilità
+- Audio: Sistemi di amplificazione, diffusione e acquisizione
+- Video: Telecamere, proiettori, monitor, sistemi di switching
+- Controllo: Pannelli touch, automazione, gestione centralizzata
         `;
 
         // State management
@@ -668,8 +589,87 @@ Supporto tecnico qualificato con:
             return Array.from(checkboxes).map(cb => cb.value);
         }
 
-        // Generate brief using Gemini AI
+        // GROQ API CALL - UNICA FUNZIONE API
+        async function callGroqAPI(prompt, retryCount = 0) {
+            console.log(`🚀 [GROQ] Tentativo ${retryCount + 1} - Chiamata API...`);
+            
+            const apiUrl = "https://api.groq.com/openai/v1/chat/completions";
+
+            const requestBody = {
+                model: "llama-3.1-8b-instant",
+                messages: [
+                    {
+                        role: "system",
+                        content: "Sei un Senior Technical Consultant di Var Group - Multimedia & Workspaces. Genera sempre risposte in HTML ben formattato e professionale."
+                    },
+                    {
+                        role: "user",
+                        content: prompt.substring(0, 5000) // Limitiamo per sicurezza
+                    }
+                ],
+                max_tokens: 2500,
+                temperature: 0.7,
+                stream: false
+            };
+
+            try {
+                console.log('📡 [GROQ] Invio richiesta...');
+                
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${GROQ_API_KEY}`
+                    },
+                    body: JSON.stringify(requestBody),
+                });
+                
+                console.log(`📊 [GROQ] Status: ${response.status}`);
+                
+                if (response.status === 429) {
+                    console.log('⏳ [GROQ] Rate limit, aspetto...');
+                    if (retryCount < 3) {
+                        const waitTime = (retryCount + 1) * 3000;
+                        console.log(`⏰ [GROQ] Aspetto ${waitTime}ms...`);
+                        await new Promise(resolve => setTimeout(resolve, waitTime));
+                        return callGroqAPI(prompt, retryCount + 1);
+                    } else {
+                        throw new Error('Rate limit GROQ superato. Riprova tra qualche minuto.');
+                    }
+                }
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('❌ [GROQ] Errore:', errorText);
+                    throw new Error(`GROQ API Error (${response.status}): ${errorText}`);
+                }
+
+                const result = await response.json();
+                console.log('✅ [GROQ] Risposta ricevuta!');
+                
+                if (result.choices && result.choices[0]?.message?.content) {
+                    let rawText = result.choices[0].message.content;
+                    return rawText.replace(/^\s*```(html)?\n?/, '').replace(/\n?```\s*$/, '');
+                } else {
+                    console.error('❌ [GROQ] Formato non valido:', result);
+                    throw new Error("Risposta GROQ non nel formato atteso.");
+                }
+            } catch (error) {
+                console.error('❌ [GROQ] Errore chiamata:', error);
+                if (retryCount < 2) {
+                    const waitTime = (retryCount + 1) * 2000;
+                    console.log(`🔄 [GROQ] Retry in ${waitTime}ms...`);
+                    await new Promise(resolve => setTimeout(resolve, waitTime));
+                    return callGroqAPI(prompt, retryCount + 1);
+                }
+                throw error;
+            }
+        }
+
+        // Generate brief using GROQ API
         async function generateBrief() {
+            console.log("🎯 Inizio generazione brief...");
+            
             if (!canGenerateBrief()) {
                 alert('Per favore compila almeno: Nome Cliente, Numero Sale/Spazi e Note del Meeting');
                 return;
@@ -702,6 +702,8 @@ Supporto tecnico qualificato con:
                     specialRequirements: document.getElementById('specialRequirements').value
                 };
 
+                console.log("📋 Dati raccolti:", formData);
+
                 const prompt = `Agisci come un Senior Technical Consultant di Var Group - Multimedia & Workspaces. 
 
 CONTESTO AZIENDALE:
@@ -716,54 +718,23 @@ DATI DEL MEETING E REQUISITI CLIENTE:
 - Requisiti Tecnologici: ${formData.techRequirements.join(', ')}
 - Budget Indicativo: ${formData.budget}
 - Timeline: ${formData.timeline}
-- Note del Meeting: ${formData.meetingNotes}
+- Note del Meeting: ${formData.meetingNotes.substring(0, 2000)}
 - Requisiti Speciali: ${formData.specialRequirements}
 - File Allegati: ${uploadedFiles.map(f => f.name).join(', ')}
 
 TASK: Genera un brief strutturato e professionale per il team DSA (Design & Solution Architecture) che contenga:
 
-1. **EXECUTIVE SUMMARY**
-   - Sintesi del progetto e obiettivi del cliente
-
-2. **ANALISI REQUISITI**
-   - Requisiti funzionali estratti dal meeting
-   - Requisiti tecnici identificati
-   - Vincoli e criticità emerse
-
-3. **SPECIFICHE SPAZI**
-   - Dettaglio per ogni tipologia di spazio richiesta
-   - Numero partecipanti previsti per spazio
-   - Funzionalità specifiche richieste
-
-4. **INDICAZIONI TECNOLOGICHE**
-   - Soluzioni tecnologiche da valutare
-   - Integrazioni richieste
-   - Standard di qualità da rispettare
-
-5. **DELIVERABLE RICHIESTI AL DSA**
-   - Tech Annex dettagliato
-   - Economics e pricing
-   - Timeline di implementazione
-   - Documentazione tecnica
-
-6. **DOCUMENTAZIONE ALLEGATA**
-   - Riferimenti ai file caricati: ${uploadedFiles.map(f => f.name).join(', ')}
-   - Indicazioni su come utilizzare planimetrie/documenti allegati
-   - Note per l'analisi dei file forniti
-
-7. **NEXT STEPS**
-   - Azioni immediate per il DSA
-   - Informazioni aggiuntive da raccogliere
-   - Milestone del progetto
-
-IMPORTANTE: 
-- Se sono stati caricati file (planimetrie, foto, documenti), fai sempre riferimento ad essi nella sezione "DOCUMENTAZIONE ALLEGATA" 
-- Indica chiaramente al DSA come utilizzare i file allegati per la progettazione
-- Se presente trascrizione meeting, utilizzala come fonte primaria per i requisiti
+1. EXECUTIVE SUMMARY - Sintesi del progetto e obiettivi del cliente
+2. ANALISI REQUISITI - Requisiti funzionali estratti, Requisiti tecnici identificati, Vincoli e criticità emerse
+3. SPECIFICHE SPAZI - Dettaglio per ogni tipologia di spazio richiesta, Numero partecipanti previsti, Funzionalità specifiche
+4. INDICAZIONI TECNOLOGICHE - Soluzioni tecnologiche da valutare, Integrazioni richieste, Standard di qualità
+5. DELIVERABLE RICHIESTI AL DSA - Tech Annex dettagliato, Economics e pricing, Timeline implementazione
+6. NEXT STEPS - Azioni immediate per il DSA, Informazioni aggiuntive da raccogliere, Milestone del progetto
 
 Fornisci il brief in formato HTML professionale, strutturato e pronto per essere condiviso con il team DSA.`;
 
-                const response = await callGeminiAPI(prompt);
+                console.log("📤 Invio prompt a GROQ...");
+                const response = await callGroqAPI(prompt);
                 
                 // Show generated brief
                 generatedBriefContent = response;
@@ -772,41 +743,15 @@ Fornisci il brief in formato HTML professionale, strutturato e pronto per essere
                 document.getElementById('generatedBrief').classList.remove('hidden');
                 document.getElementById('generatedBrief').classList.add('fade-in');
 
+                console.log("✅ Brief generato con successo!");
+
             } catch (error) {
+                console.error('❌ Errore completo:', error);
                 alert('Errore nella generazione del brief: ' + error.message);
             } finally {
                 // Restore button
                 generateBtn.innerHTML = originalText;
                 generateBtn.disabled = false;
-            }
-        }
-
-        // Call Gemini API
-        async function callGeminiAPI(prompt) {
-            const modelName = "gemini-2.5-pro";
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${API_KEY}`;
-
-            const requestBody = {
-                contents: [{ role: "user", parts: [{ text: prompt }] }],
-            };
-
-            const response = await fetch(apiUrl, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(requestBody),
-            });
-            
-            if (!response.ok) {
-                throw new Error(`API Error (${response.status}): ${response.statusText}`);
-            }
-
-            const result = await response.json();
-            
-            if (result.candidates && result.candidates[0]?.content?.parts[0]?.text) {
-                let rawText = result.candidates[0].content.parts[0].text;
-                return rawText.replace(/^\s*```(html)?\n?/, '').replace(/\n?```\s*$/, '');
-            } else {
-                throw new Error("Risposta AI non nel formato atteso.");
             }
         }
 
@@ -877,6 +822,7 @@ Fornisci il brief in formato HTML professionale, strutturato e pronto per essere
 
         // Initialize the app
         document.addEventListener('DOMContentLoaded', function() {
+            console.log("🎉 App inizializzata - Solo GROQ attivo!");
             // Set default view
             showIntro();
             
