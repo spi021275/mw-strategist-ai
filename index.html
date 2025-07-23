@@ -351,8 +351,14 @@
     <script>
         console.log("🚀 Multimedia & Workspaces AI - Versione Groq Pulita");
         
-        // GROQ API Configuration - UNICA API USATA
-        const GROQ_API_KEY = "gsk_EDgI1s88fXYaA5rMWiARWGdyb3FYTMOZIhwouDxoVNmdqVczRIx";
+        // API Configuration - SCEGLI TRA GROQ O OPENAI
+        const USE_OPENAI = false; // Cambiato a false per usare Groq
+        
+        // GROQ (GRATIS ma serve key valida)
+        const GROQ_API_KEY = "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";
+        
+        // OPENAI (Stabile, costa poco)
+        const OPENAI_API_KEY = "INSERISCI_QUI_LA_TUA_OPENAI_KEY"; // Da: platform.openai.com
         
         // Multimedia & Workspaces Context
         const MW_CONTEXT = `
@@ -589,7 +595,87 @@ La BU Multimedia & Workspaces di Var Group si occupa di far comunicare e collabo
             return Array.from(checkboxes).map(cb => cb.value);
         }
 
-        // GROQ API CALL - UNICA FUNZIONE API
+        // API CALL - SUPPORTA SIA GROQ CHE OPENAI
+        async function callAI(prompt, retryCount = 0) {
+            if (USE_OPENAI) {
+                return callOpenAI(prompt, retryCount);
+            } else {
+                return callGroqAPI(prompt, retryCount);
+            }
+        }
+
+        // OPENAI API CALL
+        async function callOpenAI(prompt, retryCount = 0) {
+            console.log(`🤖 [OPENAI] Tentativo ${retryCount + 1} - Chiamata API...`);
+            
+            const apiUrl = "https://api.openai.com/v1/chat/completions";
+
+            const requestBody = {
+                model: "gpt-4o-mini", // Modello economico e veloce
+                messages: [
+                    {
+                        role: "system",
+                        content: "Sei un Senior Technical Consultant di Var Group - Multimedia & Workspaces. Genera sempre risposte in HTML ben formattato e professionale."
+                    },
+                    {
+                        role: "user",
+                        content: prompt.substring(0, 6000)
+                    }
+                ],
+                max_tokens: 3000,
+                temperature: 0.7
+            };
+
+            try {
+                console.log('📡 [OPENAI] Invio richiesta...');
+                
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${OPENAI_API_KEY}`
+                    },
+                    body: JSON.stringify(requestBody),
+                });
+                
+                console.log(`📊 [OPENAI] Status: ${response.status}`);
+                
+                if (response.status === 429) {
+                    console.log('⏳ [OPENAI] Rate limit, aspetto...');
+                    if (retryCount < 3) {
+                        const waitTime = (retryCount + 1) * 2000;
+                        console.log(`⏰ [OPENAI] Aspetto ${waitTime}ms...`);
+                        await new Promise(resolve => setTimeout(resolve, waitTime));
+                        return callOpenAI(prompt, retryCount + 1);
+                    }
+                }
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('❌ [OPENAI] Errore:', errorText);
+                    throw new Error(`OpenAI API Error (${response.status}): ${errorText}`);
+                }
+
+                const result = await response.json();
+                console.log('✅ [OPENAI] Risposta ricevuta!');
+                
+                if (result.choices && result.choices[0]?.message?.content) {
+                    let rawText = result.choices[0].message.content;
+                    return rawText.replace(/^\s*```(html)?\n?/, '').replace(/\n?```\s*$/, '');
+                } else {
+                    throw new Error("Risposta OpenAI non nel formato atteso.");
+                }
+            } catch (error) {
+                console.error('❌ [OPENAI] Errore chiamata:', error);
+                if (retryCount < 2) {
+                    const waitTime = (retryCount + 1) * 2000;
+                    console.log(`🔄 [OPENAI] Retry in ${waitTime}ms...`);
+                    await new Promise(resolve => setTimeout(resolve, waitTime));
+                    return callOpenAI(prompt, retryCount + 1);
+                }
+                throw error;
+            }
+        }
         async function callGroqAPI(prompt, retryCount = 0) {
             console.log(`🚀 [GROQ] Tentativo ${retryCount + 1} - Chiamata API...`);
             
@@ -733,8 +819,8 @@ TASK: Genera un brief strutturato e professionale per il team DSA (Design & Solu
 
 Fornisci il brief in formato HTML professionale, strutturato e pronto per essere condiviso con il team DSA.`;
 
-                console.log("📤 Invio prompt a GROQ...");
-                const response = await callGroqAPI(prompt);
+                console.log("📤 Invio prompt all'AI...");
+                const response = await callAI(prompt);
                 
                 // Show generated brief
                 generatedBriefContent = response;
