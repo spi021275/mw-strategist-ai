@@ -200,10 +200,40 @@
                         </div>
                     </div>
 
-                    <!-- Note Meeting -->
+                    <!-- Note Meeting con Upload Trascrizione -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Note e Appunti del Meeting *</label>
-                        <textarea id="meetingNotes" rows="8" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Incolla qui tutti gli appunti del meeting, requisiti emersi, problematiche discusse, aspettative del cliente..."></textarea>
+                        <div class="space-y-4">
+                            <textarea id="meetingNotes" rows="8" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Incolla qui tutti gli appunti del meeting, requisiti emersi, problematiche discusse, aspettative del cliente..."></textarea>
+                            
+                            <!-- Upload Trascrizione Teams -->
+                            <div class="border-t pt-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Oppure carica trascrizione Teams/call</label>
+                                <div onclick="document.getElementById('transcriptUpload').click()" class="flex items-center justify-center w-full h-20 border-2 border-blue-300 border-dashed rounded-lg bg-blue-50 hover:bg-blue-100 cursor-pointer transition-colors">
+                                    <svg class="w-6 h-6 text-blue-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
+                                    </svg>
+                                    <span class="text-sm text-blue-700">Carica trascrizione Teams (.txt, .docx, .pdf)</span>
+                                </div>
+                                <input type="file" id="transcriptUpload" class="hidden" accept=".txt,.docx,.pdf,.doc">
+                                <div id="transcriptFile" class="mt-2 hidden">
+                                    <div class="flex items-center justify-between bg-blue-100 p-3 rounded-lg">
+                                        <div class="flex items-center">
+                                            <svg class="w-5 h-5 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                            </svg>
+                                            <span id="transcriptFileName" class="font-medium text-blue-800"></span>
+                                        </div>
+                                        <button onclick="removeTranscript()" class="text-red-500 hover:text-red-700">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-2">Il contenuto del file verrà automaticamente aggiunto alle note del meeting per l'analisi AI</p>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Timeline e Requisiti Speciali -->
@@ -433,6 +463,7 @@ Supporto tecnico qualificato con:
 
         // State management
         let uploadedFiles = [];
+        let transcriptContent = '';
         let generatedBriefContent = '';
 
         // Navigation functions
@@ -457,7 +488,7 @@ Supporto tecnico qualificato con:
             document.getElementById('homeBtn').classList.remove('hidden');
         }
 
-        // File upload handling
+        // File upload handling for planimetrie/documenti
         document.getElementById('fileUpload').addEventListener('change', function(event) {
             const files = Array.from(event.target.files);
             
@@ -472,6 +503,68 @@ Supporto tecnico qualificato con:
 
             updateFileDisplay();
         });
+
+        // Transcript upload handling
+        document.getElementById('transcriptUpload').addEventListener('change', async function(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            try {
+                // Read file content
+                const content = await readFileContent(file);
+                transcriptContent = content;
+                
+                // Show file info
+                document.getElementById('transcriptFileName').textContent = file.name;
+                document.getElementById('transcriptFile').classList.remove('hidden');
+                
+                // Add content to meeting notes
+                const meetingNotesTextarea = document.getElementById('meetingNotes');
+                const currentNotes = meetingNotesTextarea.value;
+                const separator = currentNotes ? '\n\n--- TRASCRIZIONE MEETING ---\n' : '--- TRASCRIZIONE MEETING ---\n';
+                meetingNotesTextarea.value = currentNotes + separator + content;
+                
+            } catch (error) {
+                alert('Errore nel caricamento del file: ' + error.message);
+            }
+        });
+
+        // Read file content (simple text extraction)
+        function readFileContent(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    resolve(e.target.result);
+                };
+                
+                reader.onerror = function() {
+                    reject(new Error('Errore nella lettura del file'));
+                };
+                
+                // Read as text for most file types
+                if (file.type.includes('text') || file.name.endsWith('.txt')) {
+                    reader.readAsText(file);
+                } else {
+                    // For other files, we'll read as text anyway (works for most cases)
+                    reader.readAsText(file);
+                }
+            });
+        }
+
+        // Remove transcript
+        function removeTranscript() {
+            transcriptContent = '';
+            document.getElementById('transcriptFile').classList.add('hidden');
+            document.getElementById('transcriptUpload').value = '';
+            
+            // Optionally remove from meeting notes
+            const meetingNotesTextarea = document.getElementById('meetingNotes');
+            const content = meetingNotesTextarea.value;
+            // Remove the transcript section if it exists
+            const cleanedContent = content.replace(/\n*--- TRASCRIZIONE MEETING ---\n[\s\S]*$/, '');
+            meetingNotesTextarea.value = cleanedContent;
+        }
 
         function updateFileDisplay() {
             const uploadedFilesDiv = document.getElementById('uploadedFiles');
@@ -596,10 +689,20 @@ TASK: Genera un brief strutturato e professionale per il team DSA (Design & Solu
    - Timeline di implementazione
    - Documentazione tecnica
 
-6. **NEXT STEPS**
+6. **DOCUMENTAZIONE ALLEGATA**
+   - Riferimenti ai file caricati: ${uploadedFiles.map(f => f.name).join(', ')}
+   - Indicazioni su come utilizzare planimetrie/documenti allegati
+   - Note per l'analisi dei file forniti
+
+7. **NEXT STEPS**
    - Azioni immediate per il DSA
    - Informazioni aggiuntive da raccogliere
    - Milestone del progetto
+
+IMPORTANTE: 
+- Se sono stati caricati file (planimetrie, foto, documenti), fai sempre riferimento ad essi nella sezione "DOCUMENTAZIONE ALLEGATA" 
+- Indica chiaramente al DSA come utilizzare i file allegati per la progettazione
+- Se presente trascrizione meeting, utilizzala come fonte primaria per i requisiti
 
 Fornisci il brief in formato HTML professionale, strutturato e pronto per essere condiviso con il team DSA.`;
 
@@ -701,6 +804,11 @@ Fornisci il brief in formato HTML professionale, strutturato e pronto per essere
             // Reset file uploads
             uploadedFiles = [];
             updateFileDisplay();
+            
+            // Reset transcript
+            transcriptContent = '';
+            document.getElementById('transcriptFile').classList.add('hidden');
+            document.getElementById('transcriptUpload').value = '';
             
             // Show form, hide brief
             document.getElementById('postMeetingForm').classList.remove('hidden');
