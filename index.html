@@ -338,6 +338,12 @@
                                 <svg class="w-5 h-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
                                 </svg>
+                                Selezione tipologia spazio
+                            </li>
+                            <li class="flex items-center">
+                                <svg class="w-5 h-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                                </svg>
                                 Calcolo dimensioni e capacità
                             </li>
                             <li class="flex items-center">
@@ -464,6 +470,7 @@ Supporto tecnico qualificato con:
 
         // State management
         let uploadedFiles = [];
+        let uploadedFileData = []; // Store actual file data for images
         let transcriptContent = '';
         let generatedBriefContent = '';
 
@@ -500,6 +507,25 @@ Supporto tecnico qualificato con:
                     type: file.type || 'application/octet-stream'
                 };
                 uploadedFiles.push(fileObj);
+                
+                // Store file data for images to display later
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        uploadedFileData.push({
+                            name: file.name,
+                            type: file.type,
+                            data: e.target.result
+                        });
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    uploadedFileData.push({
+                        name: file.name,
+                        type: file.type,
+                        data: null
+                    });
+                }
             });
 
             updateFileDisplay();
@@ -551,9 +577,44 @@ Supporto tecnico qualificato con:
                 console.error('Errore nel caricamento del file:', error);
                 alert('Errore nel caricamento del file: ' + error.message);
             }
+        }
+
+        // Generate image section for uploaded files
+        function generateImageSection() {
+            const images = uploadedFileData.filter(f => f.type && f.type.startsWith('image/') && f.data);
+            if (images.length === 0) return '';
+
+            let imageHtml = `
+                <div class="mt-8 p-6 bg-blue-50 rounded-lg border border-blue-200">
+                    <h4 class="text-lg font-semibold text-blue-900 mb-4">📸 Planimetrie e Immagini Allegate</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            `;
+
+            images.forEach(img => {
+                imageHtml += `
+                    <div class="bg-white p-4 rounded-lg shadow-sm border">
+                        <h5 class="font-medium text-gray-800 mb-2">${img.name}</h5>
+                        <img src="${img.data}" alt="${img.name}" class="w-full h-auto max-h-64 object-contain rounded border" />
+                        <p class="text-xs text-gray-500 mt-2">Riferimento per progettazione DSA</p>
+                    </div>
+                `;
+            });
+
+            imageHtml += `
+                    </div>
+                    <div class="mt-4 p-3 bg-blue-100 rounded">
+                        <p class="text-sm text-blue-800">
+                            <strong>Nota per DSA:</strong> Utilizzare le immagini sopra come riferimento per:
+                            • Analisi layout esistente • Identificazione vincoli strutturali • Posizionamento ottimale equipment • Valutazione cablaggio e alimentazioni
+                        </p>
+                    </div>
+                </div>
+            `;
+
+            return imageHtml;
         });
 
-        // Clean Teams transcript function
+        // Clean Teams transcript function with enhanced extraction
         function cleanTeamsTranscript(rawContent) {
             if (!rawContent) return '';
             
@@ -564,17 +625,35 @@ Supporto tecnico qualificato con:
             cleaned = cleaned.replace(/\{width=".*?"\s*height=".*?"\}/g, '');
             cleaned = cleaned.replace(/media\/[a-zA-Z0-9_-]+\.png/g, '');
             
-            // Remove timestamp headers
+            // Remove timestamp headers and metadata
             cleaned = cleaned.replace(/\*\*Trascrizione\*\*\s*\d+.*?\d+:\d+[AP]M/g, '');
+            cleaned = cleaned.replace(/Riunione registrata e trascritta.*/gi, '');
+            cleaned = cleaned.replace(/Meeting recorded and transcribed.*/gi, '');
             
-            // Clean up speaker names and format
+            // Enhanced speaker detection and formatting
             cleaned = cleaned.replace(/\*\*\\\s*/g, '');
-            cleaned = cleaned.replace(/\*\*\s*([^*]+)\*\*\s*(\d+:\d+)\\\s*/g, '\n$1 ($2): ');
-            cleaned = cleaned.replace(/\*\*\s*([^*]+)\*\*\s*/g, '\n$1: ');
+            cleaned = cleaned.replace(/\*\*\s*([^*]+)\*\*\s*(\d+:\d+:\d+)\s*\\\s*/g, '\n\n👤 $1 [$2]: ');
+            cleaned = cleaned.replace(/\*\*\s*([^*]+)\*\*\s*(\d+:\d+)\s*\\\s*/g, '\n\n👤 $1 [$2]: ');
+            cleaned = cleaned.replace(/\*\*\s*([^*]+)\*\*\s*/g, '\n\n👤 $1: ');
             
-            // Remove extra asterisks and formatting
+            // Clean up formatting and extract key information
             cleaned = cleaned.replace(/\*+/g, '');
             cleaned = cleaned.replace(/\\\s*/g, ' ');
+            cleaned = cleaned.replace(/\\/g, '');
+            
+            // Identify and highlight key discussion points
+            const keyPhrases = [
+                'requisiti', 'requirement', 'necessità', 'need', 'problema', 'issue', 'soluzione', 'solution',
+                'budget', 'costo', 'cost', 'prezzo', 'price', 'timeline', 'scadenza', 'deadline',
+                'sala', 'room', 'spazio', 'space', 'meeting', 'riunione', 'videoconferenza', 'video conference',
+                'teams', 'zoom', 'audio', 'video', 'schermo', 'display', 'proiettore', 'projector',
+                'implementazione', 'installation', 'configurazione', 'setup', 'integrazione', 'integration'
+            ];
+            
+            keyPhrases.forEach(phrase => {
+                const regex = new RegExp(`\\b(${phrase}[a-zA-Zàèéìíîòóùú]*)\\b`, 'gi');
+                cleaned = cleaned.replace(regex, '🔑 $1');
+            });
             
             // Clean up multiple newlines and spaces
             cleaned = cleaned.replace(/\n\s*\n\s*\n/g, '\n\n');
@@ -582,6 +661,7 @@ Supporto tecnico qualificato con:
             
             // Remove "trascrizione avviata/arrestata" lines
             cleaned = cleaned.replace(/.*trascrizione (avviata|arrestata).*/gi, '');
+            cleaned = cleaned.replace(/.*transcription (started|stopped).*/gi, '');
             
             return cleaned.trim();
         }
@@ -643,6 +723,7 @@ Supporto tecnico qualificato con:
 
         function removeFile(index) {
             uploadedFiles.splice(index, 1);
+            uploadedFileData.splice(index, 1);
             updateFileDisplay();
         }
 
@@ -718,50 +799,71 @@ TASK: Genera un brief strutturato e professionale per il team DSA (Design & Solu
 
 1. **EXECUTIVE SUMMARY**
    - Sintesi del progetto e obiettivi del cliente
+   - Contesto aziendale e driver del progetto
 
 2. **ANALISI REQUISITI**
-   - Requisiti funzionali estratti dal meeting
-   - Requisiti tecnici identificati
-   - Vincoli e criticità emerse
+   - 🔍 Requisiti funzionali estratti dal meeting (analizza attentamente le note/trascrizione)
+   - 🔧 Requisiti tecnici identificati
+   - ⚠️ Vincoli e criticità emerse
+   - 📊 Priorità e must-have vs nice-to-have
 
 3. **SPECIFICHE SPAZI**
    - Dettaglio per ogni tipologia di spazio richiesta
    - Numero partecipanti previsti per spazio
    - Funzionalità specifiche richieste
+   - Layout e configurazione suggerita
 
 4. **INDICAZIONI TECNOLOGICHE**
-   - Soluzioni tecnologiche da valutare
-   - Integrazioni richieste
+   - Soluzioni tecnologiche da valutare (BYOD, MTR, Audio/Video)
+   - Integrazioni richieste con sistemi esistenti
    - Standard di qualità da rispettare
+   - Partner technology da considerare
 
 5. **DELIVERABLE RICHIESTI AL DSA**
-   - Tech Annex dettagliato
-   - Economics e pricing
-   - Timeline di implementazione
-   - Documentazione tecnica
+   - Tech Annex dettagliato con specifiche tecniche
+   - Economics e pricing strutturato
+   - Timeline di implementazione con milestone
+   - Documentazione tecnica e disegni
 
-6. **DOCUMENTAZIONE ALLEGATA**
+6. **DOCUMENTAZIONE ALLEGATA E RIFERIMENTI VISUALI**
    - Riferimenti ai file caricati: ${uploadedFiles.map(f => f.name).join(', ')}
-   - Indicazioni su come utilizzare planimetrie/documenti allegati
-   - Note per l'analisi dei file forniti
+   - Indicazioni specifiche su come utilizzare planimetrie/documenti allegati per la progettazione
+   - Note per l'analisi dei file forniti dal cliente
+   - ${uploadedFileData.filter(f => f.type && f.type.startsWith('image/')).length > 0 ? 'INCLUDI le immagini/planimetrie caricate nel brief per riferimento visivo' : ''}
 
-7. **NEXT STEPS**
+7. **NEXT STEPS E AZIONI**
    - Azioni immediate per il DSA
-   - Informazioni aggiuntive da raccogliere
-   - Milestone del progetto
+   - Informazioni aggiuntive da raccogliere dal cliente
+   - Milestone del progetto e punti di verifica
+   - Follow-up meeting suggeriti
 
-IMPORTANTE: 
-- Se sono stati caricati file (planimetrie, foto, documenti), fai sempre riferimento ad essi nella sezione "DOCUMENTAZIONE ALLEGATA" 
-- Indica chiaramente al DSA come utilizzare i file allegati per la progettazione
-- Se presente trascrizione meeting, utilizzala come fonte primaria per i requisiti
+ISTRUZIONI SPECIFICHE:
+- Analizza con attenzione OGNI dettaglio presente nelle note del meeting e nella trascrizione
+- Estrai requisiti impliciti e espliciti dalle conversazioni
+- Identifica le parole chiave evidenziate con 🔑 nella trascrizione come punti focali
+- Se sono presenti informazioni sui partecipanti (👤), analizza le loro esigenze specifiche
+- Dai priorità alta ai requisiti emersi dalla trascrizione Teams rispetto ai campi form
+- Usa un linguaggio tecnico ma accessibile
+- Struttura il brief in modo che sia immediatamente actionable per il DSA
 
-Fornisci il brief in formato HTML professionale, strutturato e pronto per essere condiviso con il team DSA.`;
+Fornisci il brief in formato HTML professionale con sezioni ben strutturate, evidenziazioni e ready per condivisione.`;
 
                 const response = await callGeminiAPI(prompt);
                 
+                // Add images to the response if any were uploaded
+                let finalResponse = response;
+                if (uploadedFileData.some(f => f.type && f.type.startsWith('image/'))) {
+                    const imageSection = generateImageSection();
+                    // Insert image section after the DOCUMENTAZIONE ALLEGATA section
+                    finalResponse = response.replace(
+                        /(<\/div>\s*<\/div>\s*$|$)/,
+                        imageSection + '$1'
+                    );
+                }
+                
                 // Show generated brief
-                generatedBriefContent = response;
-                document.getElementById('briefContent').innerHTML = response;
+                generatedBriefContent = finalResponse;
+                document.getElementById('briefContent').innerHTML = finalResponse;
                 document.getElementById('postMeetingForm').classList.add('hidden');
                 document.getElementById('generatedBrief').classList.remove('hidden');
                 document.getElementById('generatedBrief').classList.add('fade-in');
@@ -854,6 +956,7 @@ Fornisci il brief in formato HTML professionale, strutturato e pronto per essere
             
             // Reset file uploads
             uploadedFiles = [];
+            uploadedFileData = [];
             updateFileDisplay();
             
             // Reset transcript
