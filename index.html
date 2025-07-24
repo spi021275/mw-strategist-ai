@@ -974,53 +974,81 @@ Fornisci risposta in formato JSON strutturato.`;
             resultDiv.classList.remove('hidden');
             
             try {
-                // Try to parse JSON response
-                const parsed = JSON.parse(response);
+                // Clean the response to extract JSON
+                let jsonString = response;
+                
+                // Try to find JSON in the response
+                const jsonMatch = response.match(/\{[\s\S]*\}/);
+                if (jsonMatch) {
+                    jsonString = jsonMatch[0];
+                }
+                
+                // Parse JSON response
+                const parsed = JSON.parse(jsonString);
                 
                 let analysisHTML = `<strong>Analisi ${type === 'photo' ? 'Foto' : 'Planimetria'}:</strong><br>`;
                 
-                if (parsed.dimensioni) {
-                    analysisHTML += `<strong>Dimensioni:</strong> ${parsed.dimensioni.metri_quadri || 'N/A'} mq, ${parsed.dimensioni.larghezza || 'N/A'}m x ${parsed.dimensioni.lunghezza || 'N/A'}m<br>`;
-                }
-                
-                if (parsed.capacita) {
-                    analysisHTML += `<strong>Capacità:</strong> ${parsed.capacita} persone<br>`;
-                }
-                
-                if (parsed.tipologia) {
-                    analysisHTML += `<strong>Tipologia:</strong> ${parsed.tipologia}<br>`;
-                }
-                
-                // Auto-fill form fields if possible
-                if (parsed.dimensioni) {
-                    if (parsed.dimensioni.metri_quadri) {
+                // Display analysis results
+                if (parsed.DIMENSIONI_STIMATE) {
+                    const dim = parsed.DIMENSIONI_STIMATE;
+                    analysisHTML += `<strong>Dimensioni:</strong> ${dim.Metri_quadri_approssimativi || 'N/A'} mq, ${dim.Larghezza_stimata_metri || 'N/A'}m x ${dim.Lunghezza_stimata_metri || 'N/A'}m x ${dim.Altezza_stimata_metri || 'N/A'}m<br>`;
+                    
+                    // Auto-fill form fields
+                    if (dim.Metri_quadri_approssimativi) {
                         const sqmField = selectedInputMethod === 'upload' ? 'roomSqmAI' : 'roomSqm';
-                        document.getElementById(sqmField).value = parsed.dimensioni.metri_quadri;
+                        document.getElementById(sqmField).value = dim.Metri_quadri_approssimativi;
                     }
-                    if (parsed.dimensioni.larghezza) {
+                    if (dim.Larghezza_stimata_metri) {
                         const widthField = selectedInputMethod === 'upload' ? 'roomWidthAI' : 'roomWidth';
-                        document.getElementById(widthField).value = parsed.dimensioni.larghezza;
+                        document.getElementById(widthField).value = dim.Larghezza_stimata_metri;
                     }
-                    if (parsed.dimensioni.lunghezza) {
+                    if (dim.Lunghezza_stimata_metri) {
                         const lengthField = selectedInputMethod === 'upload' ? 'roomLengthAI' : 'roomLength';
-                        document.getElementById(lengthField).value = parsed.dimensioni.lunghezza;
+                        document.getElementById(lengthField).value = dim.Lunghezza_stimata_metri;
                     }
-                    if (parsed.dimensioni.altezza) {
+                    if (dim.Altezza_stimata_metri) {
                         const heightField = selectedInputMethod === 'upload' ? 'roomHeightAI' : 'roomHeight';
-                        document.getElementById(heightField).value = parsed.dimensioni.altezza;
+                        document.getElementById(heightField).value = dim.Altezza_stimata_metri;
                     }
                 }
                 
-                if (parsed.capacita) {
+                if (parsed.CAPACITA && parsed.CAPACITA.Numero_persone) {
+                    analysisHTML += `<strong>Capacità:</strong> ${parsed.CAPACITA.Numero_persone} persone<br>`;
+                    
                     const capacityField = selectedInputMethod === 'upload' ? 'roomCapacityAI' : 'roomCapacity';
-                    document.getElementById(capacityField).value = parsed.capacita;
+                    document.getElementById(capacityField).value = parsed.CAPACITA.Numero_persone;
+                }
+                
+                if (parsed.CARATTERISTICHE_SPAZIO && parsed.CARATTERISTICHE_SPAZIO.Tipologia_spazio) {
+                    analysisHTML += `<strong>Tipologia:</strong> ${parsed.CARATTERISTICHE_SPAZIO.Tipologia_spazio}<br>`;
                 }
                 
                 contentDiv.innerHTML = analysisHTML;
                 
             } catch (e) {
-                // If not JSON, display as text
-                contentDiv.innerHTML = `<strong>Analisi completata:</strong><br>${response}`;
+                console.error('Errore nel parsing JSON:', e);
+                console.log('Risposta originale:', response);
+                
+                // If JSON parsing fails, try to extract data manually from the text
+                const numbers = response.match(/\d+(?:\.\d+)?/g);
+                if (numbers && numbers.length >= 4) {
+                    // Try to extract: mq, larghezza, lunghezza, altezza, capacità
+                    const sqmField = selectedInputMethod === 'upload' ? 'roomSqmAI' : 'roomSqm';
+                    const widthField = selectedInputMethod === 'upload' ? 'roomWidthAI' : 'roomWidth';
+                    const lengthField = selectedInputMethod === 'upload' ? 'roomLengthAI' : 'roomLength';
+                    const heightField = selectedInputMethod === 'upload' ? 'roomHeightAI' : 'roomHeight';
+                    const capacityField = selectedInputMethod === 'upload' ? 'roomCapacityAI' : 'roomCapacity';
+                    
+                    // Extract values based on position in the response
+                    if (numbers[0]) document.getElementById(sqmField).value = numbers[0];
+                    if (numbers[1]) document.getElementById(widthField).value = numbers[1];
+                    if (numbers[2]) document.getElementById(lengthField).value = numbers[2];
+                    if (numbers[3]) document.getElementById(heightField).value = numbers[3];
+                    if (numbers.length > 4 && numbers[4]) document.getElementById(capacityField).value = numbers[4];
+                }
+                
+                // Display as text
+                contentDiv.innerHTML = `<strong>Analisi completata:</strong><br>${response.substring(0, 500)}...`;
             }
         }
 
