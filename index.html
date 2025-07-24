@@ -1012,11 +1012,25 @@ Fornisci risposta in formato JSON strutturato.`;
                     }
                 }
                 
-                if (parsed.CAPACITA && parsed.CAPACITA.Numero_persone) {
-                    analysisHTML += `<strong>Capacità:</strong> ${parsed.CAPACITA.Numero_persone} persone<br>`;
+                if (parsed.CAPACITA) {
+                    // Try different possible structures for capacity
+                    let capacityValue = null;
+                    if (typeof parsed.CAPACITA === 'object') {
+                        capacityValue = parsed.CAPACITA.Numero_persone || parsed.CAPACITA.persone || parsed.CAPACITA.capacita;
+                    } else if (typeof parsed.CAPACITA === 'string') {
+                        // Extract number from string like "9 persone"
+                        const match = parsed.CAPACITA.match(/(\d+)/);
+                        if (match) capacityValue = parseInt(match[1]);
+                    } else if (typeof parsed.CAPACITA === 'number') {
+                        capacityValue = parsed.CAPACITA;
+                    }
                     
-                    const capacityField = selectedInputMethod === 'upload' ? 'roomCapacityAI' : 'roomCapacity';
-                    document.getElementById(capacityField).value = parsed.CAPACITA.Numero_persone;
+                    if (capacityValue) {
+                        analysisHTML += `<strong>Capacità:</strong> ${capacityValue} persone<br>`;
+                        
+                        const capacityField = selectedInputMethod === 'upload' ? 'roomCapacityAI' : 'roomCapacity';
+                        document.getElementById(capacityField).value = capacityValue;
+                    }
                 }
                 
                 if (parsed.CARATTERISTICHE_SPAZIO && parsed.CARATTERISTICHE_SPAZIO.Tipologia_spazio) {
@@ -1031,7 +1045,7 @@ Fornisci risposta in formato JSON strutturato.`;
                 
                 // If JSON parsing fails, try to extract data manually from the text
                 const numbers = response.match(/\d+(?:\.\d+)?/g);
-                if (numbers && numbers.length >= 4) {
+                if (numbers && numbers.length >= 2) {
                     // Try to extract: mq, larghezza, lunghezza, altezza, capacità
                     const sqmField = selectedInputMethod === 'upload' ? 'roomSqmAI' : 'roomSqm';
                     const widthField = selectedInputMethod === 'upload' ? 'roomWidthAI' : 'roomWidth';
@@ -1039,12 +1053,23 @@ Fornisci risposta in formato JSON strutturato.`;
                     const heightField = selectedInputMethod === 'upload' ? 'roomHeightAI' : 'roomHeight';
                     const capacityField = selectedInputMethod === 'upload' ? 'roomCapacityAI' : 'roomCapacity';
                     
-                    // Extract values based on position in the response
-                    if (numbers[0]) document.getElementById(sqmField).value = numbers[0];
-                    if (numbers[1]) document.getElementById(widthField).value = numbers[1];
-                    if (numbers[2]) document.getElementById(lengthField).value = numbers[2];
-                    if (numbers[3]) document.getElementById(heightField).value = numbers[3];
-                    if (numbers.length > 4 && numbers[4]) document.getElementById(capacityField).value = numbers[4];
+                    // More intelligent extraction based on typical order in the response
+                    let numberIndex = 0;
+                    
+                    // Look for capacity specifically in the text
+                    const capacityMatch = response.match(/persone[^:]*:\s*(\d+)|CAPACITA[^}]*(\d+)|(\d+)\s*persone/i);
+                    if (capacityMatch) {
+                        const capacity = capacityMatch[1] || capacityMatch[2] || capacityMatch[3];
+                        if (capacity) {
+                            document.getElementById(capacityField).value = capacity;
+                        }
+                    }
+                    
+                    // Extract other dimensions
+                    if (numbers[0]) document.getElementById(sqmField).value = numbers[0]; // First number likely mq
+                    if (numbers[1]) document.getElementById(widthField).value = numbers[1]; // Second number likely width
+                    if (numbers[2]) document.getElementById(lengthField).value = numbers[2]; // Third number likely length
+                    if (numbers[3]) document.getElementById(heightField).value = numbers[3]; // Fourth number likely height
                 }
                 
                 // Display as text
