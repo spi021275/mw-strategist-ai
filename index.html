@@ -979,8 +979,11 @@ Fornisci risposta in formato JSON strutturato.`;
                 
                 // Try to find JSON in the response
                 const jsonMatch = response.match(/\{[\s\S]*\}/);
-                if (jsonMatch) {
-                    jsonString = jsonMatch[0];
+                if (jsonString.includes('{') && jsonString.includes('}')) {
+                    // Find the JSON part
+                    const startIndex = jsonString.indexOf('{');
+                    const endIndex = jsonString.lastIndexOf('}') + 1;
+                    jsonString = jsonString.substring(startIndex, endIndex);
                 }
                 
                 // Parse JSON response
@@ -988,91 +991,72 @@ Fornisci risposta in formato JSON strutturato.`;
                 
                 let analysisHTML = `<strong>Analisi ${type === 'photo' ? 'Foto' : 'Planimetria'}:</strong><br>`;
                 
-                // Display analysis results
-                if (parsed.DIMENSIONI_STIMATE) {
-                    const dim = parsed.DIMENSIONI_STIMATE;
-                    analysisHTML += `<strong>Dimensioni:</strong> ${dim.Metri_quadri_approssimativi || 'N/A'} mq, ${dim.Larghezza_stimata_metri || 'N/A'}m x ${dim.Lunghezza_stimata_metri || 'N/A'}m x ${dim.Altezza_stimata_metri || 'N/A'}m<br>`;
+                // Auto-fill form fields - try multiple possible structures
+                const sqmField = selectedInputMethod === 'upload' ? 'roomSqmAI' : 'roomSqm';
+                const widthField = selectedInputMethod === 'upload' ? 'roomWidthAI' : 'roomWidth';
+                const lengthField = selectedInputMethod === 'upload' ? 'roomLengthAI' : 'roomLength';
+                const heightField = selectedInputMethod === 'upload' ? 'roomHeightAI' : 'roomHeight';
+                const capacityField = selectedInputMethod === 'upload' ? 'roomCapacityAI' : 'roomCapacity';
+                
+                // Try to extract dimensions
+                if (parsed.dimensioni || parsed.DIMENSIONI_STIMATE) {
+                    const dim = parsed.dimensioni || parsed.DIMENSIONI_STIMATE;
                     
-                    // Auto-fill form fields
-                    if (dim.Metri_quadri_approssimativi) {
-                        const sqmField = selectedInputMethod === 'upload' ? 'roomSqmAI' : 'roomSqm';
-                        document.getElementById(sqmField).value = dim.Metri_quadri_approssimativi;
+                    if (dim.metri_quadri || dim.Metri_quadri_approssimativi) {
+                        const sqm = dim.metri_quadri || dim.Metri_quadri_approssimativi;
+                        document.getElementById(sqmField).value = sqm;
+                        analysisHTML += `<strong>Metri Quadri:</strong> ${sqm} mq<br>`;
                     }
-                    if (dim.Larghezza_stimata_metri) {
-                        const widthField = selectedInputMethod === 'upload' ? 'roomWidthAI' : 'roomWidth';
-                        document.getElementById(widthField).value = dim.Larghezza_stimata_metri;
+                    
+                    if (dim.larghezza || dim.Larghezza_stimata_metri) {
+                        const width = dim.larghezza || dim.Larghezza_stimata_metri;
+                        document.getElementById(widthField).value = width;
+                        analysisHTML += `<strong>Larghezza:</strong> ${width} m<br>`;
                     }
-                    if (dim.Lunghezza_stimata_metri) {
-                        const lengthField = selectedInputMethod === 'upload' ? 'roomLengthAI' : 'roomLength';
-                        document.getElementById(lengthField).value = dim.Lunghezza_stimata_metri;
+                    
+                    if (dim.lunghezza || dim.Lunghezza_stimata_metri) {
+                        const length = dim.lunghezza || dim.Lunghezza_stimata_metri;
+                        document.getElementById(lengthField).value = length;
+                        analysisHTML += `<strong>Lunghezza:</strong> ${length} m<br>`;
                     }
-                    if (dim.Altezza_stimata_metri) {
-                        const heightField = selectedInputMethod === 'upload' ? 'roomHeightAI' : 'roomHeight';
-                        document.getElementById(heightField).value = dim.Altezza_stimata_metri;
+                    
+                    if (dim.altezza || dim.Altezza_stimata_metri) {
+                        const height = dim.altezza || dim.Altezza_stimata_metri;
+                        document.getElementById(heightField).value = height;
+                        analysisHTML += `<strong>Altezza:</strong> ${height} m<br>`;
                     }
                 }
                 
-                if (parsed.CAPACITA) {
-                    // Try different possible structures for capacity
-                    let capacityValue = null;
-                    if (typeof parsed.CAPACITA === 'object') {
-                        capacityValue = parsed.CAPACITA.Numero_persone || parsed.CAPACITA.persone || parsed.CAPACITA.capacita;
-                    } else if (typeof parsed.CAPACITA === 'string') {
-                        // Extract number from string like "9 persone"
-                        const match = parsed.CAPACITA.match(/(\d+)/);
-                        if (match) capacityValue = parseInt(match[1]);
-                    } else if (typeof parsed.CAPACITA === 'number') {
-                        capacityValue = parsed.CAPACITA;
+                // Try to extract capacity
+                if (parsed.capacita || parsed.CAPACITA) {
+                    let capacity = null;
+                    const cap = parsed.capacita || parsed.CAPACITA;
+                    
+                    if (typeof cap === 'number') {
+                        capacity = cap;
+                    } else if (typeof cap === 'string') {
+                        const match = cap.match(/(\d+)/);
+                        if (match) capacity = parseInt(match[1]);
+                    } else if (typeof cap === 'object') {
+                        capacity = cap.persone || cap.Numero_persone || cap.numero_persone;
                     }
                     
-                    if (capacityValue) {
-                        analysisHTML += `<strong>Capacità:</strong> ${capacityValue} persone<br>`;
-                        
-                        const capacityField = selectedInputMethod === 'upload' ? 'roomCapacityAI' : 'roomCapacity';
-                        document.getElementById(capacityField).value = capacityValue;
+                    if (capacity) {
+                        document.getElementById(capacityField).value = capacity;
+                        analysisHTML += `<strong>Capacità:</strong> ${capacity} persone<br>`;
                     }
                 }
                 
-                if (parsed.CARATTERISTICHE_SPAZIO && parsed.CARATTERISTICHE_SPAZIO.Tipologia_spazio) {
-                    analysisHTML += `<strong>Tipologia:</strong> ${parsed.CARATTERISTICHE_SPAZIO.Tipologia_spazio}<br>`;
+                if (parsed.tipologia || (parsed.CARATTERISTICHE_SPAZIO && parsed.CARATTERISTICHE_SPAZIO.Tipologia_spazio)) {
+                    const tipo = parsed.tipologia || parsed.CARATTERISTICHE_SPAZIO.Tipologia_spazio;
+                    analysisHTML += `<strong>Tipologia:</strong> ${tipo}<br>`;
                 }
                 
                 contentDiv.innerHTML = analysisHTML;
                 
             } catch (e) {
                 console.error('Errore nel parsing JSON:', e);
-                console.log('Risposta originale:', response);
-                
-                // If JSON parsing fails, try to extract data manually from the text
-                const numbers = response.match(/\d+(?:\.\d+)?/g);
-                if (numbers && numbers.length >= 2) {
-                    // Try to extract: mq, larghezza, lunghezza, altezza, capacità
-                    const sqmField = selectedInputMethod === 'upload' ? 'roomSqmAI' : 'roomSqm';
-                    const widthField = selectedInputMethod === 'upload' ? 'roomWidthAI' : 'roomWidth';
-                    const lengthField = selectedInputMethod === 'upload' ? 'roomLengthAI' : 'roomLength';
-                    const heightField = selectedInputMethod === 'upload' ? 'roomHeightAI' : 'roomHeight';
-                    const capacityField = selectedInputMethod === 'upload' ? 'roomCapacityAI' : 'roomCapacity';
-                    
-                    // More intelligent extraction based on typical order in the response
-                    let numberIndex = 0;
-                    
-                    // Look for capacity specifically in the text
-                    const capacityMatch = response.match(/persone[^:]*:\s*(\d+)|CAPACITA[^}]*(\d+)|(\d+)\s*persone/i);
-                    if (capacityMatch) {
-                        const capacity = capacityMatch[1] || capacityMatch[2] || capacityMatch[3];
-                        if (capacity) {
-                            document.getElementById(capacityField).value = capacity;
-                        }
-                    }
-                    
-                    // Extract other dimensions
-                    if (numbers[0]) document.getElementById(sqmField).value = numbers[0]; // First number likely mq
-                    if (numbers[1]) document.getElementById(widthField).value = numbers[1]; // Second number likely width
-                    if (numbers[2]) document.getElementById(lengthField).value = numbers[2]; // Third number likely length
-                    if (numbers[3]) document.getElementById(heightField).value = numbers[3]; // Fourth number likely height
-                }
-                
-                // Display as text
+                // If not JSON, display as text
                 contentDiv.innerHTML = `<strong>Analisi completata:</strong><br>${response.substring(0, 500)}...`;
             }
         }
