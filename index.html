@@ -480,25 +480,25 @@
                             <div class="mt-6 grid md:grid-cols-3 gap-4">
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Capacità Persone *</label>
-                                    <input type="number" id="roomCapacityAI" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500" placeholder="Compilato da AI" min="1">
+                                    <input type="number" id="roomCapacity" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500" placeholder="Compilato da AI" min="1">
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Metri Quadri</label>
-                                    <input type="number" id="roomSqmAI" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500" placeholder="Compilato da AI" step="0.1">
+                                    <input type="number" id="roomSqm" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500" placeholder="Compilato da AI" step="0.1">
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Altezza (m)</label>
-                                    <input type="number" id="roomHeightAI" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500" placeholder="2.7" step="0.1" value="2.7">
+                                    <input type="number" id="roomHeight" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500" placeholder="2.7" step="0.1" value="2.7">
                                 </div>
                             </div>
                             <div class="grid md:grid-cols-2 gap-4 mt-4">
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Larghezza (m)</label>
-                                    <input type="number" id="roomWidthAI" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500" placeholder="Compilato da AI" step="0.1">
+                                    <input type="number" id="roomWidth" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500" placeholder="Compilato da AI" step="0.1">
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Lunghezza (m)</label>
-                                    <input type="number" id="roomLengthAI" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500" placeholder="Compilato da AI" step="0.1">
+                                    <input type="number" id="roomLength" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500" placeholder="Compilato da AI" step="0.1">
                                 </div>
                             </div>
                         </div>
@@ -974,90 +974,40 @@ Fornisci risposta in formato JSON strutturato.`;
             resultDiv.classList.remove('hidden');
             
             try {
-                // Clean the response to extract JSON
-                let jsonString = response;
-                
-                // Try to find JSON in the response
-                const jsonMatch = response.match(/\{[\s\S]*\}/);
-                if (jsonString.includes('{') && jsonString.includes('}')) {
-                    // Find the JSON part
-                    const startIndex = jsonString.indexOf('{');
-                    const endIndex = jsonString.lastIndexOf('}') + 1;
-                    jsonString = jsonString.substring(startIndex, endIndex);
-                }
-                
-                // Parse JSON response
-                const parsed = JSON.parse(jsonString);
+                // Try to parse JSON response
+                const parsed = JSON.parse(response);
                 
                 let analysisHTML = `<strong>Analisi ${type === 'photo' ? 'Foto' : 'Planimetria'}:</strong><br>`;
                 
-                // Auto-fill form fields - try multiple possible structures
-                const sqmField = selectedInputMethod === 'upload' ? 'roomSqmAI' : 'roomSqm';
-                const widthField = selectedInputMethod === 'upload' ? 'roomWidthAI' : 'roomWidth';
-                const lengthField = selectedInputMethod === 'upload' ? 'roomLengthAI' : 'roomLength';
-                const heightField = selectedInputMethod === 'upload' ? 'roomHeightAI' : 'roomHeight';
-                const capacityField = selectedInputMethod === 'upload' ? 'roomCapacityAI' : 'roomCapacity';
-                
-                // Try to extract dimensions
-                if (parsed.dimensioni || parsed.DIMENSIONI_STIMATE) {
-                    const dim = parsed.dimensioni || parsed.DIMENSIONI_STIMATE;
-                    
-                    if (dim.metri_quadri || dim.Metri_quadri_approssimativi) {
-                        const sqm = dim.metri_quadri || dim.Metri_quadri_approssimativi;
-                        document.getElementById(sqmField).value = sqm;
-                        analysisHTML += `<strong>Metri Quadri:</strong> ${sqm} mq<br>`;
-                    }
-                    
-                    if (dim.larghezza || dim.Larghezza_stimata_metri) {
-                        const width = dim.larghezza || dim.Larghezza_stimata_metri;
-                        document.getElementById(widthField).value = width;
-                        analysisHTML += `<strong>Larghezza:</strong> ${width} m<br>`;
-                    }
-                    
-                    if (dim.lunghezza || dim.Lunghezza_stimata_metri) {
-                        const length = dim.lunghezza || dim.Lunghezza_stimata_metri;
-                        document.getElementById(lengthField).value = length;
-                        analysisHTML += `<strong>Lunghezza:</strong> ${length} m<br>`;
-                    }
-                    
-                    if (dim.altezza || dim.Altezza_stimata_metri) {
-                        const height = dim.altezza || dim.Altezza_stimata_metri;
-                        document.getElementById(heightField).value = height;
-                        analysisHTML += `<strong>Altezza:</strong> ${height} m<br>`;
-                    }
+                if (parsed.dimensioni) {
+                    analysisHTML += `<strong>Dimensioni:</strong> ${parsed.dimensioni.metri_quadri || 'N/A'} mq, ${parsed.dimensioni.larghezza || 'N/A'}m x ${parsed.dimensioni.lunghezza || 'N/A'}m<br>`;
                 }
                 
-                // Try to extract capacity
-                if (parsed.capacita || parsed.CAPACITA) {
-                    let capacity = null;
-                    const cap = parsed.capacita || parsed.CAPACITA;
-                    
-                    if (typeof cap === 'number') {
-                        capacity = cap;
-                    } else if (typeof cap === 'string') {
-                        const match = cap.match(/(\d+)/);
-                        if (match) capacity = parseInt(match[1]);
-                    } else if (typeof cap === 'object') {
-                        capacity = cap.persone || cap.Numero_persone || cap.numero_persone;
-                    }
-                    
-                    if (capacity) {
-                        document.getElementById(capacityField).value = capacity;
-                        analysisHTML += `<strong>Capacità:</strong> ${capacity} persone<br>`;
-                    }
+                if (parsed.capacita) {
+                    analysisHTML += `<strong>Capacità:</strong> ${parsed.capacita} persone<br>`;
                 }
                 
-                if (parsed.tipologia || (parsed.CARATTERISTICHE_SPAZIO && parsed.CARATTERISTICHE_SPAZIO.Tipologia_spazio)) {
-                    const tipo = parsed.tipologia || parsed.CARATTERISTICHE_SPAZIO.Tipologia_spazio;
-                    analysisHTML += `<strong>Tipologia:</strong> ${tipo}<br>`;
+                if (parsed.tipologia) {
+                    analysisHTML += `<strong>Tipologia:</strong> ${parsed.tipologia}<br>`;
+                }
+                
+                // Auto-fill form fields if possible
+                if (parsed.dimensioni) {
+                    if (parsed.dimensioni.metri_quadri) document.getElementById('roomSqm').value = parsed.dimensioni.metri_quadri;
+                    if (parsed.dimensioni.larghezza) document.getElementById('roomWidth').value = parsed.dimensioni.larghezza;
+                    if (parsed.dimensioni.lunghezza) document.getElementById('roomLength').value = parsed.dimensioni.lunghezza;
+                    if (parsed.dimensioni.altezza) document.getElementById('roomHeight').value = parsed.dimensioni.altezza;
+                }
+                
+                if (parsed.capacita) {
+                    document.getElementById('roomCapacity').value = parsed.capacita;
                 }
                 
                 contentDiv.innerHTML = analysisHTML;
                 
             } catch (e) {
-                console.error('Errore nel parsing JSON:', e);
                 // If not JSON, display as text
-                contentDiv.innerHTML = `<strong>Analisi completata:</strong><br>${response.substring(0, 500)}...`;
+                contentDiv.innerHTML = `<strong>Analisi completata:</strong><br>${response}`;
             }
         }
 
@@ -1136,11 +1086,11 @@ Fornisci risposta in formato JSON strutturato.`;
                 }
             } else {
                 // Get from AI analysis or require manual input
-                capacity = parseInt(document.getElementById('roomCapacityAI').value) || 0;
-                sqm = parseFloat(document.getElementById('roomSqmAI').value) || 0;
-                width = parseFloat(document.getElementById('roomWidthAI').value) || 0;
-                length = parseFloat(document.getElementById('roomLengthAI').value) || 0;
-                height = parseFloat(document.getElementById('roomHeightAI').value) || 2.7;
+                capacity = parseInt(document.getElementById('roomCapacity').value) || 0;
+                sqm = parseFloat(document.getElementById('roomSqm').value) || 0;
+                width = parseFloat(document.getElementById('roomWidth').value) || 0;
+                length = parseFloat(document.getElementById('roomLength').value) || 0;
+                height = parseFloat(document.getElementById('roomHeight').value) || 2.7;
 
                 if (!capacity || !sqm) {
                     alert('L\'analisi AI non ha fornito dati sufficienti. Compila manualmente capacità e dimensioni.');
@@ -1260,13 +1210,6 @@ Genera offerta in HTML professionale, completa e pronta per il cliente.`;
             document.getElementById('roomHeight').value = '';
             document.getElementById('roomCapacity').value = '';
             document.getElementById('roomNotes').value = '';
-            
-            // Reset AI fields
-            document.getElementById('roomSqmAI').value = '';
-            document.getElementById('roomWidthAI').value = '';
-            document.getElementById('roomLengthAI').value = '';
-            document.getElementById('roomHeightAI').value = '2.7';
-            document.getElementById('roomCapacityAI').value = '';
             
             // Reset radio buttons and checkboxes
             document.querySelectorAll('input[name="vcMode"]').forEach(r => r.checked = false);
