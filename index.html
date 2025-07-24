@@ -480,25 +480,25 @@
                             <div class="mt-6 grid md:grid-cols-3 gap-4">
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Capacità Persone *</label>
-                                    <input type="number" id="roomCapacity" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500" placeholder="Compilato da AI" min="1">
+                                    <input type="number" id="roomCapacityAI" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500" placeholder="Compilato da AI" min="1">
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Metri Quadri</label>
-                                    <input type="number" id="roomSqm" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500" placeholder="Compilato da AI" step="0.1">
+                                    <input type="number" id="roomSqmAI" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500" placeholder="Compilato da AI" step="0.1">
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Altezza (m)</label>
-                                    <input type="number" id="roomHeight" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500" placeholder="2.7" step="0.1" value="2.7">
+                                    <input type="number" id="roomHeightAI" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500" placeholder="2.7" step="0.1" value="2.7">
                                 </div>
                             </div>
                             <div class="grid md:grid-cols-2 gap-4 mt-4">
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Larghezza (m)</label>
-                                    <input type="number" id="roomWidth" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500" placeholder="Compilato da AI" step="0.1">
+                                    <input type="number" id="roomWidthAI" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500" placeholder="Compilato da AI" step="0.1">
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-2">Lunghezza (m)</label>
-                                    <input type="number" id="roomLength" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500" placeholder="Compilato da AI" step="0.1">
+                                    <input type="number" id="roomLengthAI" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-cyan-500" placeholder="Compilato da AI" step="0.1">
                                 </div>
                             </div>
                         </div>
@@ -993,14 +993,27 @@ Fornisci risposta in formato JSON strutturato.`;
                 
                 // Auto-fill form fields if possible
                 if (parsed.dimensioni) {
-                    if (parsed.dimensioni.metri_quadri) document.getElementById('roomSqm').value = parsed.dimensioni.metri_quadri;
-                    if (parsed.dimensioni.larghezza) document.getElementById('roomWidth').value = parsed.dimensioni.larghezza;
-                    if (parsed.dimensioni.lunghezza) document.getElementById('roomLength').value = parsed.dimensioni.lunghezza;
-                    if (parsed.dimensioni.altezza) document.getElementById('roomHeight').value = parsed.dimensioni.altezza;
+                    if (parsed.dimensioni.metri_quadri) {
+                        const sqmField = selectedInputMethod === 'upload' ? 'roomSqmAI' : 'roomSqm';
+                        document.getElementById(sqmField).value = parsed.dimensioni.metri_quadri;
+                    }
+                    if (parsed.dimensioni.larghezza) {
+                        const widthField = selectedInputMethod === 'upload' ? 'roomWidthAI' : 'roomWidth';
+                        document.getElementById(widthField).value = parsed.dimensioni.larghezza;
+                    }
+                    if (parsed.dimensioni.lunghezza) {
+                        const lengthField = selectedInputMethod === 'upload' ? 'roomLengthAI' : 'roomLength';
+                        document.getElementById(lengthField).value = parsed.dimensioni.lunghezza;
+                    }
+                    if (parsed.dimensioni.altezza) {
+                        const heightField = selectedInputMethod === 'upload' ? 'roomHeightAI' : 'roomHeight';
+                        document.getElementById(heightField).value = parsed.dimensioni.altezza;
+                    }
                 }
                 
                 if (parsed.capacita) {
-                    document.getElementById('roomCapacity').value = parsed.capacita;
+                    const capacityField = selectedInputMethod === 'upload' ? 'roomCapacityAI' : 'roomCapacity';
+                    document.getElementById(capacityField).value = parsed.capacita;
                 }
                 
                 contentDiv.innerHTML = analysisHTML;
@@ -1086,11 +1099,11 @@ Fornisci risposta in formato JSON strutturato.`;
                 }
             } else {
                 // Get from AI analysis or require manual input
-                capacity = parseInt(document.getElementById('roomCapacity').value) || 0;
-                sqm = parseFloat(document.getElementById('roomSqm').value) || 0;
-                width = parseFloat(document.getElementById('roomWidth').value) || 0;
-                length = parseFloat(document.getElementById('roomLength').value) || 0;
-                height = parseFloat(document.getElementById('roomHeight').value) || 2.7;
+                capacity = parseInt(document.getElementById('roomCapacityAI').value) || 0;
+                sqm = parseFloat(document.getElementById('roomSqmAI').value) || 0;
+                width = parseFloat(document.getElementById('roomWidthAI').value) || 0;
+                length = parseFloat(document.getElementById('roomLengthAI').value) || 0;
+                height = parseFloat(document.getElementById('roomHeightAI').value) || 2.7;
 
                 if (!capacity || !sqm) {
                     alert('L\'analisi AI non ha fornito dati sufficienti. Compila manualmente capacità e dimensioni.');
@@ -1210,6 +1223,13 @@ Genera offerta in HTML professionale, completa e pronta per il cliente.`;
             document.getElementById('roomHeight').value = '';
             document.getElementById('roomCapacity').value = '';
             document.getElementById('roomNotes').value = '';
+            
+            // Reset AI fields
+            document.getElementById('roomSqmAI').value = '';
+            document.getElementById('roomWidthAI').value = '';
+            document.getElementById('roomLengthAI').value = '';
+            document.getElementById('roomHeightAI').value = '2.7';
+            document.getElementById('roomCapacityAI').value = '';
             
             // Reset radio buttons and checkboxes
             document.querySelectorAll('input[name="vcMode"]').forEach(r => r.checked = false);
