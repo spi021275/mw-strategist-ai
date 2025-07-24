@@ -53,7 +53,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
                             </svg>
                             <h3 class="text-xl font-semibold text-gray-800 mb-2">Analizza Meeting & Genera Brief DSA</h3>
-                            <p class="text-gray-600 mb-4">Analizza appunti del meeting, estrai requisiti e genera brief strutturato per il team DSA con upload di planimetrie e foto.</p>
+                            <p class="text-gray-600 mb-4">Analizza appunti del meeting, estrai requisiti e genera brief strutturato per il team DSA sfruttando l'expertise di 51 anni, partnership certificate e soluzioni proprietarie (Spacebooking, Agrid Welcome/Bank).</p>
                             <button onclick="showPostMeeting()" class="w-full inline-flex items-center justify-center px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg">
                                 Inizia
                                 <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -92,7 +92,7 @@
                 </button>
                 
                 <h2 class="text-3xl font-bold text-gray-900 mb-2">Analizza Meeting & Genera Brief DSA</h2>
-                <p class="text-gray-600 mb-8">Trasforma i tuoi appunti del meeting in un brief tecnico strutturato per il team DSA</p>
+                <p class="text-gray-600 mb-8">Trasforma i tuoi appunti del meeting in un brief tecnico strutturato per il team DSA utilizzando l'expertise completa della BU (51 anni esperienza, 823M€ fatturato, 3.850 persone)</p>
                 
                 <div id="postMeetingForm" class="space-y-8">
                     <!-- Dati Base Cliente -->
@@ -338,12 +338,6 @@
                                 <svg class="w-5 h-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
                                 </svg>
-                                Selezione tipologia spazio
-                            </li>
-                            <li class="flex items-center">
-                                <svg class="w-5 h-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                                </svg>
                                 Calcolo dimensioni e capacità
                             </li>
                             <li class="flex items-center">
@@ -368,11 +362,11 @@
     <!-- Footer -->
     <div class="mt-16 pb-8 text-center text-sm text-gray-500">
         <p>
-            Strumento personalizzato per la BU Multimedia & Workspaces di
+            Strumento specializzato per la BU Multimedia & Workspaces di
             <span class="font-semibold text-blue-600">Var Group</span>
         </p>
         <p class="mt-2 text-xs text-gray-400 max-w-2xl mx-auto px-4">
-            Sviluppato utilizzando l'expertise della BU e il framework AI del B2B Sales Strategist AI
+            Alimentato dall'expertise di 51 anni, 823M€ fatturato, 3.850 persone, partnership certificate e soluzioni proprietarie
         </p>
     </div>
 
@@ -380,92 +374,173 @@
         // API Configuration
         const API_KEY = "AIzaSyDjlVWJIzGCa5CnXbj_nQEj1aG2aHlLwnQ";
         
-        // Multimedia & Workspaces Context
+        // Multimedia & Workspaces Context Completo
         const MW_CONTEXT = `
 # Var Group - Multimedia & Workspaces Business Unit
 
-## Identità e Mission
-La BU Multimedia & Workspaces di Var Group si occupa di far comunicare e collaborare al meglio le persone in ogni luogo e contesto. Con oltre 60 anni di esperienza, progettiamo e integriamo spazi di lavoro ibridi e soluzioni di comunicazione, agendo come partner unico per l'intero ciclo di vita del progetto.
+## Identità e Struttura Corporate
+**Durante + Sangalli Tecnologie** formano la BU Multimedia & Workspaces di **Var Group**, società controllata al 100% dal **Gruppo SeSa** (fatturato 3.210 milioni di euro), leader in Italia nella distribuzione di soluzioni IT a valore per le imprese, quotata dal 2013 sul Mercato Telematico Azionario di Borsa Italiana.
+
+### Numeri Chiave di VarGroup (al 30.04.2024)
+- **Fatturato**: 823 milioni di euro
+- **EBITDA**: 99,4 milioni di euro  
+- **Persone**: 3.850 collaboratori
+- **Esperienza**: 51 anni di competenza nel settore
+- **Copertura**: Italia + presenza internazionale (Europa, Messico, Brasile)
+
+## Mission
+La BU Multimedia & Workspaces si occupa di far comunicare e collaborare al meglio le persone in ogni luogo e contesto. Con oltre 60 anni di esperienza, progettiamo e integriamo spazi di lavoro ibridi e soluzioni di comunicazione, agendo come partner unico per l'intero ciclo di vita del progetto.
 
 ## Pilastri degli Hybrid Workspaces
 1. **User Experience**: Massima semplicità d'uso, performance elevate ed ergonomia
-2. **Tecnologie**: Implementazione delle migliori soluzioni di collaborazione, audio-video e piattaforme per il lavoro ibrido
-3. **ESG**: Attenzione al benessere delle persone e alla sostenibilità ambientale ed economica
+2. **Technologies**: Best Collaboration, Best Audio Visual, Hybrid Work Platform
+3. **ESG**: Benessere delle persone, sostenibilità ambientale ed economica
 
 ## Aree di Competenza Principali
 
 ### Microsoft Modern Work
-- Suite Microsoft 365 completa per ambiente di lavoro sicuro e intelligente
-- Gestione identità e accessi (Entra ID)
-- Management dispositivi (Intune)
-- Produttività (Teams, Exchange, SharePoint)
-- Sicurezza (Defender, Sentinel)
-- AI personale con Copilot
+**Microsoft Solutions Partner Modern Work & Security**
+- **Adoption Plan**: BECOME MODERN → MAKE EVERYTHING SECURE → MANAGE YOUR DEVICE → UNLOCK THE POWER OF PERSONAL AI
+- Suite Microsoft 365 completa: Exchange, Outlook, Teams, OneDrive, SharePoint
+- Cloud Security: EntraID, Defender, Sentinel
+- Device Management: Intune
+- Data Governance: Purview
+- AI personale con **Microsoft Copilot**
 
 ### Collaboration Solutions
-- Telefonia enterprise e videoconferenza
-- Piattaforme di collaborazione ibrida
-- Partner: Microsoft, Cisco, Poly, Pexip, Logitech, Zoom, Google Cloud
+**"Permettere alle persone di lavorare e collaborare efficacemente da ogni luogo e in ogni contesto"**
+- **Enterprise Telephony**
+- **Videoconference Solutions** 
+- **Hybrid Collaboration**
+- Partner certificati: Microsoft, Cisco Gold Integrator, Pexip Gold Partner, Poly Platinum Partner, Logitech One Tier Partner, Zoom, Google Cloud, Neat
 
 ### Allestimenti Workplace
-- Progettazione spazi fisici che uniscono architettura e tecnologia
-- Focus su qualità audio-video e semplicità d'uso (BYOD)
-- Tipologie: Huddle Room, Meeting Room, Board Room, Training Room, Demo Room
+**Da oltre 30 anni** progettiamo e integriamo spazi di lavoro pensati per enfatizzare la user experience attraverso design integrato tra architettura e tecnologia, qualità audio-video eccellenti e massima semplicità d'uso anche in modalità BYOD.
+- **Huddle Room**: piccoli spazi di lavoro estremamente efficienti
+- **Meeting Room**: sale riunioni multimediali, intuitive ed efficaci  
+- **Board Room**: spazi di pregio pensati per le esigenze dei CDA
+- **Training Room**: sale pensate per facilitare la formazione
+- **Demo Room**: spazi disegnati per enfatizzare le emozioni
 
 ### Spazi Specializzati
-- **Media Room**: Ambienti per creazione contenuti professionali, webinar, podcast, live streaming
-- **Control Room**: Situation room e sale di controllo con design multimediale e ridondanza sistemi
-- **Digital Reception (Agrid Welcome)**: Soluzioni Microsoft Teams per remotizzazione accoglienza
-- **Remote Expert (Agrid Bank)**: Piattaforme banking per consulenza video specializzata
+
+#### Media Room
+Spazio pensato per realizzare webinar, podcast, live social o creare contenuti:
+- Tecnologie green screen avanzate
+- Acustica attiva e passiva di qualità Hi-Fi
+- Set multicamera e sistema di regia live  
+- Illuminazione naturale e artificiale
+- Attrezzature professionali
+- Modularità e versatilità
+
+#### Control Room  
+Sviluppiamo progetti di alta complessità per control room e situation room:
+- Design multimediale
+- Design di rete e alimentazioni
+- Security design
+- Integrazione dispositivi e software
+- Sistemi pluri ridondati
+- Disaster recovery system
+
+#### Digital Reception - Agrid Welcome (AW)
+Digital reception basata su **Microsoft Teams** che consente di remotizzare il processo di accoglienza:
+- Collegamento video ospite-receptionist
+- Acquisizione e stampa documenti da remoto
+- Attivazione dispositivi e varchi da casa
+- Più varchi, nessuna risorsa full dedicata
+- Qualità audiovisiva eccellente
+
+#### Remote Expert - Agrid Bank
+Soluzione di remote expert per filiali bancarie che consente videoconferenza per consulenza e vendita:
+- Collegamento più filiali a risorse specializzate remote
+- Scelta del miglior consulente per soluzioni finanziarie
+- Gestione code di attesa clienti
+- Gestione remota scansione, firma e stampa contratti
+- Sistemi cash-in/cash-out
+- Funzioni Remote Teller
+
+### Hybrid Work Platform - Spacebooking
+Piattaforma proprietaria con user experience semplice per organizzare lavoro in sede e remoto:
+- **Prenota** desk, sale, individua colleghi (indoor maps)
+- **Programma** hybrid working
+- **Organizza** lavoro in team
+- **Ottimizza** prenotazioni in chiave green
+- **Governa** flussi di hybrid working
+- **Integrazione** multi-touchpoint: WEB, App, Teams, Outlook, Google Workspace, assistenti vocali
 
 ### Digital Signage e Audio-Video
-- Soluzioni end-to-end per comunicazione visiva
-- Settori: Retail, Lusso, Automotive, GDO, Corporate, Musei, Entertainment
-- Servizi: Progettazione, installazione, creazione contenuti, gestione
+Soluzioni end-to-end per comunicazione visiva con **numeri consolidati**:
+- **AUTOMOTIVE**: 580 store worldwide
+- **GDO**: 260 store in Italy  
+- **RETAIL**: 1.200 shops in Europe
+- **ENTERTAINMENT**: 64 venues in Italy
+
+**Servizi completi**: Progettazione → SW/HW selection → Installazione → Contenuti → Manage & Optimize
+- Assistenza cloud, Move/Add/Change 24h, Online/On-site
+
+### Progetti Audio-Video Specializzati
+- **Musei**: Installazioni multimediali immersive
+- **Teatri**: Sistemi audio-video professionali con tecnologie avanzate
+- **Arene e Stadi**: Impianti per grandi eventi e spettacoli
+- **Real Estate, Hospitality, Yacht**: Soluzioni su misura per settori luxury
 
 ### Hybrid Events
-- Organizzazione eventi in presenza, virtuali o ibridi
-- Servizi completi: concept, noleggio tecnologie, regia live, streaming
+Organizziamo eventi creativi, interattivi e sostenibili:
+- **Tipologie**: Keynote, Presentazioni prodotto, Sfilate, Webinar, Streaming, Broadcasting, Convention, CDA, Townhall
+- **Modalità**: In presenza, Virtuali, Hybrid, LIVE o registrati
+- **Servizi pre-event**: concept, organizzazione, noleggio, installazione, creazione contenuti
+- **Servizi LIVE**: regia, coordinamento multi-site, collegamenti videoconferenza, streaming, recording
 
-## Processo di Vendita Tipico
+## Processo di Vendita Tipico - Metodologia Consolidata
 1. **Call di Qualifica**: Analisi esigenze cliente con HR/IT Manager
-2. **Sopralluogo e Raccolta Dati**: Planimetrie, foto, misure, requisiti specifici
+2. **Sopralluogo e Raccolta Dati**: Planimetrie, foto, misure, requisiti specifici  
 3. **Brief al DSA**: Trasferimento informazioni al reparto Design & Solution Architecture
 4. **Progettazione**: DSA crea soluzione tecnica con Tech Annex ed Economics
 5. **Presentazione Offerta**: Presentazione soluzione completa al cliente
 
 ## Target Clienti Principali
 - **HR Manager**: Responsabili gestione spazi e benessere dipendenti
-- **IT Manager**: Responsabili infrastruttura tecnologica e sicurezza
+- **IT Manager**: Responsabili infrastruttura tecnologica e sicurezza  
 - **Facility Manager**: Gestione immobili e spazi aziendali
 - **C-Level**: Decision maker per investimenti strategici
-
-## Tipologie di Spazi Gestiti
-- **Meeting Rooms**: Sale riunioni tradizionali e ibride
-- **Huddle Rooms**: Spazi collaborativi informali
-- **Board Rooms**: Sale direttive e C-level
-- **Auditorium**: Spazi per grandi eventi e comunicazioni
-- **Training Rooms**: Aule formative e didattiche
-- **Uffici Ibridi**: Postazioni flessibili e adattabili
-- **Media Rooms**: Studi per produzione contenuti
 
 ## Soluzioni Tecnologiche Standard
 - **BYOD (Bring Your Own Device)**: Connessione dispositivi personali
 - **MTR (Microsoft Teams Rooms)**: Sale certificate Microsoft Teams
 - **Soluzioni Ibride**: Combinazione BYOD + MTR per massima flessibilità
 - **Audio**: Sistemi di amplificazione, diffusione e acquisizione
-- **Video**: Telecamere, proiettori, monitor, sistemi di switching
+- **Video**: Telecamere, proiettori, monitor, sistemi di switching  
 - **Controllo**: Pannelli touch, automazione, gestione centralizzata
 
-## Partner Tecnologici Strategici
-Microsoft, Cisco, Poly, Logitech, Zoom, Google Cloud, Epson, AVer, Dante, WyreStorm
+## Certificazioni e Partnership Complete
 
-## DOC (Durante Operation Center)
-Supporto tecnico qualificato con:
-- Help Desk multi-livello (HD1-HD3)
-- VNOC (Video Network Operation Center)
-- Monitoraggio proattivo 24/7
-- Presidi on-site dedicati
+### Certificazioni Qualità
+- **UNI 11799:2020**: Servizi di integrazione dei sistemi Audio Video e Controllo (AVC)
+- **ISO 9001:15**: Sistema gestione qualità
+
+### Partnership Strategiche (livelli certificati)
+- **Microsoft**: Modern Work Solutions Partner & Security Solutions Partner
+- **Cisco**: Gold Integrator  
+- **Poly/HP**: Platinum Partner
+- **Logitech**: One Tier Partner
+- **Avaya**: Emerald Partner
+- **Pexip**: Gold Partner
+- **Telenia**: Premier Integrator
+- **Zoom**: Official Partner
+- **Epson, LG, Samsung, Sharp/NEC**: Official Partner
+- **Creston, Extron, Barco, Kramer**: Official Partner
+
+## DOC (Durante Operation Center) - Manage & Optimize
+Supporto tecnico di altissima qualità con **tecnici certificati da oltre 35 anni**:
+- **Help Desk multi-livello**: competenze dal primo step (HD1) fino ai sistemisti senior (HD3)
+- **VNOC (Video Network Operation Center)**: il concierge per la videoconferenza
+- **Monitoraggio proattivo**: cloud, on-prem e gestione di guasti e allarmi
+- **Servizio 24x365**: presidi on-site e supporto continuo
+
+## Copertura Territoriale
+- **Italia**: Rete capillare di sedi in tutte le principali città (Milano, Roma, Torino, Genova, Bologna, Firenze, Napoli, Bari, Catania, Cagliari, etc.)
+- **Internazionale**: Presenza consolidata in Europa, Messico, Brasile
+- **Prossimità territoriale = prossimità culturale**: approccio locale con standard globali
         `;
 
         // State management
@@ -702,9 +777,9 @@ Supporto tecnico qualificato con:
                     specialRequirements: document.getElementById('specialRequirements').value
                 };
 
-                const prompt = `Agisci come un Senior Technical Consultant di Var Group - Multimedia & Workspaces. 
+                const prompt = `Agisci come un Senior Technical Consultant di Var Group - Multimedia & Workspaces con la massima competenza tecnica e commerciale della BU.
 
-CONTESTO AZIENDALE:
+CONTESTO AZIENDALE COMPLETO:
 ${MW_CONTEXT}
 
 DATI DEL MEETING E REQUISITI CLIENTE:
@@ -720,48 +795,70 @@ DATI DEL MEETING E REQUISITI CLIENTE:
 - Requisiti Speciali: ${formData.specialRequirements}
 - File Allegati: ${uploadedFiles.map(f => f.name).join(', ')}
 
-TASK: Genera un brief strutturato e professionale per il team DSA (Design & Solution Architecture) che contenga:
+TASK: Genera un brief professionale e dettagliato per il team DSA (Design & Solution Architecture) che sfrutti completamente l'expertise della BU e contenga:
 
 1. **EXECUTIVE SUMMARY**
-   - Sintesi del progetto e obiettivi del cliente
+   - Inquadramento strategico del progetto
+   - Obiettivi business del cliente
+   - Valore aggiunto della soluzione Var Group
 
-2. **ANALISI REQUISITI**
+2. **ANALISI REQUISITI APPROFONDITA**
    - Requisiti funzionali estratti dal meeting
-   - Requisiti tecnici identificati
-   - Vincoli e criticità emerse
+   - Requisiti tecnici identificati con tecnologie specifiche
+   - Vincoli architetturali, normativi e di sicurezza
+   - Criticità emerse e rischi progettuali
 
-3. **SPECIFICHE SPAZI**
-   - Dettaglio per ogni tipologia di spazio richiesta
-   - Numero partecipanti previsti per spazio
-   - Funzionalità specifiche richieste
+3. **SPECIFICHE SPAZI DETTAGLIATE**
+   - Dettaglio per ogni tipologia di spazio con:
+     * Dimensioni e capacità suggerite
+     * Funzionalità specifiche richieste
+     * Tecnologie raccomandate (BYOD/MTR/Hybrid)
+     * Standard di qualità audio-video
+     * Integrazione con sistemi esistenti
 
-4. **INDICAZIONI TECNOLOGICHE**
-   - Soluzioni tecnologiche da valutare
-   - Integrazioni richieste
-   - Standard di qualità da rispettare
+4. **RACCOMANDAZIONI TECNOLOGICHE SPECIALIZZATE**
+   - Soluzioni da portfolio Var Group (Spacebooking, Agrid Welcome, etc.)
+   - Partner tecnologici specifici da coinvolgere
+   - Architettura di sistema proposta
+   - Certificazioni richieste (UNI 11799:2020)
+   - Integrazioni Microsoft 365/Teams
 
 5. **DELIVERABLE RICHIESTI AL DSA**
-   - Tech Annex dettagliato
-   - Economics e pricing
-   - Timeline di implementazione
-   - Documentazione tecnica
+   - Tech Annex dettagliato con specifiche tecniche
+   - Economics strutturato con:
+     * CAPEX (hardware, software, installazione)
+     * OPEX (licenze, manutenzione DOC)
+     * ROI e TCO analysis
+   - Timeline di implementazione con milestone
+   - Documentazione tecnica e certificazioni
 
-6. **DOCUMENTAZIONE ALLEGATA**
-   - Riferimenti ai file caricati: ${uploadedFiles.map(f => f.name).join(', ')}
-   - Indicazioni su come utilizzare planimetrie/documenti allegati
-   - Note per l'analisi dei file forniti
+6. **DOCUMENTAZIONE ALLEGATA E ANALISI**
+   - Riferimenti specifici ai file: ${uploadedFiles.map(f => f.name).join(', ')}
+   - Indicazioni operative per utilizzo planimetrie/documenti
+   - Note per rilievi tecnici aggiuntivi necessari
+   - Checklist per sopralluogo tecnico DSA
 
-7. **NEXT STEPS**
-   - Azioni immediate per il DSA
-   - Informazioni aggiuntive da raccogliere
-   - Milestone del progetto
+7. **STRATEGIA COMMERCIALE E NEXT STEPS**
+   - Positioning competitivo vs alternative
+   - Elementi differenzianti della proposta
+   - Stakeholder chiave da coinvolgere
+   - Milestone commerciali e tecnici
+   - Risk mitigation strategy
+
+8. **CONSIDERAZIONI DOC E POST-VENDITA**
+   - Servizi di supporto raccomandati
+   - SLA proposti per il cliente
+   - Training e change management
+   - Evoluzione futura della soluzione
 
 IMPORTANTE: 
-- Se sono stati caricati file (planimetrie, foto, documenti), fai sempre riferimento ad essi nella sezione "DOCUMENTAZIONE ALLEGATA" 
-- Indica chiaramente al DSA come utilizzare i file allegati per la progettazione
-- Se presente trascrizione meeting, utilizzala come fonte primaria per i requisiti
+- Utilizza terminologia tecnica specifica e numeri concreti della BU
+- Fai riferimento ai nostri 51 anni di esperienza e ai 823M€ di fatturato
+- Includi sempre partnership certificate e competenze specialistiche
+- Se presenti file allegati, utilizzali come fonte primaria per le specifiche
+- Menziona capacità internazionale e presenza geografica quando rilevante
 
-Fornisci il brief in formato HTML professionale, strutturato e pronto per essere condiviso con il team DSA.`;
+Fornisci il brief in formato HTML professionale, completo e actionable per il team DSA.`;
 
                 const response = await callGeminiAPI(prompt);
                 
