@@ -1,4 +1,475 @@
-<!DOCTYPE html>
+// State management
+        let uploadedFiles = [];
+        let transcriptContent = '';
+        let generatedBriefContent = '';
+        let spaceFiles = [];
+        let selectedInputMethod = '';
+        let roomData = {};
+
+        // Hardware Database
+        const HARDWARE_DB = {
+            yealink: {
+                A40: { name: "Yealink A40", type: "Small/Huddle", modes: ["BYOD", "MTR", "ZOOM"], capacity: "1-6 persone", maxPickup: "3m" },
+                A50: { name: "Yealink A50", type: "Medium", modes: ["BYOD", "MTR", "ZOOM"], capacity: "6-12 persone", maxPickup: "5m" },
+                MeetingBoard: { name: "Yealink MeetingBoard", type: "Small/Huddle", modes: ["BYOD", "MTR", "ZOOM"], capacity: "1-6 persone", maxPickup: "3m" },
+                VMC36W: { name: "Yealink VMC36-W Package", type: "Additional Microphone", modes: ["Wireless"], capacity: "Expansion", maxPickup: "2m" },
+                PA20: { name: "Yealink PA20", type: "Wireless Sharing", modes: ["BYOD"], capacity: "Content Sharing", maxPickup: "N/A" }
+            },
+            logitech: {
+                Meetup2: { name: "Logitech Meetup 2", type: "Huddle/Small", modes: ["BYOD", "MTR", "ZOOM", "GOOGLE MEET"], capacity: "1-6 persone", maxPickup: "2.4m" },
+                RallyBarHuddle: { name: "Logitech Rally Bar Huddle", type: "Huddle/Small", modes: ["BYOD", "MTR", "ZOOM", "GOOGLE MEET"], capacity: "1-6 persone", maxPickup: "3m" },
+                RallyBar: { name: "Logitech Rally Bar", type: "Medium/Large", modes: ["BYOD", "MTR", "ZOOM", "GOOGLE MEET"], capacity: "6-16 persone", maxPickup: "5.5m" },
+                RallyPlus: { name: "Logitech Rally Plus", type: "Large", modes: ["BYOD", "MTR", "ZOOM", "GOOGLE MEET"], capacity: "12+ persone", maxPickup: "7m" },
+                MicExpansion: { name: "Logitech Microfono Espansione", type: "Additional Microphone", modes: ["Wired"], capacity: "Expansion", maxPickup: "2.2m" }
+            },
+            poly: {
+                X32: { name: "Poly X32", type: "Small", modes: ["BYOD", "MTR", "ZOOM", "GOOGLE MEET"], capacity: "3-6 persone", maxPickup: "3.5m" },
+                X52: { name: "Poly X52", type: "Medium/Large", modes: ["BYOD", "MTR", "ZOOM", "GOOGLE MEET"], capacity: "6-12 persone", maxPickup: "5m" },
+                X72: { name: "Poly X72", type: "Medium/Large", modes: ["BYOD", "MTR", "ZOOM", "GOOGLE MEET"], capacity: "6-16 persone", maxPickup: "6m" },
+                SYNC: { name: "Poly SYNC", type: "Additional Microphone", modes: ["Wireless"], capacity: "Expansion", maxPickup: "2m" }
+            },
+            barco: {
+                ClickShareBarPro: { name: "Barco ClickShare Bar Pro", type: "Medium", modes: ["BYOD"], capacity: "6-12 persone", maxPickup: "4m" },
+                ClickShareBarCore: { name: "Barco ClickShare Bar Core", type: "Small/Huddle", modes: ["BYOD"], capacity: "1-6 persone", maxPickup: "3m" },
+                CX20_1: { name: "Barco ClickShare CX-20 (1 bottone)", type: "Wireless Sharing", modes: ["BYOD"], capacity: "Content Sharing", maxPickup: "N/A" },
+                CX20_2: { name: "Barco ClickShare CX-20 (2 bottoni)", type: "Wireless Sharing", modes: ["BYOD"], capacity: "Content Sharing", maxPickup: "N/A" },
+                CX50: { name: "Barco ClickShare CX-50 (2 bottoni)", type: "Wireless Sharing", modes: ["BYOD"], capacity: "Content Sharing", maxPickup: "N/A" }
+            }
+        };
+
+        // Room Classification
+        function classifyRoom(capacity, sqm) {
+            if (capacity <= 3 && sqm < 10) return "HUDDLE";
+            if (capacity <= 6 && sqm <= 18) return "SMALL";
+            if (capacity <= 12 && sqm <= 30) return "MEDIUM";
+            return "LARGE";
+        }
+
+        // Wizard Functions
+        function selectInputMethod(method) {
+            selectedInputMethod = method;
+            document.getElementById('radioManual').checked = method === 'manual';
+            document.getElementById('radioUpload').checked = method === 'upload';
+            
+            if (method === 'manual') {
+                document.getElementById('manualFields').classList.remove('hidden');
+                document.getElementById('uploadFields').classList.add('hidden');
+                document.getElementById('manualInput').parentElement.classList.add('border-blue-500', 'bg-blue-50');
+                document.getElementById('uploadInput').parentElement.classList.remove('border-blue-500', 'bg-blue-50');
+            } else {
+                document.getElementById('manualFields').classList.add('hidden');
+                document.getElementById('uploadFields').classList.remove('hidden');
+                document.getElementById('uploadInput').parentElement.classList.add('border-blue-500', 'bg-blue-50');
+                document.getElementById('manualInput').parentElement.classList.remove('border-blue-500', 'bg-blue-50');
+            }
+        }
+
+        // File Upload Handlers for Wizard
+        document.getElementById('photoUpload').addEventListener('change', async function(event) {
+            await handleSpaceFileUpload(event, 'photo');
+        });
+
+        document.getElementById('planUpload').addEventListener('change', async function(event) {
+            await handleSpaceFileUpload(event, 'plan');
+        });
+
+        async function handleSpaceFileUpload(event, type) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const fileObj = { name: file.name, type: type, file: file };
+            spaceFiles.push(fileObj);
+
+            updateSpaceFileDisplay();
+
+            // Analyze with Gemini Vision
+            if (type === 'photo' && (file.name.toLowerCase().endsWith('.jpg') || file.name.toLowerCase().endsWith('.jpeg') || file.name.toLowerCase().endsWith('.tiff'))) {
+                await analyzeImageWithAI(file);
+            } else if (type === 'plan') {
+                await analyzePlanWithAI(file);
+            }
+        }
+
+        function updateSpaceFileDisplay() {
+            const container = document.getElementById('uploadedSpaceFiles');
+            const fileList = document.getElementById('spaceFileList');
+            
+            if (spaceFiles.length > 0) {
+                container.classList.remove('hidden');
+                fileList.innerHTML = spaceFiles.map((file, index) => `
+                    <div class="flex items-center justify-between bg-blue-100 p-3 rounded-lg">
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="${file.type === 'photo' ? 'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z' : 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z'}"></path>
+                            </svg>
+                            <span class="font-medium text-blue-800">${file.name}</span>
+                            <span class="text-xs text-blue-600 ml-2">(${file.type === 'photo' ? 'Foto' : 'Planimetria'})</span>
+                        </div>
+                        <button onclick="removeSpaceFile(${index})" class="text-red-500 hover:text-red-700">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                            </svg>
+                        </button>
+                    </div>
+                `).join('');
+            } else {
+                container.classList.add('hidden');
+            }
+        }
+
+        function removeSpaceFile(index) {
+            spaceFiles.splice(index, 1);
+            updateSpaceFileDisplay();
+            if (spaceFiles.length === 0) {
+                document.getElementById('aiAnalysisResult').classList.add('hidden');
+            }
+        }
+
+        async function analyzeImageWithAI(file) {
+            try {
+                // Convert image to base64
+                const base64 = await fileToBase64(file);
+                
+                const prompt = `Agisci come un esperto in spazi collaborativi e analizza questa immagine di una sala riunioni/spazio di lavoro.
+
+Estrai e fornisci le seguenti informazioni in formato strutturato:
+
+1. DIMENSIONI STIMATE:
+- Metri quadri approssimativi
+- Larghezza stimata (metri)  
+- Lunghezza stimata (metri)
+- Altezza stimata (metri)
+
+2. CAPACITÀ:
+- Numero persone che può ospitare comodamente
+
+3. CARATTERISTICHE SPAZIO:
+- Tipologia spazio (Huddle/Small/Medium/Large Room)
+- Presenza di tavolo/i (forma, dimensioni)
+- Configurazione sedute
+- Pareti (vetro, muro, miste)
+- Illuminazione (naturale/artificiale)
+- Presenza monitor/display esistenti
+
+4. CONSIDERAZIONI TECNICHE:
+- Sfide acustiche potenziali
+- Posizionamento ottimale telecamera
+- Necessità cablaggio particolare
+- Altri elementi rilevanti per installazione AV
+
+Rispondi in formato JSON strutturato per facilitare l'elaborazione automatica.`;
+
+                const response = await callGeminiVision(prompt, base64);
+                displayAIAnalysis(response, 'photo');
+                
+            } catch (error) {
+                console.error('Errore analisi immagine:', error);
+                alert('Errore nell\'analisi dell\'immagine. Utilizzare inserimento manuale.');
+            }
+        }
+
+        async function analyzePlanWithAI(file) {
+            try {
+                let content = '';
+                
+                if (file.name.toLowerCase().endsWith('.pdf')) {
+                    content = await readFileAsText(file);
+                } else {
+                    // For DWG files, we'll analyze as image
+                    const base64 = await fileToBase64(file);
+                    const prompt = `Analizza questa planimetria e estrai:
+1. Dimensioni della sala (lunghezza x larghezza in metri)
+2. Area in metri quadri
+3. Altezza se indicata
+4. Capacità persone stimata in base alle dimensioni
+5. Note particolari (porte, finestre, ostacoli)
+
+Fornisci risposta in formato JSON strutturato.`;
+                    
+                    const response = await callGeminiVision(prompt, base64);
+                    displayAIAnalysis(response, 'plan');
+                    return;
+                }
+                
+                displayAIAnalysis(`Planimetria ${file.name} caricata. Analisi dimensioni da sviluppare per file ${file.name.split('.').pop().toUpperCase()}.`, 'plan');
+                
+            } catch (error) {
+                console.error('Errore analisi planimetria:', error);
+                alert('Errore nell\'analisi della planimetria. Utilizzare inserimento manuale.');
+            }
+        }
+
+        function displayAIAnalysis(response, type) {
+            const resultDiv = document.getElementById('aiAnalysisResult');
+            const contentDiv = document.getElementById('aiAnalysisContent');
+            
+            resultDiv.classList.remove('hidden');
+            
+            try {
+                // Try to parse JSON response
+                const parsed = JSON.parse(response);
+                
+                let analysisHTML = `<strong>Analisi ${type === 'photo' ? 'Foto' : 'Planimetria'}:</strong><br>`;
+                
+                if (parsed.dimensioni) {
+                    analysisHTML += `<strong>Dimensioni:</strong> ${parsed.dimensioni.metri_quadri || 'N/A'} mq, ${parsed.dimensioni.larghezza || 'N/A'}m x ${parsed.dimensioni.lunghezza || 'N/A'}m<br>`;
+                }
+                
+                if (parsed.capacita) {
+                    analysisHTML += `<strong>Capacità:</strong> ${parsed.capacita} persone<br>`;
+                }
+                
+                if (parsed.tipologia) {
+                    analysisHTML += `<strong>Tipologia:</strong> ${parsed.tipologia}<br>`;
+                }
+                
+                // Auto-fill form fields if possible
+                if (parsed.dimensioni) {
+                    if (parsed.dimensioni.metri_quadri) document.getElementById('roomSqm').value = parsed.dimensioni.metri_quadri;
+                    if (parsed.dimensioni.larghezza) document.getElementById('roomWidth').value = parsed.dimensioni.larghezza;
+                    if (parsed.dimensioni.lunghezza) document.getElementById('roomLength').value = parsed.dimensioni.lunghezza;
+                    if (parsed.dimensioni.altezza) document.getElementById('roomHeight').value = parsed.dimensioni.altezza;
+                }
+                
+                if (parsed.capacita) {
+                    document.getElementById('roomCapacity').value = parsed.capacita;
+                }
+                
+                contentDiv.innerHTML = analysisHTML;
+                
+            } catch (e) {
+                // If not JSON, display as text
+                contentDiv.innerHTML = `<strong>Analisi completata:</strong><br>${response}`;
+            }
+        }
+
+        // Convert file to base64
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => {
+                    const base64 = reader.result.split(',')[1];
+                    resolve(base64);
+                };
+                reader.onerror = error => reject(error);
+            });
+        }
+
+        // Call Gemini Vision API
+        async function callGeminiVision(prompt, base64Image) {
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${API_KEY}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contents: [{
+                        parts: [
+                            { text: prompt },
+                            { inline_data: { mime_type: "image/jpeg", data: base64Image } }
+                        ]
+                    }]
+                })
+            });
+
+            const result = await response.json();
+            if (result.candidates && result.candidates[0]?.content?.parts[0]?.text) {
+                return result.candidates[0].content.parts[0].text;
+            }
+            throw new Error("Risposta AI non valida");
+        }
+
+        // Generate Space Proposal
+        async function generateSpaceProposal() {
+            // Validate inputs
+            if (!selectedInputMethod) {
+                alert('Seleziona un metodo di input (Manuale o Upload)');
+                return;
+            }
+
+            const clientName = document.getElementById('wizardClientName').value.trim();
+            const spaceName = document.getElementById('wizardSpaceName').value.trim();
+            const vcMode = document.querySelector('input[name="vcMode"]:checked')?.value;
+
+            if (!clientName || !spaceName || !vcMode) {
+                alert('Compila tutti i campi obbligatori');
+                return;
+            }
+
+            let capacity, sqm, width, length, height, notes;
+
+            if (selectedInputMethod === 'manual') {
+                capacity = parseInt(document.getElementById('roomCapacity').value) || 0;
+                sqm = parseFloat(document.getElementById('roomSqm').value) || 0;
+                width = parseFloat(document.getElementById('roomWidth').value) || 0;
+                length = parseFloat(document.getElementById('roomLength').value) || 0;
+                height = parseFloat(document.getElementById('roomHeight').value) || 2.7;
+                notes = document.getElementById('roomNotes').value.trim();
+
+                if (!capacity) {
+                    alert('Inserisci almeno la capacità persone');
+                    return;
+                }
+
+                // Calculate missing dimensions
+                if (!sqm && width && length) sqm = width * length;
+                if (!width && !length && sqm) {
+                    width = Math.sqrt(sqm);
+                    length = width;
+                }
+            } else {
+                // Get from AI analysis or require manual input
+                capacity = parseInt(document.getElementById('roomCapacity').value) || 0;
+                sqm = parseFloat(document.getElementById('roomSqm').value) || 0;
+                width = parseFloat(document.getElementById('roomWidth').value) || 0;
+                length = parseFloat(document.getElementById('roomLength').value) || 0;
+                height = parseFloat(document.getElementById('roomHeight').value) || 2.7;
+
+                if (!capacity || !sqm) {
+                    alert('L\'analisi AI non ha fornito dati sufficienti. Compila manualmente capacità e dimensioni.');
+                    return;
+                }
+            }
+
+            roomData = { clientName, spaceName, capacity, sqm, width, length, height, notes, vcMode };
+
+            // Show loading
+            const btn = document.getElementById('wizardGenerateBtn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = `
+                <svg class="w-5 h-5 mr-3 loading" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                </svg>
+                Generazione in corso...
+            `;
+            btn.disabled = true;
+
+            try {
+                const proposal = await generateConfigurationProposal();
+                
+                document.getElementById('proposalContent').innerHTML = proposal;
+                document.getElementById('wizardForm').classList.add('hidden');
+                document.getElementById('generatedProposal').classList.remove('hidden');
+                document.getElementById('generatedProposal').classList.add('fade-in');
+
+            } catch (error) {
+                alert('Errore nella generazione della proposta: ' + error.message);
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        }
+
+        async function generateConfigurationProposal() {
+            const roomType = classifyRoom(roomData.capacity, roomData.sqm);
+            
+            const prompt = `Agisci come un Senior Solution Architect di Var Group - Multimedia & Workspaces specializzato in configurazioni spazi collaborativi.
+
+DATI SPAZIO:
+- Cliente: ${roomData.clientName}
+- Nome Spazio: ${roomData.spaceName}
+- Capacità: ${roomData.capacity} persone
+- Dimensioni: ${roomData.sqm} mq (${roomData.width}m x ${roomData.length}m x ${roomData.height}m)
+- Tipologia: ${roomType} ROOM
+- Modalità VC: ${roomData.vcMode}
+- Note: ${roomData.notes || 'Nessuna'}
+
+CONTESTO AZIENDALE:
+${MW_CONTEXT}
+
+DATABASE HARDWARE DISPONIBILE:
+${JSON.stringify(HARDWARE_DB, null, 2)}
+
+CRITERI DIMENSIONALI:
+- HUDDLE ROOM: 1-3 persone, < 10 mq
+- SMALL ROOM: 3-6 persone, 10-18 mq  
+- MEDIUM ROOM: 6-12 persone, 18-30 mq
+- LARGE ROOM: >12 persone, >30 mq
+
+TASK: Genera un'offerta express professionale in formato HTML che includa:
+
+1. **EXECUTIVE SUMMARY**
+   - Inquadramento del progetto
+   - Tipologia spazio identificata
+   - Soluzione tecnologica raccomandata
+
+2. **CONFIGURAZIONE PROPOSTA**
+   - Barra all-in-one principale (con giustificazione scelta)
+   - Monitor (se necessario)
+   - Microfoni aggiuntivi (basato su analisi pick-up vs dimensioni sala)
+   - Sistema condivisione contenuti
+   - Accessori e cablaggio
+
+3. **TABELLA COMPONENTI** (formato simile template JBT allegato)
+   - Quantità, Descrizione dettagliata, Prezzo unitario placeholder
+   - Sezione servizi professionali
+   - Totale configurazione
+
+4. **BENEFICI SOLUZIONE**
+   - Vantaggi specifici per la tipologia di spazio
+   - Benefici della modalità ${roomData.vcMode} scelta
+   - User Experience e produttività
+
+5. **SPECIFICHE TECNICHE**
+   - Compatibilità piattaforme
+   - Range microfoni e copertura acustica
+   - Qualità video e audio garantita
+
+IMPORTANTE:
+- Utilizza SOLO hardware dal database fornito
+- Considera compatibilità ${roomData.vcMode} per ogni componente
+- Analizza se servono microfoni aggiuntivi basandoti sul range pick-up della barra vs dimensioni sala
+- Includi almeno 1 alternativa di configurazione se appropriato
+- Prezzi placeholder (€ TBD) in attesa di listini
+
+Genera offerta in HTML professionale, completa e pronta per il cliente.`;
+
+            return await callGeminiAPI(prompt);
+        }
+
+        function downloadProposalWord() {
+            // This would generate a Word document - placeholder for now
+            alert('Funzionalità download Word in sviluppo. Per ora utilizza copia/incolla del contenuto.');
+        }
+
+        function resetWizard() {
+            // Reset all wizard fields
+            document.getElementById('wizardClientName').value = '';
+            document.getElementById('wizardSpaceName').value = '';
+            document.getElementById('wizardBudget').value = '';
+            document.getElementById('roomSqm').value = '';
+            document.getElementById('roomWidth').value = '';
+            document.getElementById('roomLength').value = '';
+            document.getElementById('roomHeight').value = '';
+            document.getElementById('roomCapacity').value = '';
+            document.getElementById('roomNotes').value = '';
+            
+            // Reset radio buttons and checkboxes
+            document.querySelectorAll('input[name="vcMode"]').forEach(r => r.checked = false);
+            document.querySelectorAll('input[name="inputMethod"]').forEach(r => r.checked = false);
+            document.getElementById('hasExistingMonitor').checked = false;
+            document.getElementById('needsWirelessSharing').checked = false;
+            document.getElementById('acousticChallenges').checked = false;
+            
+            // Reset file uploads
+            spaceFiles = [];
+            updateSpaceFileDisplay();
+            document.getElementById('photoUpload').value = '';
+            document.getElementById('planUpload').value = '';
+            
+            // Reset UI state
+            selectedInputMethod = '';
+            document.getElementById('manualFields').classList.add('hidden');
+            document.getElementById('uploadFields').classList.add('hidden');
+            document.getElementById('aiAnalysisResult').classList.add('hidden');
+            document.getElementById('manualInput').parentElement.classList.remove('border-blue-500', 'bg-blue-50');
+            document.getElementById('uploadInput').parentElement.classList.remove('border-blue-500', 'bg-blue-50');
+            
+            // Show form, hide proposal
+            document.getElementById('wizardForm').classList.remove('hidden');
+            document.getElementById('generatedProposal').classList.add('hidden');
+            
+            roomData = {};
+        }<!DOCTYPE html>
 <html lang="it">
 <head>
     <meta charset="UTF-8">
@@ -381,7 +852,7 @@
 ## Identità e Struttura Corporate
 **Durante + Sangalli Tecnologie** formano la BU Multimedia & Workspaces di **Var Group**, società controllata al 100% dal **Gruppo SeSa** (fatturato 3.210 milioni di euro), leader in Italia nella distribuzione di soluzioni IT a valore per le imprese, quotata dal 2013 sul Mercato Telematico Azionario di Borsa Italiana.
 
-### Numeri Chiave di VarGroup (al 30.04.2024)
+### Numeri Chiave della BU (al 30.04.2024)
 - **Fatturato**: 823 milioni di euro
 - **EBITDA**: 99,4 milioni di euro  
 - **Persone**: 3.850 collaboratori
