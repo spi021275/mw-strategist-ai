@@ -6,14 +6,22 @@
     <title>Multimedia & Workspaces Strategist AI</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.2/mammoth.browser.min.js"></script>
+    <!-- Libreria XLSX aggiunta per il Modulo 3 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         body { 
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; 
         }
-        .loading { animation: spin 2s linear infinite; }
+        .loading { animation: spin 1.5s linear infinite; }
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        .fade-in { animation: fadeIn 0.5s ease-in; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .fade-in { animation: fadeIn 0.5s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        /* Stili per la preview del brief del Modulo 1 */
+        .prose h1, .prose h2, .prose h3 { color: #1e3a8a; margin-top: 1.25em; margin-bottom: 0.5em; }
+        .prose ul { list-style-type: disc; padding-left: 1.75rem; margin-top: 0.5em; }
+        .prose table { width: 100%; border-collapse: collapse; margin-top: 1em; }
+        .prose th, .prose td { border: 1px solid #d1d5db; padding: 0.5rem 0.75rem; }
+        .prose th { background-color: #eff6ff; font-weight: 600; }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -46,9 +54,9 @@
                     <h2 class="text-3xl font-bold text-gray-900 mb-4">Scegli il tuo modulo</h2>
                     <p class="text-lg text-gray-700 mb-8">Seleziona lo strumento che ti serve per il tuo progetto</p>
                     
-                    <div class="grid md:grid-cols-2 gap-6">
+                    <div class="grid md:grid-cols-3 gap-6">
                         <!-- Module 1 -->
-                        <div class="border border-gray-200 rounded-lg p-6 hover:shadow-md hover:border-blue-300 transition-all">
+                         <div class="border border-gray-200 rounded-lg p-6 hover:shadow-md hover:border-blue-300 transition-all">
                             <svg class="w-10 h-10 text-blue-600 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
                             </svg>
@@ -70,6 +78,21 @@
                             <h3 class="text-xl font-semibold text-gray-800 mb-2">Wizard Spazi Collaborativi</h3>
                             <p class="text-gray-600 mb-4">Definisci la soluzione tecnologica ottimale per spazi collaborativi basandoti su misure, tipologia e caratteristiche.</p>
                             <button onclick="showSpaceWizard()" class="w-full inline-flex items-center justify-center px-6 py-2.5 bg-cyan-600 hover:bg-cyan-700 text-white font-medium rounded-lg">
+                                Inizia
+                                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        
+                        <!-- Module 3 -->
+                        <div class="border border-gray-200 rounded-lg p-6 hover:shadow-md hover:border-green-300 transition-all">
+                            <svg class="w-10 h-10 text-green-600 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                            <h3 class="text-xl font-semibold text-gray-800 mb-2">Generatore Offerte Economiche</h3>
+                            <p class="text-gray-600 mb-4">Carica un file di Analisi Economica e genera un'offerta formattata pronta all'uso.</p>
+                            <button onclick="showFileGenerator()" class="w-full inline-flex items-center justify-center px-6 py-2.5 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg">
                                 Inizia
                                 <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -310,8 +333,8 @@
             </div>
         </div>
 
-        <!-- Space Wizard Module - AGGIORNATO CON TUTTE LE NOVITÀ DELLA VERSIONE 15 -->
-        <div id="spaceWizardSection" class="hidden">
+        <!-- Space Wizard Module -->
+<div id="spaceWizardSection" class="hidden">
             <div class="bg-white rounded-xl shadow-lg p-8">
                 <button onclick="showIntro()" class="inline-flex items-center mb-6 px-4 py-2 bg-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-300">
                     <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -567,20 +590,62 @@
             </div>
         </div>
     </div>
+     <!-- File Generator Module -->
+        <div id="fileGeneratorSection" class="hidden">
+            <div class="bg-white rounded-xl shadow-lg p-8">
+                <button onclick="showIntro()" class="inline-flex items-center mb-6 px-4 py-2 bg-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-300">
+                    <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                    Torna alla Homepage
+                </button>
+                
+                <div id="fileGeneratorForm" class="space-y-8">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-2">Generazione Offerta Economica</h2>
+                    <p class="text-gray-600 -mt-6">Carica il file Excel "Analisi Economica" per generare la tabella riepilogativa.</p>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div><label for="fileGenClientName" class="block text-sm font-medium text-gray-700 mb-2">Nome Cliente *</label><input type="text" id="fileGenClientName" class="w-full p-3 border border-gray-300 rounded-lg"></div>
+                        <div><label for="projectCode" class="block text-sm font-medium text-gray-700 mb-2">Codice Progetto / Riferimento</label><input type="text" id="projectCode" class="w-full p-3 border border-gray-300 rounded-lg"></div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-3">File Analisi Economica DSA *</label>
+                        <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                            <div onclick="document.getElementById('analysisUpload').click()" class="flex flex-col items-center justify-center h-32 border-2 border-blue-300 border-dashed rounded-lg bg-white hover:bg-blue-50 cursor-pointer"><svg class="w-10 h-10 text-blue-500 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg><span class="text-sm text-blue-700">Clicca per caricare</span><span class="text-xs text-blue-600 mt-1">.xlsx, .xls</span></div>
+                            <input type="file" id="analysisUpload" class="hidden" accept=".xlsx,.xlsm,.xls" onchange="handleAnalysisUpload(event)">
+                            <div id="uploadedAnalysisFile" class="mt-4 hidden"><div class="flex items-center justify-between bg-blue-100 p-3 rounded-lg"><div class="flex items-center min-w-0"><svg class="w-5 h-5 text-blue-600 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg><span id="analysisFileName" class="font-medium text-blue-800 truncate"></span></div><button onclick="removeAnalysisFile()" class="text-red-500 hover:text-red-700 ml-4 flex-shrink-0"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path></svg></button></div></div>
+                        </div>
+                    </div>
+                    <div class="text-center pt-4"><button type="button" onclick="generateFiles()" id="fileGenerateBtn" class="inline-flex items-center px-8 py-3 bg-blue-600 text-white font-medium text-lg rounded-lg disabled:opacity-50" disabled>Genera Offerta</button></div>
+                </div>
+                <div id="generatedFiles" class="hidden space-y-6"><h3 class="text-2xl font-bold text-gray-800">Offerta Generata</h3><div id="filesList"></div><div id="filesPreview"></div><div class="text-center"><button onclick="resetFileGenerator()" class="inline-flex items-center px-4 py-2 bg-gray-300 text-gray-800 rounded-lg"><svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>Torna Indietro</button></div></div>
+            </div>
+        </div>
+        <!-- RESULTS SECTION -->
+        <div id="generatedFiles" class="hidden space-y-6">
+            <h3 class="text-2xl font-bold text-gray-800">Offerta Generata</h3>
+            <div id="filesList"></div>
+            <div id="filesPreview"></div>
+            <div class="text-center">
+                <button onclick="resetFileGenerator()" class="inline-flex items-center px-4 py-2 bg-gray-300 text-gray-800 font-medium rounded-lg hover:bg-gray-400">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                    Torna Indietro (Nuova Offerta)
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 
     <!-- Footer -->
-    <div class="mt-16 pb-8 text-center text-sm text-gray-500">
+<div class="mt-16 pb-8 text-center text-sm text-gray-500">
         <p>
             Strumento specializzato per la BU Multimedia & Workspaces di
             <span class="font-semibold text-blue-600">Var Group</span>
         </p>
         <p class="mt-2 text-xs text-gray-400 max-w-2xl mx-auto px-4">
-            Alimentato dall'expertise di 51 anni, 823M€ fatturato, 3.850 persone, partnership certificate e soluzioni proprietarie
+            Alimentato dall'expertise di 60 anni, partnership certificate e soluzioni proprietarie
         </p>
     </div>
 
     <script>
-        // API Configuration
+    // API Configuration
         const API_KEY = "AIzaSyDjlVWJIzGCa5CnXbj_nQEj1aG2aHlLwnQ";
         
         // Multimedia & Workspaces Context Completo
@@ -774,6 +839,12 @@ Supporto tecnico di altissima qualità con **tecnici certificati da oltre 35 ann
                 X72: { name: "Poly X72", type: "Medium/Large", modes: ["BYOD", "MTR", "ZOOM", "GOOGLE MEET"], capacity: "6-16 persone", maxPickup: "6m" },
                 SYNC: { name: "Poly SYNC", type: "Additional Microphone", modes: ["Wireless"], capacity: "Expansion", maxPickup: "2m" }
             },
+            cisco: {
+                RoomBar: { name: "Cisco Room Bar", type: "Small/Huddle", modes: ["BYOD", "MTR", "ZOOM", "GOOGLE MEET"], capacity: "1-5 persone", maxPickup: "3m" },
+                RoomBarPro: { name: "Cisco Room Bar Pro", type: "Medium/Large", modes: ["BYOD", "MTR", "ZOOM", "GOOGLE MEET"], capacity: "6-16 persone", maxPickup: "5m" },
+                TableMicrophonePro: { name: "Cisco Table Microphone Pro", type: "Additional Microphone", modes: ["Wired"], capacity: "Expansion", maxPickup: "3.5m" },
+                CeilingMicrophonePro: { name: "Cisco Ceiling Microphone Pro", type: "Additional Microphone", modes: ["PoE"], capacity: "Expansion", maxPickup: "4m" }
+            },
             barco: {
                 ClickShareBarPro: { name: "Barco ClickShare Bar Pro", type: "Medium", modes: ["BYOD"], capacity: "6-12 persone", maxPickup: "4m" },
                 ClickShareBarCore: { name: "Barco ClickShare Bar Core", type: "Small/Huddle", modes: ["BYOD"], capacity: "1-6 persone", maxPickup: "3m" },
@@ -783,26 +854,31 @@ Supporto tecnico di altissima qualità con **tecnici certificati da oltre 35 ann
             }
         };
 
-        // State management
+// State management
         let uploadedFiles = [];
         let transcriptContent = '';
         let generatedBriefContent = '';
         let spaceFiles = [];
         let selectedInputMethod = '';
         let roomData = {};
+        let analysisFile = null;
+        let extractedData = {};
+        let generatedFileData = null;
 
         // Navigation functions
         function showIntro() {
             document.getElementById('introSection').classList.remove('hidden');
             document.getElementById('postMeetingSection').classList.add('hidden');
             document.getElementById('spaceWizardSection').classList.add('hidden');
+            document.getElementById('fileGeneratorSection').classList.add('hidden');
             document.getElementById('homeBtn').classList.add('hidden');
         }
-
+        
         function showPostMeeting() {
             document.getElementById('introSection').classList.add('hidden');
             document.getElementById('postMeetingSection').classList.remove('hidden');
             document.getElementById('spaceWizardSection').classList.add('hidden');
+            document.getElementById('fileGeneratorSection').classList.add('hidden');
             document.getElementById('homeBtn').classList.remove('hidden');
         }
 
@@ -810,18 +886,28 @@ Supporto tecnico di altissima qualità con **tecnici certificati da oltre 35 ann
             document.getElementById('introSection').classList.add('hidden');
             document.getElementById('postMeetingSection').classList.add('hidden');
             document.getElementById('spaceWizardSection').classList.remove('hidden');
+            document.getElementById('fileGeneratorSection').classList.add('hidden');
             document.getElementById('homeBtn').classList.remove('hidden');
         }
 
-        // Room Classification
+        function showFileGenerator() {
+            document.getElementById('introSection').classList.add('hidden');
+            document.getElementById('postMeetingSection').classList.add('hidden');
+            document.getElementById('spaceWizardSection').classList.add('hidden');
+            document.getElementById('fileGeneratorSection').classList.remove('hidden');
+            document.getElementById('homeBtn').classList.remove('hidden');
+            resetFileGenerator();
+        }
+
+         // Room Classification
         function classifyRoom(capacity, sqm) {
             if (capacity <= 3 && sqm < 10) return "HUDDLE";
             if (capacity <= 6 && sqm <= 18) return "SMALL";
             if (capacity <= 12 && sqm <= 30) return "MEDIUM";
             return "LARGE";
         }
-
-        // Wizard Functions
+        
+         // Wizard Functions
         function selectInputMethod(method) {
             selectedInputMethod = method;
             document.getElementById('radioManual').checked = method === 'manual';
@@ -839,7 +925,7 @@ Supporto tecnico di altissima qualità con **tecnici certificati da oltre 35 ann
                 document.getElementById('manualInput').parentElement.classList.remove('border-cyan-500', 'bg-cyan-50');
             }
         }
-
+        
         // File Upload Handlers for Wizard
         async function handleSpaceFileUpload(event, type) {
             const file = event.target.files[0];
@@ -1689,7 +1775,143 @@ Fornisci il brief in formato HTML professionale, completo e actionable per il te
             generatedBriefContent = '';
         }
 
-        // Initialize the app
+        // --- MODULE 3: FILE GENERATOR FUNCTIONS ---
+
+        async function handleAnalysisUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    try {
+        analysisFile = file;
+        document.getElementById('analysisFileName').textContent = file.name;
+        document.getElementById('uploadedAnalysisFile').classList.remove('hidden');
+        await processExcelFile(file);
+    } catch (error) {
+        alert('Errore: ' + error.message);
+        removeAnalysisFile();
+    }
+}
+
+async function processExcelFile(file) {
+    try {
+        const data = await readExcelFile(file);
+        extractedData = extractKeyData(data);
+        document.getElementById('fileGenerateBtn').disabled = false;
+    } catch (error) {
+        alert('Errore: ' + error.message);
+        removeAnalysisFile();
+    }
+}
+
+function readExcelFile(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                const workbook = XLSX.read(e.target.result, { type: 'binary' });
+                const sheetName = workbook.SheetNames[0];
+                if (!sheetName) throw new Error("Il file Excel non contiene fogli di lavoro.");
+                resolve(XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], { header: 1, defval: '' }));
+            } catch (err) { reject(err); }
+        };
+        reader.onerror = () => reject(new Error('Impossibile leggere il file.'));
+        reader.readAsBinaryString(file);
+    });
+}
+
+function extractKeyData(sheetData) {
+    const extracted = { articoli: [] };
+    const colonne = { I: 8, J: 9, K: 10, T: 19, U: 20 };
+    for (let i = 2; i < sheetData.length; i++) {
+        const row = sheetData[i];
+        if (!row) continue;
+        const quantitaK = parseFloat(row[colonne.K]);
+        if (!isNaN(quantitaK) && quantitaK > 0) {
+            extracted.articoli.push({
+                colonnaI: row[colonne.I] || '',
+                colonnaJ: row[colonne.J] || '',
+                colonnaK: quantitaK,
+                colonnaT: parseFloat(row[colonne.T]) || 0,
+                colonnaU: parseFloat(row[colonne.U]) || 0,
+            });
+        }
+    }
+    extracted.totaleU = extracted.articoli.reduce((sum, art) => sum + art.colonnaU, 0);
+    return extracted;
+}
+
+function generateCommercialOffer(projectData) {
+    const data = projectData.extractedData;
+    const dataOdierna = new Date().toLocaleDateString('it-IT');
+    return `<div style="font-family:Arial,sans-serif;margin:1rem;"><h2 style="color:#1e3a8a;font-size:1.5rem;font-weight:bold;">Offerta Commerciale</h2><p><strong>Cliente:</strong> ${projectData.cliente||'N/D'}<br><strong>Data:</strong> ${dataOdierna}<br><strong>Rif:</strong> ${projectData.projectCode||'N/D'}</p><hr style="margin:20px 0;border:0;border-top:1px solid #ddd;"><table style="width:100%;border-collapse:collapse;margin-top:20px"><thead><tr><th style="border:1px solid #ddd;padding:8px;text-align:left;font-size:10pt;background-color:#eff6ff;color:#1e3a8a;font-weight:bold;">Codice Articolo</th><th style="border:1px solid #ddd;padding:8px;text-align:left;font-size:10pt;background-color:#eff6ff;color:#1e3a8a;font-weight:bold;">Descrizione</th><th style="border:1px solid #ddd;padding:8px;text-align:left;font-size:10pt;background-color:#eff6ff;color:#1e3a8a;font-weight:bold;">Quantità</th><th style="border:1px solid #ddd;padding:8px;text-align:right;font-size:10pt;background-color:#eff6ff;color:#1e3a8a;font-weight:bold;">Prezzo Unitario</th><th style="border:1px solid #ddd;padding:8px;text-align:right;font-size:10pt;background-color:#eff6ff;color:#1e3a8a;font-weight:bold;">Prezzo Totale</th></tr></thead><tbody>${data.articoli.map(art=>`<tr><td style="border:1px solid #ddd;padding:8px;font-size:10pt;">${art.colonnaI}</td><td style="border:1px solid #ddd;padding:8px;font-size:10pt;">${art.colonnaJ}</td><td style="border:1px solid #ddd;padding:8px;font-size:10pt;">${art.colonnaK}</td><td style="border:1px solid #ddd;padding:8px;text-align:right;font-size:10pt;">€ ${art.colonnaT.toLocaleString('it-IT',{minimumFractionDigits:2})}</td><td style="border:1px solid #ddd;padding:8px;text-align:right;font-size:10pt;">€ ${art.colonnaU.toLocaleString('it-IT',{minimumFractionDigits:2})}</td></tr>`).join('')}<tr style="font-weight:bold;background-color:#eff6ff;"><td colspan="4" style="border:1px solid #ddd;padding:8px;text-align:right;font-size:10pt;">TOTALE COMPLESSIVO</td><td style="border:1px solid #ddd;padding:8px;text-align:right;font-size:10pt;">€ ${data.totaleU.toLocaleString('it-IT',{minimumFractionDigits:2})}</td></tr></tbody></table></div>`;
+}
+
+async function generateFiles() {
+    if (!document.getElementById('fileGenClientName').value.trim()) { alert("Inserisci il Nome Cliente."); return; }
+    const btn = document.getElementById('fileGenerateBtn');
+    const originalHTML = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = `<svg class="w-5 h-5 mr-3 loading" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>Generazione...`;
+    await new Promise(resolve => setTimeout(resolve, 500));
+    const projectData = { cliente: document.getElementById('fileGenClientName').value, projectCode: document.getElementById('projectCode').value, extractedData: extractedData };
+    generatedFileData = { type: 'offer', name: `Offerta_${projectData.cliente.replace(/[\s\/]/g, '_')}.html`, content: generateCommercialOffer(projectData) };
+    displayGeneratedFiles();
+    document.getElementById('fileGeneratorForm').classList.add('hidden');
+    document.getElementById('generatedFiles').classList.remove('hidden');
+    btn.disabled = false;
+    btn.innerHTML = "Genera Offerta";
+}
+
+function displayGeneratedFiles() {
+    const filesList = document.getElementById('filesList');
+    const file = generatedFileData;
+    filesList.innerHTML = `<div class="border border-blue-200 rounded-lg p-4 bg-blue-50"><div class="flex items-center mb-3"><svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg><span class="font-semibold text-blue-800 ml-2 text-lg">Offerta</span></div><p class="text-sm text-gray-700 mb-4">${file.name}</p><div class="grid grid-cols-2 gap-3"><button onclick="downloadFile()" class="px-4 py-2 bg-blue-600 text-white rounded-lg">Download</button><button onclick="copyFileContent(this)" class="px-4 py-2 bg-gray-200 rounded-lg">Copia</button></div></div>`;
+    previewFile();
+}
+
+function previewFile() {
+    const file = generatedFileData;
+    const previewContainer = document.getElementById('filesPreview');
+    previewContainer.innerHTML = `<div class="bg-white border rounded-lg p-6"><h4 class="font-medium text-gray-800 mb-4">Anteprima:</h4><div id="preview-content-wrapper" class="bg-white border rounded max-h-[40rem] overflow-y-auto"></div></div>`;
+    document.getElementById('preview-content-wrapper').innerHTML = file.content;
+}
+
+function downloadFile() {
+    const file = generatedFileData;
+    const fullHtml = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Offerta</title></head><body>${file.content}</body></html>`;
+    const blob = new Blob([fullHtml], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = file.name; a.click(); URL.revokeObjectURL(url);
+}
+
+function copyFileContent(buttonElement) {
+    const file = generatedFileData;
+    const originalText = buttonElement.textContent;
+    const blob = new Blob([file.content], { type: 'text/html' });
+    const item = new ClipboardItem({ 'text/html': blob });
+    navigator.clipboard.write([item]).then(() => {
+        buttonElement.textContent = 'Copiato!';
+        setTimeout(() => { buttonElement.textContent = originalText; }, 2500);
+    }).catch(err => alert('Errore: ' + err.message));
+}
+
+function removeAnalysisFile() {
+    analysisFile = null;
+    extractedData = {};
+    document.getElementById('analysisUpload').value = '';
+    document.getElementById('uploadedAnalysisFile').classList.add('hidden');
+    document.getElementById('fileGenerateBtn').disabled = true;
+}
+
+function resetFileGenerator() {
+    document.getElementById('fileGenClientName').value = '';
+    document.getElementById('projectCode').value = '';
+    removeAnalysisFile();
+    generatedFileData = null;
+    document.getElementById('generatedFiles').classList.add('hidden');
+    document.getElementById('fileGeneratorForm').classList.remove('hidden');
+}
+
+        // --- GLOBAL INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', function() {
             // Set default view
             showIntro();
